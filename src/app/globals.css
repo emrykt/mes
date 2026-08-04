@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Surfaces & ink (light) — cool, ServiceNow-style */
+  --color-page: #f1f5f6;
+  --color-surface: #ffffff;
+  --color-ink: #10222a;
+  --color-ink-2: #465862;
+  --color-muted: #7c8b93;
+  --color-line: #dce5e8;
+
+  /* Brand / accent — deep teal (green–blue bridge, primary interactive) */
+  --color-accent: #0e8390;
+  --color-accent-strong: #0a616b;
+  --color-accent-soft: #dcf1f3;
+  --color-accent-wash: #b6e3e7;
+
+  /* Secondary blue (data / info) */
+  --color-info: #2f74d0;
+  --color-info-soft: #dceafa;
+
+  /* Status — reserved, never reused as series colors */
+  --color-good: #16a34a;
+  --color-good-text: #15803d;
+  --color-good-soft: #dcfae6;
+  --color-warning: #e8930c;
+  --color-warning-text: #9a5b00;
+  --color-warning-soft: #fbeed0;
+  --color-serious: #f0762f;
+  --color-serious-text: #b23f12;
+  --color-serious-soft: #fce7da;
+  --color-critical: #dc3b3b;
+  --color-critical-text: #b02121;
+  --color-critical-soft: #fae4e4;
+  --color-neutral-soft: #e9eff1;
+
+  /* Dark chrome (admin sidebar, TV, operator) — deep navy-teal */
+  --color-chrome: #0d2a30;
+  --color-chrome-2: #16393f;
+  --color-chrome-ink: #9bb6bb;
+}
+
+body {
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent-wash);
+}
+
+/* ---------- Motion system (landing) ---------- */
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@keyframes spinRev { to { transform: rotate(-360deg); } }
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } }
+@keyframes auroraPan {
+  0%   { transform: translate3d(-6%, -3%, 0) rotate(0deg) scale(1.05); }
+  100% { transform: translate3d(6%, 4%, 0) rotate(200deg) scale(1.15); }
+}
+@keyframes gradPan { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes revealUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes pulseGlow { 0%, 100% { opacity: 0.5; transform: scale(0.97); } 50% { opacity: 1; transform: scale(1.03); } }
+@keyframes sheen { 0% { transform: translateX(-140%) skewX(-18deg); } 60%, 100% { transform: translateX(320%) skewX(-18deg); } }
+@keyframes dashFlow { to { stroke-dashoffset: -1000; } }
+
+.anim-spin-slow { animation: spinSlow 30s linear infinite; }
+.anim-spin-rev { animation: spinRev 46s linear infinite; }
+.anim-float { animation: floatY 6s ease-in-out infinite; }
+.anim-twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+.anim-aurora { animation: auroraPan 26s ease-in-out infinite alternate; }
+.anim-pulse { animation: pulseGlow 4.5s ease-in-out infinite; }
+.anim-grad { background-size: 220% 220%; animation: gradPan 9s ease infinite; }
+
+/* Animated gradient text for hero highlight */
+.text-grad {
+  background: linear-gradient(100deg, var(--color-accent) 0%, var(--color-good) 45%, var(--color-info) 100%);
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradPan 9s ease infinite;
+}
+
+/* Scroll-reveal */
+.reveal { opacity: 0; will-change: opacity, transform; }
+.reveal.in { animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Button sheen on hover */
+.btn-sheen { position: relative; overflow: hidden; }
+.btn-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: translateX(-140%) skewX(-18deg);
+  pointer-events: none;
+}
+.btn-sheen:hover::after { animation: sheen 0.9s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-spin-slow, .anim-spin-rev, .anim-float, .anim-twinkle, .anim-aurora, .anim-pulse, .anim-grad, .text-grad {
+    animation: none !important;
+  }
+  .reveal { opacity: 1 !important; }
+  .reveal.in { animation: none !important; }
+  .btn-sheen:hover::after { animation: none !important; }
+}

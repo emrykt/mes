@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import {
   AlertOctagon,
@@ -124,9 +125,13 @@ export default function OperatorKioskPage() {
     <div className="min-h-screen bg-chrome text-white">
       {/* header */}
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-white/10 px-4 py-3 sm:px-5">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-accent">
+        <Link
+          href="/mes"
+          className="flex size-9 items-center justify-center rounded-lg bg-accent"
+          aria-label="KioskMES"
+        >
           <Factory className="size-5" />
-        </span>
+        </Link>
         <div className="mr-auto">
           <p className="text-base font-semibold leading-tight">{def.name}</p>
           <p className="text-xs text-chrome-ink">

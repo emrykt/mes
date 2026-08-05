@@ -24,9 +24,13 @@ export default function ExecutiveAssistantPage() {
         >
           <ArrowLeft className="size-5" />
         </Link>
-        <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
+        <Link
+          href="/mes"
+          className="flex size-8 items-center justify-center rounded-lg bg-accent text-white"
+          aria-label={tc("appName")}
+        >
           <Factory className="size-4.5" />
-        </span>
+        </Link>
         <div className="mr-auto">
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-xs text-muted">{t("subtitle")}</p>

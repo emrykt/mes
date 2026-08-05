@@ -176,9 +176,13 @@ export default function ExecutivePage() {
         >
           <ArrowLeft className="size-5" />
         </Link>
-        <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
+        <Link
+          href="/mes"
+          className="flex size-8 items-center justify-center rounded-lg bg-accent text-white"
+          aria-label={tc("appName")}
+        >
           <Factory className="size-4.5" />
-        </span>
+        </Link>
         <div className="mr-auto">
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-xs text-muted">{t("subtitle", { date: dateLabel })}</p>
@@ -197,14 +201,14 @@ export default function ExecutivePage() {
       <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("utilToday")}</p>
-          <p className="mt-1 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
             {Math.round(util * 100)}
-            <span className="text-xl text-ink-2 sm:text-2xl">%</span>
+            <span className="text-base text-ink-2 sm:text-2xl">%</span>
           </p>
         </Card>
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("outputToday")}</p>
-          <p className="mt-1 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
             {output.toLocaleString(locale)}
           </p>
           <p className="mt-1 text-xs text-muted">
@@ -219,9 +223,9 @@ export default function ExecutivePage() {
         </Card>
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("adherenceToday")}</p>
-          <p className="mt-1 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
             {Math.round(adherenceRate(planPerformanceOf(snap.orders), util) * 100)}
-            <span className="text-xl text-ink-2 sm:text-2xl">%</span>
+            <span className="text-base text-ink-2 sm:text-2xl">%</span>
           </p>
         </Card>
       </div>

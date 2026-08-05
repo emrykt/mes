@@ -75,8 +75,8 @@ function isBatchable(store: DemoStore, operationId: string): boolean {
 
 /* ------------------------------ seeding ---------------------------- */
 
-const SEED_WIP = 30; // work-in-progress spread across the whole routing
-const SEED_BACKLOG = 18; // fresh orders waiting to start — a visible queue
+const SEED_WIP = 46; // work-in-progress spread across the whole routing
+const SEED_BACKLOG = 28; // fresh orders waiting to start — a visible queue
 
 function seedActiveOrders(store: DemoStore, now: Date): void {
   // WIP: current step distributed *uniformly* across each order's routing, so
@@ -653,16 +653,19 @@ function tickMinute(store: DemoStore, now: Date): void {
   // evaluate configurable escalation rules against the live state
   evaluateAlerts(store, now);
 
-  // keep a deep backlog: top the order book up toward ~40 open orders so the
-  // plant always has waiting work and stations stay busy.
-  if (epochMin % 12 === 0) {
-    const active = store.orders.filter((o) => !orderDone(o)).length;
-    if (active < 40) {
+  // keep a deep backlog: top the order book up toward ~56 open orders so the
+  // plant always has waiting work and every station stays busy.
+  if (epochMin % 6 === 0) {
+    let active = store.orders.filter((o) => !orderDone(o)).length;
+    let added = 0;
+    while (active < 56 && added < 3) {
       const id = nextOrderId(store, now);
       const order = buildOrder(`auto:${id}`, id, now, false);
       order.routing[0].status = "queued";
       assignOrderMaterial(store, order);
       store.orders.push(order);
+      active++;
+      added++;
     }
   }
 }

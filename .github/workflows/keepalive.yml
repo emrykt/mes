@@ -1,0 +1,21 @@
+name: Keep demo live
+
+# Advances the live plant simulation even when nobody is viewing the site.
+# The API's advance() catches up every elapsed minute on each call, so a
+# 5-minute heartbeat keeps the demo fresh minute-by-minute and writes the
+# progressed state back to Redis.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # every 5 minutes (GitHub's shortest allowed interval)
+  workflow_dispatch: {} # lets you trigger it manually from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tick the live demo store
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" https://mes-baykal1.vercel.app/api/demo)
+          echo "GET /api/demo -> HTTP $code"
+          test "$code" = "200"

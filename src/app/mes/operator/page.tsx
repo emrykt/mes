@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -54,6 +54,13 @@ export default function OperatorKioskPage() {
   const [scanValue, setScanValue] = useState("");
   const [scanError, setScanError] = useState(false);
 
+  // keep the picked station valid when the active company changes
+  useEffect(() => {
+    if (snap && !snap.stations.some((s) => s.id === stationId)) {
+      setStationId(snap.stations[0]?.id ?? stationId);
+    }
+  }, [snap, stationId]);
+
   if (!snap) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-chrome text-chrome-ink">
@@ -62,8 +69,14 @@ export default function OperatorKioskPage() {
     );
   }
 
-  const def = SIM_STATIONS.find((s) => s.id === stationId)!;
-  const live = snap.stations.find((s) => s.id === stationId)!;
+  // The picked station may not exist for the newly selected company — fall back
+  // to this company's first station so switching companies never crashes.
+  const activeId = snap.stations.some((s) => s.id === stationId)
+    ? stationId
+    : snap.stations[0]?.id ?? stationId;
+
+  const def = SIM_STATIONS.find((s) => s.id === activeId)!;
+  const live = snap.stations.find((s) => s.id === activeId)!;
   const operation = snap.settings.operations.find((o) => o.id === def.operationId);
 
   const queue = snap.orders
@@ -84,7 +97,7 @@ export default function OperatorKioskPage() {
   const running = live.state === "running";
   const down = live.state === "down";
   const myAndon = snap.andon.find(
-    (a) => a.open && a.manual && a.stationId === stationId,
+    (a) => a.open && a.manual && a.stationId === activeId,
   );
   const downtimeReason = live.downtimeReasonId
     ? snap.settings.downtimeReasons.find((r) => r.id === live.downtimeReasonId)?.name
@@ -152,15 +165,18 @@ export default function OperatorKioskPage() {
         <label className="flex items-center gap-2 text-xs text-chrome-ink">
           <span className="hidden lg:inline">{t("stationSelect")}</span>
           <select
-            value={stationId}
+            value={activeId}
             onChange={(e) => setStationId(e.target.value)}
             className="rounded-lg border border-white/15 bg-chrome-2 px-2 py-1.5 text-xs font-medium text-white focus:border-accent focus:outline-none"
           >
-            {SIM_STATIONS.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
+            {snap.stations.map((s) => {
+              const d = SIM_STATIONS.find((x) => x.id === s.id);
+              return (
+                <option key={s.id} value={s.id}>
+                  {d?.name ?? s.id}
+                </option>
+              );
+            })}
           </select>
         </label>
       </header>

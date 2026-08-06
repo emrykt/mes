@@ -51,6 +51,10 @@ export default function PlannedMaintenance() {
     m.nextDueAt < now ? "overdue" : m.nextDueAt < soonLimit ? "dueSoon" : "upcoming";
   const stationName = (id: string) => SIM_STATIONS.find((s) => s.id === id)?.name ?? id;
   const buckets: Bucket[] = ["overdue", "dueSoon", "upcoming"];
+  // add-task station must belong to the active company
+  const addStation = snap.stations.some((s) => s.id === stationId)
+    ? stationId
+    : snap.stations[0]?.id ?? stationId;
 
   return (
     <div className="space-y-5">
@@ -106,13 +110,13 @@ export default function PlannedMaintenance() {
             className="grow rounded-lg border border-line bg-page px-3 py-2 text-sm placeholder:text-muted focus:border-accent focus:outline-none sm:max-w-64"
           />
           <select
-            value={stationId}
+            value={addStation}
             onChange={(e) => setStationId(e.target.value)}
             className="rounded-lg border border-line bg-page px-3 py-2 text-sm focus:border-accent focus:outline-none"
           >
-            {SIM_STATIONS.map((s) => (
+            {snap.stations.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name}
+                {stationName(s.id)}
               </option>
             ))}
           </select>
@@ -132,7 +136,7 @@ export default function PlannedMaintenance() {
               if (!title.trim()) return;
               await dispatch({
                 type: "addMaintenance",
-                stationId,
+                stationId: addStation,
                 title: title.trim(),
                 intervalDays: Number(interval) || 30,
               });

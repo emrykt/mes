@@ -50,7 +50,7 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   {
     id: "baykal-sac",
     name: "Baykal Sac & Metal",
-    sector: "Sac metal imalatı",
+    sector: "Sac metal fabrikasyonu",
     stationIds: [
       "st-lazer-1", "st-lazer-2", "st-plazma-1", "st-punch-1",
       "st-abkant-1", "st-abkant-2", "st-kaynak-1", "st-montaj-1",
@@ -68,7 +68,7 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   {
     id: "ege-talasli",
     name: "Ege Talaşlı İşleme",
-    sector: "Talaşlı imalat (CNC)",
+    sector: "Metal iş atölyesi · talaşlı ağırlıklı",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-torna-2", "st-freze-1",
       "st-freze-2", "st-matkap-1", "st-kalite-1", "st-paket-1",
@@ -85,7 +85,7 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   {
     id: "kuzey-fabrika",
     name: "Kuzey Fabrika",
-    sector: "Karışık metal işleme",
+    sector: "Sac & metal fabrikasyon atölyesi",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-torna-2", "st-freze-1", "st-freze-2",
       "st-matkap-1", "st-lazer-1", "st-lazer-2", "st-plazma-1", "st-punch-1",
@@ -104,7 +104,7 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   {
     id: "demir-atolye",
     name: "Demir Atölye",
-    sector: "Küçük atölye",
+    sector: "Küçük metal fabrikasyon atölyesi",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-freze-1", "st-lazer-1",
       "st-abkant-1", "st-kaynak-1", "st-kalite-1", "st-paket-1",

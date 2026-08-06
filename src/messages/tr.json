@@ -85,7 +85,7 @@
     "heroBadge": "Yapay zekâ destekli Smart Manufacturing",
     "heroTitle": "Yapay zekâ ile",
     "heroHighlight": "ölçülebilir verimlilik",
-    "heroSubtitle": "Metal işleme atölyeleri için gerçek zamanlı zekâ. Darboğazı görün, gecikmeyi önleyin, kapasitenizin her saatini kullanın — sahada sizinle çalışan bir yapay zekâ ile.",
+    "heroSubtitle": "Sac metal fabrikasyon ve metal iş atölyeleri için gerçek zamanlı zekâ. Darboğazı görün, gecikmeyi önleyin, kapasitenizin her saatini kullanın — sahada sizinle çalışan bir yapay zekâ ile.",
     "heroLoop": "Veri + Yapay Zekâ + İş Akışı + Verimlilik",
     "nodeProduction": "Üretim",
     "nodeQuality": "Kalite",
@@ -793,7 +793,9 @@
       "allGood": "Sahada her şey yolunda.",
       "tabPulse": "Nabız",
       "tabPerformance": "Performans",
-      "tabAssistant": "Asistan"
+      "tabCosts": "Maliyet & Fire",
+      "tabAssistant": "Asistan",
+      "costsSubtitle": "Maliyet, kâr ve fire"
     },
     "upsell": {
       "badge": "AI Pro",

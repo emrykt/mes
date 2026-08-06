@@ -85,7 +85,7 @@
     "heroBadge": "KI-gestütztes Smart Manufacturing",
     "heroTitle": "KI-gestützte Effizienz,",
     "heroHighlight": "die messbar ist",
-    "heroSubtitle": "Echtzeit-Intelligenz für Metallwerkstätten. Engpässe sehen, Verzüge vermeiden, jede Kapazitätsstunde nutzen — mit einer KI, die mit Ihnen in der Fertigung arbeitet.",
+    "heroSubtitle": "Echtzeit-Intelligenz für Blechfertiger und Metall-Lohnfertiger. Engpässe sehen, Verzüge vermeiden, jede Kapazitätsstunde nutzen — mit einer KI, die mit Ihnen in der Fertigung arbeitet.",
     "heroLoop": "Daten + KI + Workflow + Effizienz",
     "nodeProduction": "Produktion",
     "nodeQuality": "Qualität",
@@ -793,7 +793,9 @@
       "allGood": "In der Fertigung ist alles im grünen Bereich.",
       "tabPulse": "Puls",
       "tabPerformance": "Leistung",
-      "tabAssistant": "Assistent"
+      "tabCosts": "Kosten & Ausschuss",
+      "tabAssistant": "Assistent",
+      "costsSubtitle": "Kosten, Gewinn & Ausschuss"
     },
     "upsell": {
       "badge": "AI Pro",

@@ -18,39 +18,16 @@ import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo, useEntitlements } from "@/components/demo/DemoProvider";
 import ExecutiveTabs from "@/components/mes/ExecutiveTabs";
 import InsightsPanel from "@/components/mes/InsightsPanel";
-import PerformanceScore from "@/components/mes/PerformanceScore";
-import ScrapPanel from "@/components/mes/ScrapPanel";
 import BadgesStrip from "@/components/mes/BadgesStrip";
 import { Card } from "@/components/ui";
-import { formatCost } from "@/lib/currency";
 import {
   adherenceRate,
-  downtimeCostPerHour,
-  downtimeTodayByReason,
   orderDone,
   paretoOf,
   planPerformanceOf,
 } from "@/lib/mes-calc";
-import { plantEconomics } from "@/lib/revenue";
 import { SIM_STATIONS, plantDailySeries } from "@/lib/sim";
 import { companyProfile } from "@/lib/companies";
-import type { DemoSettings } from "@/lib/demo-types";
-
-const CUTTING = new Set(["op-lazer", "op-plazma", "op-oksijen"]);
-
-/** Rough plant cost for a day at the given utilization, for this plant's size. */
-function costOfDay(
-  util: number,
-  cr: DemoSettings["costRates"],
-  stationCount: number,
-  cuttingCount: number,
-): { labor: number; energy: number; gas: number; overhead: number; total: number } {
-  const labor = stationCount * 24 * cr.laborPerHour;
-  const energy = stationCount * 24 * util * cr.energyPerHour;
-  const gas = cuttingCount * 24 * util * cr.gasPerHour;
-  const overhead = cr.overheadPerDay;
-  return { labor, energy, gas, overhead, total: labor + energy + gas + overhead };
-}
 
 function dayLabel(iso: string, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
@@ -80,12 +57,8 @@ export default function ExecutivePage() {
   const util = snap.today.util;
   const output = snap.today.output;
 
-  // per-company sizing: capacity, cost and trend scale with this plant, not all 16
+  // per-company sizing: capacity target + trend scale with this plant, not all 16
   const profile = companyProfile(snap.companyId);
-  const stationCount = snap.stations.length;
-  const cuttingCount = snap.stations.filter((st) =>
-    CUTTING.has(SIM_STATIONS.find((d) => d.id === st.id)?.operationId ?? ""),
-  ).length;
   const plantTarget = Math.round(
     snap.stations.reduce(
       (s, st) => s + (SIM_STATIONS.find((d) => d.id === st.id)?.rate ?? 0),
@@ -107,40 +80,13 @@ export default function ExecutivePage() {
   const reasonName = (id: string) =>
     settings.downtimeReasons.find((r) => r.id === id)?.name ?? id;
 
-  // today's cost, prorated by elapsed hours
-  const elapsed = (now.getUTCHours() + 1) / 24;
-  const dayCost = costOfDay(util, settings.costRates, stationCount, cuttingCount);
-  const cost = {
-    labor: dayCost.labor * elapsed,
-    energy: dayCost.energy * elapsed,
-    gas: dayCost.gas * elapsed,
-    overhead: dayCost.overhead * elapsed,
-  };
-  const costTotal = cost.labor + cost.energy + cost.gas + cost.overhead;
-
   // scale the shared time model to this company (util & output magnitude)
   const trend = plantDailySeries(now, 7).map((d) => ({
     day: d.day,
     util: Math.min(1, d.util * profile.utilFactor),
     output: Math.round(d.output * profile.histFactor),
   }));
-  const money = (v: number, digits = 0) =>
-    formatCost(v, settings.currency, locale, digits);
 
-  // downtime cost today, by reason
-  const dtPerHour = downtimeCostPerHour(settings.costRates);
-  const dtByReason = downtimeTodayByReason(snap.downtime, now).map((d) => ({
-    reasonId: d.reasonId,
-    minutes: d.minutes,
-    cost: (d.minutes / 60) * dtPerHour,
-  }));
-  const dtTotal = dtByReason.reduce((s, d) => s + d.cost, 0);
-  const dtMax = Math.max(1, ...dtByReason.map((d) => d.cost));
-
-  // revenue / profit / lost revenue from per-station billing rates
-  const eco = plantEconomics(snap, now);
-  const lostStations = eco.byStation.filter((x) => x.lost > 0);
-  const lostMax = Math.max(1, ...lostStations.map((x) => x.lost));
   const maintOverdue = settings.features.maintenance
     ? snap.maintenance.filter((m) => m.nextDueAt < snap.now).length
     : 0;
@@ -207,13 +153,8 @@ export default function ExecutivePage() {
 
       <ExecutiveTabs />
 
-      {/* live 0–1000 performance score — hero */}
-      <div className="mt-6">
-        <PerformanceScore />
-      </div>
-
       {/* hero: utilization + output + plan performance */}
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("utilToday")}</p>
           <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
@@ -252,168 +193,10 @@ export default function ExecutivePage() {
         </div>
       )}
 
-      {/* cost today (display currency) */}
-      <Card title={t("costTitle")} className="mt-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <p className="text-3xl font-semibold tracking-tight">{money(costTotal)}</p>
-          <p className="text-sm text-ink-2">
-            {t("costPerPart", { value: money(costTotal / Math.max(1, output), 2) })}
-          </p>
-        </div>
-        <div className="mt-3 flex h-3 gap-[2px] overflow-hidden rounded-full">
-          {(
-            [
-              ["labor", cost.labor, "var(--color-accent)"],
-              ["energy", cost.energy, "#1baf7a"],
-              ["gas", cost.gas, "#eda100"],
-              ["overhead", cost.overhead, "#898781"],
-            ] as const
-          ).map(([key, v, color]) => (
-            <div
-              key={key}
-              style={{ width: `${(v / costTotal) * 100}%`, backgroundColor: color }}
-            />
-          ))}
-        </div>
-        <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-4">
-          {(
-            [
-              ["costLabor", cost.labor, "var(--color-accent)"],
-              ["costEnergy", cost.energy, "#1baf7a"],
-              ["costGas", cost.gas, "#eda100"],
-              ["costOverhead", cost.overhead, "#898781"],
-            ] as const
-          ).map(([key, v, color]) => (
-            <li key={key} className="flex items-center gap-1.5">
-              <span className="size-2 rounded-full" style={{ backgroundColor: color }} />
-              <span className="text-ink-2">{t(key)}</span>
-              <span className="ml-auto font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>
-                {money(v)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </Card>
-
-      {/* revenue & profit today */}
-      <Card title={t("profitTitle")} subtitle={t("profitHint")} className="mt-4">
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <div>
-            <p className="text-xs font-medium text-muted">{t("revenueLabel")}</p>
-            <p className="mt-1 text-2xl font-semibold tracking-tight">{money(eco.revenue)}</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-muted">{t("costLabel")}</p>
-            <p className="mt-1 text-2xl font-semibold tracking-tight text-ink-2">
-              {money(eco.cost)}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-muted">{t("profitLabel")}</p>
-            <p
-              className={`mt-1 text-2xl font-semibold tracking-tight ${
-                eco.profit >= 0 ? "text-good-text" : "text-critical-text"
-              }`}
-            >
-              {money(eco.profit)}
-            </p>
-            <p className="mt-0.5 text-xs text-muted">
-              {t("marginLabel", { pct: Math.round(eco.marginPct) })}
-            </p>
-          </div>
-        </div>
-        {/* revenue vs cost bar */}
-        <div className="mt-4 flex h-3 gap-[2px] overflow-hidden rounded-full">
-          <div
-            className="bg-good"
-            style={{ width: `${(eco.cost / Math.max(1, eco.revenue)) * 100}%` }}
-            title={t("costLabel")}
-          />
-          <div className="flex-1 bg-good/40" title={t("profitLabel")} />
-        </div>
-      </Card>
-
-      {/* downtime cost today, by reason */}
-      <Card
-        title={t("downtimeCostTitle")}
-        subtitle={t("downtimeCostHint")}
-        className="mt-4"
-      >
-        {dtByReason.length === 0 ? (
-          <p className="text-sm text-good-text">{t("downtimeCostNone")}</p>
-        ) : (
-          <>
-            <p className="text-3xl font-semibold tracking-tight text-critical-text">
-              {money(dtTotal)}
-            </p>
-            <ul className="mt-4 space-y-3">
-              {dtByReason.map((d) => (
-                <li key={d.reasonId}>
-                  <div className="flex items-baseline justify-between text-sm">
-                    <span className="text-ink-2">{reasonName(d.reasonId)}</span>
-                    <span className="font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>
-                      {money(d.cost)}{" "}
-                      <span className="text-xs text-muted">· {d.minutes}′</span>
-                    </span>
-                  </div>
-                  <div className="mt-1 h-3 rounded-r-md bg-critical-soft">
-                    <div
-                      className="h-full rounded-r-md bg-critical"
-                      style={{ width: `${(d.cost / dtMax) * 100}%` }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </Card>
-
-      {/* lost revenue (opportunity cost of downtime) */}
-      <Card
-        title={t("lostRevenueTitle")}
-        subtitle={t("lostRevenueHint")}
-        className="mt-4"
-      >
-        {lostStations.length === 0 ? (
-          <p className="text-sm text-good-text">{t("lostRevenueNone")}</p>
-        ) : (
-          <>
-            <p className="text-3xl font-semibold tracking-tight text-warning-text">
-              {money(eco.lostRevenue)}
-            </p>
-            <ul className="mt-4 space-y-3">
-              {lostStations.map((s) => (
-                <li key={s.id}>
-                  <div className="flex items-baseline justify-between text-sm">
-                    <span className="text-ink-2">{s.name}</span>
-                    <span className="font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>
-                      {money(s.lost)}{" "}
-                      <span className="text-xs text-muted">· {s.downMin}′</span>
-                    </span>
-                  </div>
-                  <div className="mt-1 h-3 rounded-r-md bg-warning-soft">
-                    <div
-                      className="h-full rounded-r-md bg-warning"
-                      style={{ width: `${(s.lost / lostMax) * 100}%` }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </Card>
-
       {/* achievement badges */}
       <Card title={t("badgesTitle")} className="mt-4">
         <BadgesStrip />
       </Card>
-
-      {/* scrap / waste cost */}
-      <div className="mt-4">
-        <ScrapPanel withCost />
-      </div>
 
       {/* alerts */}
       <Card title={t("activeAlerts")} className="mt-4" padded={false}>
@@ -467,20 +250,6 @@ export default function ExecutivePage() {
           ]}
           unit="percent"
           yMax={100}
-          height={160}
-        />
-      </Card>
-
-      <Card title={t("costTrend")} className="mt-4">
-        <TrendChart
-          labels={trend.map((d) => dayLabel(d.day, locale))}
-          series={[
-            {
-              name: t("costTitle"),
-              color: "var(--color-accent)",
-              values: trend.map((d) => costOfDay(d.util, settings.costRates, stationCount, cuttingCount).total),
-            },
-          ]}
           height={160}
         />
       </Card>

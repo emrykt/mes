@@ -85,7 +85,7 @@
     "heroBadge": "AI-powered Smart Manufacturing",
     "heroTitle": "AI-driven efficiency",
     "heroHighlight": "you can measure",
-    "heroSubtitle": "Real-time intelligence for metal workshops. See the bottleneck, prevent the delay, use every hour of capacity — with an AI that works the floor alongside you.",
+    "heroSubtitle": "Real-time intelligence for sheet metal fabricators & metal job shops. See the bottleneck, prevent the delay, use every hour of capacity — with an AI that works the floor alongside you.",
     "heroLoop": "Data + AI + Workflow + Efficiency",
     "nodeProduction": "Production",
     "nodeQuality": "Quality",
@@ -793,7 +793,9 @@
       "allGood": "All clear on the floor.",
       "tabPulse": "Pulse",
       "tabPerformance": "Performance",
-      "tabAssistant": "Assistant"
+      "tabCosts": "Cost & Scrap",
+      "tabAssistant": "Assistant",
+      "costsSubtitle": "Cost, profit & scrap"
     },
     "upsell": {
       "badge": "AI Pro",

@@ -6,6 +6,7 @@ import { ArrowLeft, Factory } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import ExecutiveTabs from "@/components/mes/ExecutiveTabs";
+import PerformanceScore from "@/components/mes/PerformanceScore";
 import PerformanceComparison from "@/components/mes/PerformanceComparison";
 import PlanUpsell from "@/components/mes/PlanUpsell";
 import { useEntitlements } from "@/components/demo/DemoProvider";
@@ -42,7 +43,9 @@ export default function ExecutivePerformancePage() {
 
       <ExecutiveTabs />
 
-      <div className="mt-5">
+      <div className="mt-5 space-y-4">
+        {/* 0–1000 score (all plans) blended with the sector benchmark (AI Pro) */}
+        <PerformanceScore />
         {ent.advancedAnalytics ? (
           <PerformanceComparison />
         ) : (

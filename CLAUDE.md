@@ -8,6 +8,22 @@ API'si henüz bağlanmadı (sonraki faz).
 
 ## Demo modu mimarisi (MES tarafı)
 
+- **Çok-kiracılı (multi-tenant):** `src/lib/companies.ts` 4 bağımsız şirket
+  profili tanımlar (`baykal-sac` sac/TRY/AIPRO, `ege-talasli` talaşlı/EUR/
+  AIULTIMATE, `kuzey-fabrika` karışık/USD/AIPRO, `demir-atolye` küçük/TRY/
+  **BASIC**) — her biri `stationIds` (SIM_STATIONS master katalogun alt-kümesi),
+  `partKinds`, currency/plan/features/workingCalendar ve `scenario` (arıza/fire
+  oranı, tohum/refill hedefi) + `utilFactor`/`histFactor`. Depo `MultiStore`
+  (`{version:2, companies: Record<id, DemoStore>}`) — iç `DemoStore` şekli aynı,
+  yalnız `id` eklendi. `seedStore(now, profile)` profil-güdümlü; `seedMulti/
+  advanceMulti/snapshotFor/applyActionMulti` her şirket için mevcut per-plant
+  mantığı yeniden kullanır. **`SIM_STATIONS` master katalog kalır** (`.find()`
+  aramaları çalışır); `partsForCompany` parça havuzunu şirketin ops'una göre
+  filtreler. **Global seçici:** `/api/demo?company=<id>`, `DemoProvider` aktif
+  şirketi `mes_company` çerezinden okur (`company/companies/setCompany`),
+  `CompanySwitcher` her ekranda; asistan/insights `company` gönderir. Executive
+  kapasite/maliyet/trend `snap.stations` + faktörlerle per-şirket. Eski v1 blob
+  `reviveMulti` ile otomatik reseed olur.
 - `src/lib/sim.ts` — **deterministik 7/24 simülasyon**: gerçek duvar saatine
   bağlı seeded RNG; 10 istasyon (`SIM_STATIONS`, her biri `MachineKind`:
   cutting/punching/bending/welding/assembly/quality/packaging), 3 vardiya + operatör

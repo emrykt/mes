@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { BadgeCheck, Bell, Factory, Loader2, Wrench } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
 import BadgesStrip from "@/components/mes/BadgesStrip";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { minutesAgo } from "@/lib/mes-calc";
 import { SIM_STATIONS } from "@/lib/sim";
 import type { AndonType, StationState } from "@/lib/mes-types";
@@ -72,8 +73,9 @@ export default function TvBoardPage() {
           </Link>
           <div className="mr-auto">
             <h1 className="text-lg font-semibold tracking-tight md:text-2xl">{t("title")}</h1>
-            <p className="text-xs text-chrome-ink md:text-sm">{t("subtitle")}</p>
+            <p className="text-xs text-chrome-ink md:text-sm">{snap.companyName} · {t("subtitle")}</p>
           </div>
+          <CompanySwitcher dark />
         </div>
         <div className="grid grid-cols-3 gap-3 text-center md:ml-auto md:flex md:items-center md:gap-8 md:text-right">
           <div>

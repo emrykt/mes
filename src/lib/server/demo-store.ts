@@ -6,9 +6,17 @@ import type {
   DemoSnapshot,
   DemoStore,
   LiveStation,
+  MultiStore,
   SavedQuote,
   StockItem,
 } from "../demo-types";
+import {
+  COMPANY_LIST,
+  COMPANY_PROFILES,
+  DEFAULT_COMPANY_ID,
+  companyProfile,
+  type CompanyProfile,
+} from "../companies";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
   CUSTOMER_POOL,
@@ -19,6 +27,7 @@ import {
   DEFAULT_SCRAP_REASONS,
   SIM_STATIONS,
   operationBillingRate,
+  partsForCompany,
   pickScrapReason,
   buildOrder,
   estimateMinutes,
@@ -40,7 +49,7 @@ const STORE_FILE = path.join(process.cwd(), "data", "demo-store.json");
 const MAX_CATCHUP_MIN = 7 * 24 * 60; // fast-forward at most a week
 
 declare global {
-  var __demoStore: DemoStore | undefined;
+  var __demoMulti: MultiStore | undefined;
   var __demoLastPersist: number | undefined;
 }
 
@@ -75,19 +84,25 @@ function isBatchable(store: DemoStore, operationId: string): boolean {
 
 /* ------------------------------ seeding ---------------------------- */
 
-const SEED_WIP = 46; // work-in-progress spread across the whole routing
-const SEED_BACKLOG = 28; // fresh orders waiting to start — a visible queue
+/** The part templates a store's company can run (right kind + reachable ops). */
+function poolFor(store: DemoStore) {
+  const p = companyProfile(store.id);
+  return partsForCompany(p.stationIds, p.partKinds);
+}
 
 function seedActiveOrders(store: DemoStore, now: Date): void {
+  const { seedWip, seedBacklog } = companyProfile(store.id).scenario;
+  const pool = poolFor(store);
   // WIP: current step distributed *uniformly* across each order's routing, so
   // downstream operations (montaj/kalite/paket) get queued work too, not just
-  // the front of the line.
-  for (let i = 0; i < SEED_WIP; i++) {
+  // the front of the line. Seed keys are company-scoped for per-plant variety.
+  for (let i = 0; i < seedWip; i++) {
     const id = nextOrderId(store, now);
     const createdAt = new Date(now.getTime() - (2 + i) * 5 * 3600000);
-    const order = buildOrder(`seed:${id}`, id, createdAt, false);
+    const key = `seed:${store.id}:${id}`;
+    const order = buildOrder(key, id, createdAt, false, pool);
     const len = order.routing.length;
-    const doneSteps = Math.min(len - 1, Math.floor(rand(`seed:${id}:adv`) * len));
+    const doneSteps = Math.min(len - 1, Math.floor(rand(`${key}:adv`) * len));
     for (let s = 0; s < len; s++) {
       const step = order.routing[s];
       const est = step.estMinutes ?? 60;
@@ -95,10 +110,10 @@ function seedActiveOrders(store: DemoStore, now: Date): void {
         step.status = "done";
         step.qtyDone = order.qty;
         step.runMinutes = est;
-        step.actualMinutes = Math.round(est * (0.85 + rand(`seed:${id}:a${s}`) * 0.35));
+        step.actualMinutes = Math.round(est * (0.85 + rand(`${key}:a${s}`) * 0.35));
       } else if (s === doneSteps) {
         step.status = "queued";
-        const frac = rand(`seed:${id}:part`) * 0.4;
+        const frac = rand(`${key}:part`) * 0.4;
         step.runMinutes = Math.round(est * frac);
         step.qtyDone = Math.floor(order.qty * frac);
       }
@@ -107,24 +122,28 @@ function seedActiveOrders(store: DemoStore, now: Date): void {
   }
 
   // Backlog: brand-new orders, only step 1 queued — the waiting pile.
-  for (let i = 0; i < SEED_BACKLOG; i++) {
+  for (let i = 0; i < seedBacklog; i++) {
     const id = nextOrderId(store, now);
     const createdAt = new Date(now.getTime() - i * 3 * 3600000);
-    const order = buildOrder(`backlog:${id}`, id, createdAt, false);
+    const order = buildOrder(`backlog:${store.id}:${id}`, id, createdAt, false, pool);
     order.routing[0].status = "queued";
     store.orders.push(order);
   }
 }
 
-function seedStore(now: Date): DemoStore {
+function seedStore(now: Date, profile: CompanyProfile): DemoStore {
+  const stationDefs = profile.stationIds
+    .map((id) => SIM_STATIONS.find((d) => d.id === id))
+    .filter((d): d is (typeof SIM_STATIONS)[number] => !!d);
   const store: DemoStore = {
     version: 1,
+    id: profile.id,
     createdAt: now.toISOString(),
     lastTickAt: now.toISOString(),
     currentDay: isoDay(now),
     orderSeq: {},
     orders: [],
-    stations: SIM_STATIONS.map((def) => ({
+    stations: stationDefs.map((def) => ({
       id: def.id,
       state: "idle",
       operator: operatorFor(def.id, shiftForHour(now.getUTCHours()).id),
@@ -135,15 +154,15 @@ function seedStore(now: Date): DemoStore {
     })),
     andon: [],
     downtime: [],
-    maintenance: seedMaintenance(now),
+    maintenance: seedMaintenance(now, profile.stationIds),
     settings: {
-      plan: "AIPRO",
-      currency: "USD",
+      plan: profile.plan,
+      currency: profile.currency,
       costRates: { laborPerHour: 14, energyPerHour: 9, gasPerHour: 6, overheadPerDay: 420 },
       billingRates: { ...DEFAULT_BILLING_RATES },
-      features: { maintenance: true, barcode: true, quoting: true, stock: true },
+      features: { ...profile.features },
       maintenanceOwnDepartment: true,
-      workingCalendar: { shifts: 3, restDays: [] },
+      workingCalendar: { ...profile.workingCalendar },
       operations: [...DEFAULT_OPERATIONS],
       downtimeReasons: [...DEFAULT_DOWNTIME_REASONS],
       scrapReasons: [...DEFAULT_SCRAP_REASONS],
@@ -166,6 +185,15 @@ function seedStore(now: Date): DemoStore {
   // start two minutes back so the escalation engine runs on the first GET
   store.lastTickAt = new Date(now.getTime() - 2 * 60000).toISOString();
   return store;
+}
+
+/** Seed the whole multi-tenant store: one independent plant per company. */
+function seedMulti(now: Date): MultiStore {
+  const companies: Record<string, DemoStore> = {};
+  for (const profile of COMPANY_PROFILES) {
+    companies[profile.id] = seedStore(now, profile);
+  }
+  return { version: 2, createdAt: now.toISOString(), companies };
 }
 
 /**
@@ -402,9 +430,11 @@ function seedRecentEvents(store: DemoStore, now: Date): void {
   }
 }
 
-/** Recurring maintenance plans; lastDone seeded so some are already due. */
-function seedMaintenance(now: Date) {
-  const defs: [string, string, number][] = [
+/** Recurring maintenance plans; lastDone seeded so some are already due.
+ *  Only tasks for stations the company actually operates are kept. */
+function seedMaintenance(now: Date, stationIds: string[]) {
+  const have = new Set(stationIds);
+  const allDefs: [string, string, number][] = [
     ["st-lazer-1", "Lens temizliği", 7],
     ["st-lazer-2", "Lens temizliği", 7],
     ["st-lazer-1", "Nozül kontrolü", 30],
@@ -415,7 +445,15 @@ function seedMaintenance(now: Date) {
     ["st-kaynak-1", "Torç bakımı", 30],
     ["st-montaj-1", "Havalı alet bakımı", 60],
     ["st-paket-1", "Çemberleme makinesi bakımı", 90],
+    ["st-testere-1", "Şerit değişimi", 14],
+    ["st-torna-1", "Ayna / punta kontrolü", 30],
+    ["st-torna-2", "Kızak yağlama", 30],
+    ["st-freze-1", "Mil rulman kontrolü", 60],
+    ["st-freze-2", "Soğutma sıvısı değişimi", 45],
+    ["st-matkap-1", "Mandren bakımı", 90],
+    ["st-kalite-1", "Ölçü cihazı kalibrasyonu", 90],
   ];
+  const defs = allDefs.filter(([stationId]) => have.has(stationId));
   return defs.map(([stationId, title, intervalDays], i) => {
     const frac = 0.3 + rand(`maint:${stationId}:${i}`) * 0.95; // some overdue
     const lastDoneAt = new Date(now.getTime() - intervalDays * frac * 86400000);
@@ -432,6 +470,7 @@ function seedMaintenance(now: Date) {
 
 /** Bring an older persisted store up to the current shape. */
 function migrate(store: DemoStore, now: Date): void {
+  store.id ??= DEFAULT_COMPANY_ID;
   const s = store as DemoStore & { settings: { rates?: unknown } };
   delete s.settings.rates; // FX conversion removed — currency is display-only
   store.settings.plan ??= "AIPRO";
@@ -449,13 +488,17 @@ function migrate(store: DemoStore, now: Date): void {
   store.settings.features.quoting ??= true;
   store.settings.features.stock ??= true;
   store.settings.billingRates ??= { ...DEFAULT_BILLING_RATES };
-  // backfill any newly added station
+  // backfill billing rates for the whole catalog (harmless extras)
   for (const def of SIM_STATIONS)
     store.settings.billingRates[def.id] ??= DEFAULT_BILLING_RATES[def.id] ?? 40;
-  store.maintenance ??= seedMaintenance(now);
-  // stations added later (e.g. Montaj Hattı) join the live store on load
-  for (const def of SIM_STATIONS) {
-    if (!store.stations.some((st) => st.id === def.id)) {
+  const profile = companyProfile(store.id);
+  store.maintenance ??= seedMaintenance(now, profile.stationIds);
+  // reconcile live stations to exactly this company's station set
+  const wanted = new Set(profile.stationIds);
+  store.stations = store.stations.filter((st) => wanted.has(st.id));
+  for (const id of profile.stationIds) {
+    const def = SIM_STATIONS.find((d) => d.id === id);
+    if (def && !store.stations.some((st) => st.id === id)) {
       store.stations.push({
         id: def.id,
         state: "idle",
@@ -480,48 +523,102 @@ function plantTodayShare(stationId: string, now: Date): number {
 
 /* --------------------------- persistence --------------------------- */
 
-export async function loadStore(now: Date): Promise<DemoStore> {
+/** Parse a persisted blob into a valid MultiStore, migrating/reseeding as needed. */
+function reviveMulti(raw: string, now: Date): MultiStore {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return seedMulti(now);
+  }
+  const multi = parsed as Partial<MultiStore>;
+  if (multi.version !== 2 || !multi.companies || typeof multi.companies !== "object") {
+    // old single-store (v1) or unknown shape → fresh multi-tenant seed
+    return seedMulti(now);
+  }
+  // ensure every configured company exists + is migrated to current shape
+  for (const profile of COMPANY_PROFILES) {
+    const c = multi.companies[profile.id];
+    if (!c) {
+      multi.companies[profile.id] = seedStore(now, profile);
+    } else {
+      c.id ??= profile.id;
+      migrate(c, now);
+    }
+  }
+  return multi as MultiStore;
+}
+
+export async function loadStore(now: Date): Promise<MultiStore> {
   // Cloud: the Redis blob is the single source of truth. Read fresh every
   // request (no global cache) so instances never serve stale state.
   if (useRedis) {
     const raw = await kvRead();
-    if (raw) {
-      const store = JSON.parse(raw) as DemoStore;
-      migrate(store, now);
-      return store;
-    }
-    const seeded = seedStore(now);
+    if (raw) return reviveMulti(raw, now);
+    const seeded = seedMulti(now);
     await kvWrite(JSON.stringify(seeded));
     return seeded;
   }
   // Local dev: file-backed with an in-memory cache (survives HMR).
-  if (globalThis.__demoStore) {
-    migrate(globalThis.__demoStore, now); // idempotent — covers HMR'd old shapes
-    return globalThis.__demoStore;
+  if (globalThis.__demoMulti) {
+    for (const c of Object.values(globalThis.__demoMulti.companies)) migrate(c, now);
+    return globalThis.__demoMulti;
   }
   try {
     const raw = fs.readFileSync(STORE_FILE, "utf8");
-    globalThis.__demoStore = JSON.parse(raw) as DemoStore;
-    migrate(globalThis.__demoStore, now);
+    globalThis.__demoMulti = reviveMulti(raw, now);
   } catch {
-    globalThis.__demoStore = seedStore(now);
-    await persist(globalThis.__demoStore, true);
+    globalThis.__demoMulti = seedMulti(now);
+    await persist(globalThis.__demoMulti, true);
   }
-  return globalThis.__demoStore;
+  return globalThis.__demoMulti;
 }
 
-export async function persist(store: DemoStore, force = false): Promise<void> {
+export async function persist(multi: MultiStore, force = false): Promise<void> {
   if (useRedis) {
-    await kvWrite(JSON.stringify(store));
+    await kvWrite(JSON.stringify(multi));
     return;
   }
+  globalThis.__demoMulti = multi;
   const last = globalThis.__demoLastPersist ?? 0;
   if (!force && Date.now() - last < 10_000) return;
   globalThis.__demoLastPersist = Date.now();
   fs.mkdirSync(path.dirname(STORE_FILE), { recursive: true });
   const tmp = `${STORE_FILE}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(store), "utf8");
+  fs.writeFileSync(tmp, JSON.stringify(multi), "utf8");
   fs.renameSync(tmp, STORE_FILE); // atomic-ish: no half-written reads
+}
+
+/** Advance every company; true if any company ticked. */
+export function advanceMulti(multi: MultiStore, now: Date): boolean {
+  let changed = false;
+  for (const c of Object.values(multi.companies)) {
+    if (advance(c, now)) changed = true;
+  }
+  return changed;
+}
+
+/** Snapshot one company by id (defaults to the first configured company). */
+export function snapshotFor(multi: MultiStore, companyId: string, now: Date): DemoSnapshot {
+  const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
+  return snapshot(store, now);
+}
+
+/** Apply an action to one company. resetDemo reseeds the whole multi store. */
+export function applyActionMulti(
+  multi: MultiStore,
+  companyId: string,
+  action: DemoAction,
+  now: Date,
+): void {
+  if (action.type === "resetDemo") {
+    const fresh = seedMulti(now);
+    multi.companies = fresh.companies;
+    multi.createdAt = fresh.createdAt;
+    return;
+  }
+  const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
+  if (store) applyAction(store, action, now);
 }
 
 /* ------------------------------ ticking ---------------------------- */
@@ -545,6 +642,7 @@ export function advance(store: DemoStore, now: Date): boolean {
 }
 
 function tickMinute(store: DemoStore, now: Date): void {
+  const scn = companyProfile(store.id).scenario;
   // day rollover: reset today counters, prune old records
   const day = isoDay(now);
   if (day !== store.currentDay) {
@@ -616,7 +714,7 @@ function tickMinute(store: DemoStore, now: Date): void {
         st.todayOutput += dQty;
         if (
           dQty > 0 &&
-          rand(`${st.id}:${epochMin}:scrap:${orderId}`) < (def.kind === "quality" ? 0.03 : 0.013)
+          rand(`${st.id}:${epochMin}:scrap:${orderId}`) < (def.kind === "quality" ? scn.scrapRate * 2.3 : scn.scrapRate)
         ) {
           step.scrapQty = (step.scrapQty ?? 0) + 1;
           st.todayScrap += 1;
@@ -627,7 +725,7 @@ function tickMinute(store: DemoStore, now: Date): void {
       if (st.currentOrderIds.length === 0) st.state = "idle";
 
       // occasional automatic downtime (breakdown, material wait…)
-      if (rand(`${st.id}:${epochMin}:dt`) < 0.0035) {
+      if (rand(`${st.id}:${epochMin}:dt`) < scn.breakdownRate) {
         const reasonId =
           rand(`${st.id}:${epochMin}:dtr`) < 0.4 ? "dt-ariza" : rand(`${st.id}:${epochMin}:dtr2`) < 0.5 ? "dt-malzeme" : "dt-setup";
         startDowntimeInternal(store, st, reasonId, now, 8 + Math.round(rand(`${st.id}:${epochMin}:dtl`) * 22));
@@ -653,14 +751,15 @@ function tickMinute(store: DemoStore, now: Date): void {
   // evaluate configurable escalation rules against the live state
   evaluateAlerts(store, now);
 
-  // keep a deep backlog: top the order book up toward ~56 open orders so the
-  // plant always has waiting work and every station stays busy.
+  // keep a deep backlog: top the order book up toward the company's target so
+  // the plant always has waiting work and every station stays busy.
   if (epochMin % 6 === 0) {
+    const pool = poolFor(store);
     let active = store.orders.filter((o) => !orderDone(o)).length;
     let added = 0;
-    while (active < 56 && added < 3) {
+    while (active < scn.refillTarget && added < 3) {
       const id = nextOrderId(store, now);
-      const order = buildOrder(`auto:${id}`, id, now, false);
+      const order = buildOrder(`auto:${store.id}:${id}`, id, now, false, pool);
       order.routing[0].status = "queued";
       assignOrderMaterial(store, order);
       store.orders.push(order);
@@ -1129,24 +1228,23 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
       });
       break;
     }
-    case "resetDemo": {
-      // Rebuild in place so the caller's reference (and the Redis/file write
-      // that follows in the route) points at the fresh state.
-      const fresh = seedStore(now);
-      const bag = store as unknown as Record<string, unknown>;
-      for (const k of Object.keys(bag)) delete bag[k];
-      Object.assign(store, fresh);
-      globalThis.__demoStore = store;
+    case "resetDemo":
+      // Handled at the multi-store level (applyActionMulti reseeds all
+      // companies); nothing to do per-company here.
       break;
-    }
   }
 }
 
 /* ------------------------------ snapshot --------------------------- */
 
 export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
+  const profile = companyProfile(store.id);
   return {
     now: now.toISOString(),
+    companyId: profile.id,
+    companyName: profile.name,
+    sector: profile.sector,
+    companies: COMPANY_LIST,
     stations: store.stations,
     orders: store.orders,
     andon: [...store.andon].sort((a, b) => b.at.localeCompare(a.at)).slice(0, 30),
@@ -1161,7 +1259,7 @@ export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
     today: {
       output: store.stations.reduce((s, st) => s + st.todayOutput, 0),
       scrap: store.stations.reduce((s, st) => s + st.todayScrap, 0),
-      util: plantToday(now).util,
+      util: Math.max(0, Math.min(1, plantToday(now).util * profile.utilFactor)),
     },
   };
 }

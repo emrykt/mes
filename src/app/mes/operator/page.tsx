@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { SIM_STATIONS, type MachineKind } from "@/lib/sim";
 import type { MesOrder } from "@/lib/mes-types";
@@ -146,9 +147,10 @@ export default function OperatorKioskPage() {
           <BadgeCheck className="size-3.5" />
           {t("licenseOk")}
         </span>
+        <CompanySwitcher dark />
         <LanguageSwitcher dark />
         <label className="flex items-center gap-2 text-xs text-chrome-ink">
-          <span className="hidden sm:inline">{t("stationSelect")}</span>
+          <span className="hidden lg:inline">{t("stationSelect")}</span>
           <select
             value={stationId}
             onChange={(e) => setStationId(e.target.value)}

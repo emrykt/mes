@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import {
-  advance,
+  advanceMulti,
   loadStore,
   persist,
-  snapshot,
+  snapshotFor,
 } from "@/lib/server/demo-store";
+import { DEFAULT_COMPANY_ID } from "@/lib/companies";
 import {
   downtimeTodayByReason,
   minutesAgo,
@@ -30,12 +31,12 @@ const REFUSAL: Record<string, string> = {
 };
 
 /** Compact, model-friendly snapshot of the live plant. */
-async function buildContext(): Promise<string> {
+async function buildContext(company: string): Promise<string> {
   const now = new Date();
-  const store = await loadStore(now);
-  const changed = advance(store, now);
-  if (changed) await persist(store);
-  const snap = snapshot(store, now);
+  const multi = await loadStore(now);
+  const changed = advanceMulti(multi, now);
+  if (changed) await persist(multi);
+  const snap = snapshotFor(multi, company, now);
 
   const reason = (id: string) =>
     snap.settings.downtimeReasons.find((r) => r.id === id)?.name ?? id;
@@ -149,10 +150,11 @@ export async function POST(req: Request) {
   // No credentials → tell the client to fall back to the local engine.
   if (!hasKey) return NextResponse.json({ mode: "local" }, { status: 503 });
 
-  const { question, locale, scope } = (await req.json()) as {
+  const { question, locale, scope, company } = (await req.json()) as {
     question: string;
     locale?: string;
     scope?: "full" | "ops";
+    company?: string;
   };
   const lang = LANG[locale ?? "en"] ?? "English";
   const refusal = REFUSAL[locale ?? "en"] ?? REFUSAL.en;
@@ -168,7 +170,7 @@ Behave like a proactive shop-floor advisor: lead with the answer, then — when 
 Rules: reply in ${lang}. Be concise (1–4 sentences; a short bulleted list is fine for suggestions). Use the numbers from the data; never invent figures. Costs are already in the data's stated currency — show that currency and do not convert. Do not mention that you are reading JSON or that this is a demo.${opsScope}
 
 LIVE PLANT DATA (JSON):
-${await buildContext()}`;
+${await buildContext(company ?? DEFAULT_COMPANY_ID)}`;
 
   try {
     const client = new Anthropic();

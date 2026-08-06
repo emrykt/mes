@@ -577,28 +577,51 @@ export const CUSTOMER_POOL = [
   "Kuzey Asansör", "Ege Tarım Makinaları", "Sistem Raf", "Aydın Panel",
 ] as const;
 
-const PART_POOL: { part: string; ops: string[]; qty: [number, number] }[] = [
-  { part: "Davlumbaz gövdesi DV-450", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 200] },
-  { part: "Pano kapağı PK-1200", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [40, 120] },
-  { part: "Raf ayağı profili RA-90", ops: ["op-lazer", "op-punch", "op-abkant", "op-paket"], qty: [200, 600] },
-  { part: "Menfez çerçevesi MF-30", ops: ["op-plazma", "op-abkant", "op-kaynak", "op-paket"], qty: [100, 350] },
-  { part: "Cihaz şasesi CS-77", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-kalite"], qty: [20, 80] },
-  { part: "Çekmece rayı braketi", ops: ["op-punch", "op-abkant", "op-paket"], qty: [300, 900] },
-  { part: "Kabin yan paneli KP-2", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [50, 160] },
-  { part: "Trafo koruma kafesi", ops: ["op-plazma", "op-kaynak", "op-kalite"], qty: [8, 30] },
-  { part: "Konveyör sac yatağı", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-paket"], qty: [30, 110] },
-  { part: "Elektrik pano gövdesi EP-60", ops: ["op-lazer", "op-abkant", "op-montaj", "op-kalite", "op-paket"], qty: [25, 90] },
-  { part: "Filtre kasası FK-8", ops: ["op-punch", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 220] },
+export type PartKind = "sheet" | "machined";
+export interface PartTemplate { part: string; ops: string[]; qty: [number, number]; kind: PartKind; }
+
+const PART_POOL: PartTemplate[] = [
+  { part: "Davlumbaz gövdesi DV-450", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 200], kind: "sheet" },
+  { part: "Pano kapağı PK-1200", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [40, 120], kind: "sheet" },
+  { part: "Raf ayağı profili RA-90", ops: ["op-lazer", "op-punch", "op-abkant", "op-paket"], qty: [200, 600], kind: "sheet" },
+  { part: "Menfez çerçevesi MF-30", ops: ["op-plazma", "op-abkant", "op-kaynak", "op-paket"], qty: [100, 350], kind: "sheet" },
+  { part: "Cihaz şasesi CS-77", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-kalite"], qty: [20, 80], kind: "sheet" },
+  { part: "Çekmece rayı braketi", ops: ["op-punch", "op-abkant", "op-paket"], qty: [300, 900], kind: "sheet" },
+  { part: "Kabin yan paneli KP-2", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [50, 160], kind: "sheet" },
+  { part: "Trafo koruma kafesi", ops: ["op-plazma", "op-kaynak", "op-kalite"], qty: [8, 30], kind: "sheet" },
+  { part: "Konveyör sac yatağı", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-paket"], qty: [30, 110], kind: "sheet" },
+  { part: "Elektrik pano gövdesi EP-60", ops: ["op-lazer", "op-abkant", "op-montaj", "op-kalite", "op-paket"], qty: [25, 90], kind: "sheet" },
+  { part: "Filtre kasası FK-8", ops: ["op-punch", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 220], kind: "sheet" },
   // machined (turning/milling) parts — bar/billet stock
-  { part: "Mil / şaft Ø40 MS-40", ops: ["op-testere", "op-torna", "op-matkap", "op-kalite", "op-paket"], qty: [20, 120] },
-  { part: "Flanş bağlantı FL-125", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [30, 150] },
-  { part: "Redüktör gövdesi RG-8", ops: ["op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [10, 60] },
-  { part: "Burç / kovan Ø25", ops: ["op-testere", "op-torna", "op-kalite"], qty: [80, 400] },
-  { part: "Kaplin yarım KP-60", ops: ["op-testere", "op-torna", "op-freze", "op-kalite"], qty: [40, 180] },
-  { part: "Dişli göbeği DG-32", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [15, 90] },
-  { part: "Rulman yatağı RY-6205", ops: ["op-torna", "op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [25, 130] },
-  { part: "Hidrolik blok HB-14", ops: ["op-freze", "op-matkap", "op-kalite"], qty: [8, 45] },
+  { part: "Mil / şaft Ø40 MS-40", ops: ["op-testere", "op-torna", "op-matkap", "op-kalite", "op-paket"], qty: [20, 120], kind: "machined" },
+  { part: "Flanş bağlantı FL-125", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [30, 150], kind: "machined" },
+  { part: "Redüktör gövdesi RG-8", ops: ["op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [10, 60], kind: "machined" },
+  { part: "Burç / kovan Ø25", ops: ["op-testere", "op-torna", "op-kalite"], qty: [80, 400], kind: "machined" },
+  { part: "Kaplin yarım KP-60", ops: ["op-testere", "op-torna", "op-freze", "op-kalite"], qty: [40, 180], kind: "machined" },
+  { part: "Dişli göbeği DG-32", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [15, 90], kind: "machined" },
+  { part: "Rulman yatağı RY-6205", ops: ["op-torna", "op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [25, 130], kind: "machined" },
+  { part: "Hidrolik blok HB-14", ops: ["op-freze", "op-matkap", "op-kalite"], qty: [8, 45], kind: "machined" },
 ];
+
+/** Operation ids a set of stations can perform (via the master catalog). */
+export function companyOperationIds(stationIds: string[]): Set<string> {
+  const ids = new Set(stationIds);
+  return new Set(
+    SIM_STATIONS.filter((s) => ids.has(s.id)).map((s) => s.operationId),
+  );
+}
+
+/**
+ * Part templates a company can actually run: right kind AND every routing step
+ * maps to a station the company operates (so no order can get stuck).
+ */
+export function partsForCompany(stationIds: string[], kinds: PartKind[]): PartTemplate[] {
+  const ops = companyOperationIds(stationIds);
+  const kindSet = new Set(kinds);
+  return PART_POOL.filter(
+    (t) => kindSet.has(t.kind) && t.ops.every((op) => ops.has(op)),
+  );
+}
 
 /**
  * Estimated minutes for a step. **Demo-scale on purpose:** short cycles
@@ -630,8 +653,9 @@ export function buildOrder(
   id: string,
   createdAt: Date,
   done: boolean,
+  pool: PartTemplate[] = PART_POOL,
 ): MesOrder {
-  const tpl = pick(`${key}:tpl`, PART_POOL);
+  const tpl = pick(`${key}:tpl`, pool.length ? pool : PART_POOL);
   const qty = Math.round(tpl.qty[0] + rand(`${key}:q`) * (tpl.qty[1] - tpl.qty[0]));
   const leadDays = 5 + Math.round(rand(`${key}:lead`) * 9);
   const routing: RoutingStep[] = tpl.ops.map((opId, i) => {

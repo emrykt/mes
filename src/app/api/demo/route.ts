@@ -1,29 +1,36 @@
 import { NextResponse } from "next/server";
 import type { DemoAction } from "@/lib/demo-types";
+import { DEFAULT_COMPANY_ID } from "@/lib/companies";
 import {
-  advance,
-  applyAction,
+  advanceMulti,
+  applyActionMulti,
   loadStore,
   persist,
-  snapshot,
+  snapshotFor,
 } from "@/lib/server/demo-store";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+function companyOf(url: string): string {
+  return new URL(url).searchParams.get("company") || DEFAULT_COMPANY_ID;
+}
+
+export async function GET(req: Request) {
   const now = new Date();
-  const store = await loadStore(now);
-  const changed = advance(store, now);
-  if (changed) await persist(store);
-  return NextResponse.json(snapshot(store, now));
+  const company = companyOf(req.url);
+  const multi = await loadStore(now);
+  const changed = advanceMulti(multi, now);
+  if (changed) await persist(multi);
+  return NextResponse.json(snapshotFor(multi, company, now));
 }
 
 export async function POST(req: Request) {
   const now = new Date();
-  const store = await loadStore(now);
-  advance(store, now);
+  const company = companyOf(req.url);
+  const multi = await loadStore(now);
+  advanceMulti(multi, now);
   const action = (await req.json()) as DemoAction;
-  applyAction(store, action, now); // resetDemo rebuilds `store` in place
-  await persist(store, true);
-  return NextResponse.json(snapshot(store, now));
+  applyActionMulti(multi, company, action, now);
+  await persist(multi, true);
+  return NextResponse.json(snapshotFor(multi, company, now));
 }

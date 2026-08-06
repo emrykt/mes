@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { advance, loadStore, persist, snapshot } from "@/lib/server/demo-store";
+import { advanceMulti, loadStore, persist, snapshotFor } from "@/lib/server/demo-store";
+import { DEFAULT_COMPANY_ID } from "@/lib/companies";
 import {
   capacityOutlook,
   lateOrders,
@@ -14,12 +15,12 @@ export const dynamic = "force-dynamic";
 const LANG: Record<string, string> = { en: "English", tr: "Turkish", de: "German" };
 
 /** Compact plant signal set for the suggestion model. */
-async function buildContext() {
+async function buildContext(company: string) {
   const now = new Date();
-  const store = await loadStore(now);
-  const changed = advance(store, now);
-  if (changed) await persist(store);
-  const snap = snapshot(store, now);
+  const multi = await loadStore(now);
+  const changed = advanceMulti(multi, now);
+  if (changed) await persist(multi);
+  const snap = snapshotFor(multi, company, now);
   const reason = (id: string) =>
     snap.settings.downtimeReasons.find((r) => r.id === id)?.name ?? id;
 
@@ -48,7 +49,10 @@ export async function POST(req: Request) {
     !!process.env.ANTHROPIC_API_KEY || !!process.env.ANTHROPIC_AUTH_TOKEN;
   if (!hasKey) return NextResponse.json({ mode: "local" }, { status: 503 });
 
-  const { locale } = (await req.json().catch(() => ({}))) as { locale?: string };
+  const { locale, company } = (await req.json().catch(() => ({}))) as {
+    locale?: string;
+    company?: string;
+  };
   const lang = LANG[locale ?? "en"] ?? "English";
 
   const system = `You are the KioskMES Smart Manufacturing analyst for a sheet-metal plant.
@@ -59,7 +63,7 @@ Frame value as recovered capacity / reduced loss — NEVER compare to the softwa
 Reply in ${lang}. Return ONLY a JSON array of exactly 3 objects: [{"text": "...", "recommendation": "..."}]. No prose, no code fences.
 
 LIVE PLANT SIGNALS (JSON):
-${JSON.stringify(await buildContext())}`;
+${JSON.stringify(await buildContext(company ?? DEFAULT_COMPANY_ID))}`;
 
   try {
     const client = new Anthropic();

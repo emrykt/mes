@@ -237,6 +237,8 @@ export interface LiveDowntime {
 
 export interface DemoStore {
   version: 1;
+  /** Company (tenant) id this plant state belongs to — see lib/companies.ts. */
+  id: string;
   createdAt: string;
   lastTickAt: string;
   /** ISO day the today-counters belong to (daily reset). */
@@ -257,9 +259,28 @@ export interface DemoStore {
   settings: DemoSettings;
 }
 
+/** Top-level multi-tenant store: several independent company plants. */
+export interface MultiStore {
+  version: 2;
+  createdAt: string;
+  companies: Record<string, DemoStore>;
+}
+
+/** A company entry for the switcher. */
+export interface CompanyRef {
+  id: string;
+  name: string;
+  sector: string;
+}
+
 /** What the client receives from GET /api/demo. */
 export interface DemoSnapshot {
   now: string;
+  /** Which company this snapshot is for + the full list, for the switcher. */
+  companyId: string;
+  companyName: string;
+  sector: string;
+  companies: CompanyRef[];
   stations: LiveStation[];
   orders: MesOrder[];
   andon: LiveAndonCall[];

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import TrendChart from "@/components/charts/TrendChart";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo, useEntitlements } from "@/components/demo/DemoProvider";
 import ExecutiveTabs from "@/components/mes/ExecutiveTabs";
 import InsightsPanel from "@/components/mes/InsightsPanel";
@@ -32,27 +33,20 @@ import {
 } from "@/lib/mes-calc";
 import { plantEconomics } from "@/lib/revenue";
 import { SIM_STATIONS, plantDailySeries } from "@/lib/sim";
+import { companyProfile } from "@/lib/companies";
 import type { DemoSettings } from "@/lib/demo-types";
-
-/** Daily production target ≈ plant nominal capacity × 65%. */
-const PLANT_TARGET = Math.round(
-  SIM_STATIONS.reduce((s, st) => s + st.rate, 0) * 24 * 0.65,
-);
 
 const CUTTING = new Set(["op-lazer", "op-plazma", "op-oksijen"]);
 
-/** Rough plant cost (USD) for a day at the given average utilization. */
-function costOfDay(util: number, cr: DemoSettings["costRates"]): {
-  labor: number;
-  energy: number;
-  gas: number;
-  overhead: number;
-  total: number;
-} {
-  const stations = SIM_STATIONS.length;
-  const cuttingCount = SIM_STATIONS.filter((s) => CUTTING.has(s.operationId)).length;
-  const labor = stations * 24 * cr.laborPerHour;
-  const energy = stations * 24 * util * cr.energyPerHour;
+/** Rough plant cost for a day at the given utilization, for this plant's size. */
+function costOfDay(
+  util: number,
+  cr: DemoSettings["costRates"],
+  stationCount: number,
+  cuttingCount: number,
+): { labor: number; energy: number; gas: number; overhead: number; total: number } {
+  const labor = stationCount * 24 * cr.laborPerHour;
+  const energy = stationCount * 24 * util * cr.energyPerHour;
   const gas = cuttingCount * 24 * util * cr.gasPerHour;
   const overhead = cr.overheadPerDay;
   return { labor, energy, gas, overhead, total: labor + energy + gas + overhead };
@@ -86,6 +80,21 @@ export default function ExecutivePage() {
   const util = snap.today.util;
   const output = snap.today.output;
 
+  // per-company sizing: capacity, cost and trend scale with this plant, not all 16
+  const profile = companyProfile(snap.companyId);
+  const stationCount = snap.stations.length;
+  const cuttingCount = snap.stations.filter((st) =>
+    CUTTING.has(SIM_STATIONS.find((d) => d.id === st.id)?.operationId ?? ""),
+  ).length;
+  const plantTarget = Math.round(
+    snap.stations.reduce(
+      (s, st) => s + (SIM_STATIONS.find((d) => d.id === st.id)?.rate ?? 0),
+      0,
+    ) *
+      24 *
+      0.65,
+  );
+
   const downStations = snap.stations.filter((s) => s.state === "down");
   const openAndon = snap.andon.filter((a) => a.open);
   const rushAtRisk = snap.orders.filter(
@@ -100,7 +109,7 @@ export default function ExecutivePage() {
 
   // today's cost, prorated by elapsed hours
   const elapsed = (now.getUTCHours() + 1) / 24;
-  const dayCost = costOfDay(util, settings.costRates);
+  const dayCost = costOfDay(util, settings.costRates, stationCount, cuttingCount);
   const cost = {
     labor: dayCost.labor * elapsed,
     energy: dayCost.energy * elapsed,
@@ -109,7 +118,12 @@ export default function ExecutivePage() {
   };
   const costTotal = cost.labor + cost.energy + cost.gas + cost.overhead;
 
-  const trend = plantDailySeries(now, 7);
+  // scale the shared time model to this company (util & output magnitude)
+  const trend = plantDailySeries(now, 7).map((d) => ({
+    day: d.day,
+    util: Math.min(1, d.util * profile.utilFactor),
+    output: Math.round(d.output * profile.histFactor),
+  }));
   const money = (v: number, digits = 0) =>
     formatCost(v, settings.currency, locale, digits);
 
@@ -185,8 +199,9 @@ export default function ExecutivePage() {
         </Link>
         <div className="mr-auto">
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
-          <p className="text-xs text-muted">{t("subtitle", { date: dateLabel })}</p>
+          <p className="text-xs text-muted">{snap.companyName} · {t("subtitle", { date: dateLabel })}</p>
         </div>
+        <CompanySwitcher />
         <LanguageSwitcher />
       </header>
 
@@ -212,12 +227,12 @@ export default function ExecutivePage() {
             {output.toLocaleString(locale)}
           </p>
           <p className="mt-1 text-xs text-muted">
-            {t("outputOf", { target: PLANT_TARGET.toLocaleString(locale) })}
+            {t("outputOf", { target: plantTarget.toLocaleString(locale) })}
           </p>
           <div className="mx-auto mt-2 h-1.5 w-full max-w-40 overflow-hidden rounded-full bg-accent-wash">
             <div
               className="h-full rounded-full bg-accent"
-              style={{ width: `${Math.min(100, (output / PLANT_TARGET) * 100)}%` }}
+              style={{ width: `${Math.min(100, (output / Math.max(1, plantTarget)) * 100)}%` }}
             />
           </div>
         </Card>
@@ -463,7 +478,7 @@ export default function ExecutivePage() {
             {
               name: t("costTitle"),
               color: "var(--color-accent)",
-              values: trend.map((d) => costOfDay(d.util, settings.costRates).total),
+              values: trend.map((d) => costOfDay(d.util, settings.costRates, stationCount, cuttingCount).total),
             },
           ]}
           height={160}
@@ -482,7 +497,7 @@ export default function ExecutivePage() {
             {
               name: t("targetSeries"),
               color: "#898781",
-              values: trend.map(() => PLANT_TARGET),
+              values: trend.map(() => plantTarget),
             },
           ]}
           height={160}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Factory } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import ExecutiveTabs from "@/components/mes/ExecutiveTabs";
 import PerformanceComparison from "@/components/mes/PerformanceComparison";
 import PlanUpsell from "@/components/mes/PlanUpsell";
@@ -35,6 +36,7 @@ export default function ExecutivePerformancePage() {
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-xs text-muted">{t("subtitle")}</p>
         </div>
+        <CompanySwitcher />
         <LanguageSwitcher />
       </header>
 

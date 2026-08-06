@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { CalendarRange, ClipboardList, Factory, FileText } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 
 const NAV = [
@@ -37,7 +38,8 @@ export default function MesSalesShell({ children }: { children: React.ReactNode 
             <span className="text-sm font-semibold">{tc("appName")}</span>
           </Link>
           <span className="hidden text-sm font-medium text-ink-2 sm:inline">{t("shell")}</span>
-          <div className="ml-auto md:order-last">
+          <div className="ml-auto flex items-center gap-2 md:order-last">
+            <CompanySwitcher />
             <LanguageSwitcher />
           </div>
           <nav className="hidden gap-1 md:flex">

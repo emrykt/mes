@@ -25,12 +25,13 @@ async function askServer(
   question: string,
   locale: string,
   scope: AssistantScope,
+  company: string,
 ): Promise<string | null> {
   try {
     const res = await fetch("/api/assistant", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, locale, scope }),
+      body: JSON.stringify({ question, locale, scope, company }),
     });
     if (res.status === 503) return null; // no API key → use local engine
     if (!res.ok) return null;
@@ -51,7 +52,7 @@ export default function PlantAssistant({ scope = "full" }: { scope?: AssistantSc
   const tAlerts = useTranslations("mes.alerts");
   const tScore = useTranslations("mes.score");
   const locale = useLocale();
-  const { snap } = useDemo();
+  const { snap, company } = useDemo();
   const chips = chipsFor(scope);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
@@ -104,7 +105,7 @@ export default function PlantAssistant({ scope = "full" }: { scope?: AssistantSc
     // deterministic local engine answers from the same live data.
     let answer: string;
     try {
-      const server = intent ? null : await askServer(q, locale, scope);
+      const server = intent ? null : await askServer(q, locale, scope, company);
       answer = server ?? localAnswer(q, resolved);
     } catch {
       answer = t("help");

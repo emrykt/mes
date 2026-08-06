@@ -15,6 +15,7 @@ import {
   Wrench,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 
 const NAV = [
@@ -62,7 +63,8 @@ export default function MesManagerShell({
             </span>
             <span className="text-sm font-semibold">{tc("appName")}</span>
           </Link>
-          <div className="ml-auto md:order-last">
+          <div className="ml-auto flex items-center gap-2 md:order-last">
+            <CompanySwitcher />
             <LanguageSwitcher />
           </div>
           <nav className="hidden gap-1 md:flex">

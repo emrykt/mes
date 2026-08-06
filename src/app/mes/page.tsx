@@ -14,6 +14,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 
 const FACES = [
   { href: "/mes/operator", key: "operator", desc: "operatorDesc", icon: MonitorSmartphone },
@@ -44,10 +45,11 @@ export default function MesChooserPage() {
         <span className="flex size-10 items-center justify-center rounded-xl bg-accent text-white">
           <Factory className="size-5" />
         </span>
-        <div>
+        <div className="mr-auto">
           <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-          <p className="text-sm text-ink-2">{t("subtitle")}</p>
+          <p className="text-sm text-ink-2">{snap?.companyName ?? t("subtitle")}</p>
         </div>
+        <CompanySwitcher />
       </div>
 
       <p className="mt-4 inline-flex items-center gap-2 self-start rounded-full bg-good-soft px-3 py-1 text-xs font-medium text-good-text">

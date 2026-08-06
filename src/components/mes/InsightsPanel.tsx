@@ -43,7 +43,7 @@ const SEV: Record<Severity, string> = {
 export default function InsightsPanel({ limit }: { limit?: number }) {
   const t = useTranslations("mes.insights");
   const locale = useLocale();
-  const { snap } = useDemo();
+  const { snap, company } = useDemo();
   const [llm, setLlm] = useState<LlmItem[] | null>(null);
 
   // Try the real LLM analyst; if no key/error the route 503s and we keep the
@@ -54,7 +54,7 @@ export default function InsightsPanel({ limit }: { limit?: number }) {
       fetch("/api/insights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
+        body: JSON.stringify({ locale, company }),
       })
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => {
@@ -67,7 +67,7 @@ export default function InsightsPanel({ limit }: { limit?: number }) {
       alive = false;
       clearInterval(id);
     };
-  }, [locale]);
+  }, [locale, company]);
 
   if (!snap) return null;
 

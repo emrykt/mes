@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, BellRing, Check, Loader2, ShieldCheck, Wrench } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import PlannedMaintenance from "@/components/mes/PlannedMaintenance";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card } from "@/components/ui";
@@ -49,6 +50,7 @@ export default function MaintenanceScreen() {
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-xs text-muted">{t("subtitle")}</p>
         </div>
+        <CompanySwitcher />
         <LanguageSwitcher />
       </header>
 

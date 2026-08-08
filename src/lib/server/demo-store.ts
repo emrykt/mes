@@ -17,6 +17,8 @@ import {
   companyProfile,
   type CompanyProfile,
 } from "../companies";
+import { PLAN_ENTITLEMENTS } from "../data";
+import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
   CUSTOMER_POOL,
@@ -167,6 +169,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
       downtimeReasons: [...DEFAULT_DOWNTIME_REASONS],
       scrapReasons: [...DEFAULT_SCRAP_REASONS],
       escalationRules: DEFAULT_ESCALATION_RULES.map((r) => ({ ...r })),
+      kpiTargets: defaultKpiTargets(profile),
     },
     alerts: [],
     quotes: seedQuotes(now),
@@ -477,6 +480,7 @@ function migrate(store: DemoStore, now: Date): void {
   store.settings.escalationRules ??= DEFAULT_ESCALATION_RULES.map((r) => ({ ...r }));
   store.settings.maintenanceOwnDepartment ??= true;
   store.settings.workingCalendar ??= { shifts: 3, restDays: [] };
+  store.settings.kpiTargets ??= defaultKpiTargets(companyProfile(store.id));
   store.alerts ??= [];
   store.quotes ??= seedQuotes(now);
   store.stock ??= seedStock();
@@ -918,6 +922,60 @@ function evaluateAlerts(store: DemoStore, now: Date): void {
       });
     }
   }
+
+  // KPI target alarms — twice-hourly, plans with advanced analytics (AI Pro+).
+  const minute = Math.floor(now.getTime() / 60000);
+  if (minute % 30 === 0 && PLAN_ENTITLEMENTS[store.settings.plan].advancedAnalytics) {
+    const profile = companyProfile(store.id);
+    const targets = store.settings.kpiTargets ?? {};
+    const nowIso = now.toISOString();
+    const totalOut = store.stations.reduce((s, st) => s + st.todayOutput, 0);
+    const totalScrap = store.stations.reduce((s, st) => s + st.todayScrap, 0);
+    const util = Math.max(0, Math.min(1, plantToday(now).util * profile.utilFactor)) * 100;
+    const scrapRate = totalOut + totalScrap > 0 ? (totalScrap / (totalOut + totalScrap)) * 100 : 0;
+    const open = store.orders.filter((o) => !orderDone(o));
+    const late = open.filter((o) => o.dueDate < nowIso).length;
+    const onTime = open.length > 0 ? (1 - late / open.length) * 100 : 100;
+    const dayStart = new Date(`${day}T00:00:00.000Z`).getTime();
+    let dtMin = 0;
+    for (const d of store.downtime) {
+      const s = Math.max(dayStart, new Date(d.startedAt).getTime());
+      const e = d.endedAt ? new Date(d.endedAt).getTime() : now.getTime();
+      if (e > s) dtMin += (e - s) / 60000;
+    }
+    const overdue = store.settings.features.maintenance
+      ? store.maintenance.filter((m) => m.nextDueAt < nowIso).length
+      : 0;
+    const kpiVals: [string, number][] = [
+      ["utilization", util],
+      ["scrapRate", scrapRate],
+      ["onTimeDelivery", onTime],
+      ["downtimeMin", dtMin],
+      ["overdueMaint", overdue],
+    ];
+    for (const [id, value] of kpiVals) {
+      const def = KPI_DEFS.find((d) => d.id === id);
+      if (!def?.alarm) continue;
+      const target = targets[id] ?? def.defaultTarget;
+      if (kpiStatus(value, target, def) !== "bad") continue;
+      const key = `kpi:${id}:${day}`;
+      if (has(key)) continue;
+      store.alerts.push({
+        id: `al-kpi-${id}-${minute}`,
+        ruleId: "kpi",
+        trigger: "kpiTarget",
+        stationId: "",
+        target: "supervisor",
+        at: nowIso,
+        value: Math.round(value),
+        threshold: target,
+        reasonId: id,
+        label: id,
+        sourceKey: key,
+        acked: false,
+      });
+    }
+  }
 }
 
 function endDowntimeInternal(store: DemoStore, st: LiveStation, now: Date): void {
@@ -1157,6 +1215,9 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
     case "saveEscalationRules":
       store.settings.escalationRules = action.rules;
       break;
+    case "saveKpiTargets":
+      store.settings.kpiTargets = { ...store.settings.kpiTargets, ...action.targets };
+      break;
     case "setMaintenanceDept":
       store.settings.maintenanceOwnDepartment = action.own;
       break;
@@ -1239,6 +1300,19 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
 
 export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
   const profile = companyProfile(store.id);
+  // Gate modules by plan: quoting/maintenance/stock are AI Pro+ only. Return a
+  // copy so the stored flags are never mutated (admin still edits the raw ones).
+  const ent = PLAN_ENTITLEMENTS[store.settings.plan];
+  const f = store.settings.features;
+  const gatedSettings = {
+    ...store.settings,
+    features: {
+      barcode: f.barcode,
+      quoting: f.quoting && ent.quoting,
+      maintenance: f.maintenance && ent.maintenance,
+      stock: f.stock && ent.stock,
+    },
+  };
   return {
     now: now.toISOString(),
     companyId: profile.id,
@@ -1255,7 +1329,7 @@ export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
     stock: store.stock,
     stockMoves: [...store.stockMoves].slice(0, 40),
     scrapEvents: [...store.scrapEvents].slice(0, 200),
-    settings: store.settings,
+    settings: gatedSettings,
     today: {
       output: store.stations.reduce((s, st) => s + st.todayOutput, 0),
       scrap: store.stations.reduce((s, st) => s + st.todayScrap, 0),

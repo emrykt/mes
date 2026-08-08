@@ -65,7 +65,23 @@ API'si henüz bağlanmadı (sonraki faz).
   `settings.plan` canlı depoda tutulur (`/admin/mes`'ten `setPlan`), MES tarafı
   `useEntitlements()` (`DemoProvider`) ile kapılanır: asistan, performans
   karşılaştırması, öneri paneli ve uyarı merkezi **AI Pro+**'a (`advancedAnalytics`)
-  bağlı; Basic'te `PlanUpsell` gösterilir.
+  bağlı; Basic'te `PlanUpsell` gösterilir. **AI Ultimate → "Enterprise"** (yalnız
+  görünen ad; `PlanId` hâlâ `AIULTIMATE`); paket kartı **tüm özellikleri tek tek**
+  listeler. **Modül-paket kapılaması:** Teklif/Bakım/Stok/Benchmark artık **AI
+  Pro+**'a bağlı (`PlanEntitlements` `quoting`/`maintenance`/`stock` + mevcut
+  `sectorBenchmark`); `snapshot()` `settings.features`'ı plana göre **süzer**
+  (stored flag'i bozmadan kopya) → tüm `snap.settings.features.X` kontrolleri
+  otomatik plana uyar. Barkod tüm paketlerde.
+- **KPI hedefleri & skorkart** (`src/lib/kpi.ts` `KPI_DEFS`/`computeKpis`/
+  `kpiStatus`/`defaultKpiTargets`, **AI Pro+**): 10 KPI, 5 bölüm (üretim/kalite/
+  bakım/satış/üst yönetim), her biri yön (up/down) + birim + düzenlenebilir hedef
+  (`settings.kpiTargets`, profil-bazlı varsayılan, `saveKpiTargets` aksiyonu).
+  `KpiScorecard` (renkli durum: good/warn/bad) **kısım kısım** rol ekranlarında
+  (üretim=üretim+kalite, bakım=bakım, satış=satış) ve **toptan** üst yönetim
+  **Hedefler** sekmesinde (`/mes/executive/kpi` + `KpiTargetsSettings` düzenleyici).
+  **Hedef alarmı:** `evaluateAlerts` yarım saatte bir (AI Pro+) hafif KPI'ları
+  (util/fire/zamanında teslimat/duruş/gecikmiş bakım) hedefe göre değerlendirir,
+  aşımda `LiveAlert` (`trigger:"kpiTarget"`, `reasonId`=KpiId) → Uyarı Merkezi.
 - **Smart Manufacturing katmanı** (AI Pro): **konfigüre edilebilir uyarı/eskalasyon
   motoru** — `settings.escalationRules` (`EscalationRule`: `trigger`
   scrapRate/downtime, `threshold`, `target` supervisor/maintenance/quality,

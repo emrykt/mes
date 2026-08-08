@@ -26,7 +26,7 @@
   "plans": {
     "BASIC": "Basic",
     "AIPRO": "AI Pro",
-    "AIULTIMATE": "AI Ultimate"
+    "AIULTIMATE": "Enterprise"
   },
   "invoiceStatus": {
     "paid": "Ödendi",
@@ -54,12 +54,16 @@
     "contactCta": "Teklif alın",
     "planTaglineBasic": "Sahada tam MES",
     "planTaglineAipro": "MES + Smart Manufacturing AI",
-    "planTaglineUltimate": "Çoklu tesis operasyonları için",
+    "planTaglineUltimate": "Tüm modüller + çoklu tesis & API",
     "feaMesCore": "Tam MES: siparişler, kiosklar, canlı panolar, raporlar",
     "feaUnlimited": "Sınırsız istasyon ve kullanıcı",
     "feaPaperless": "Kağıtsız dijital iş emirleri",
     "feaTimeProgress": "Süre-tabanlı ilerleme ve gecikme takibi",
     "feaCost": "Maliyet, ciro ve kaybedilen kazanç analizi",
+    "feaQuoting": "Tekliflendirme & maliyet modülü",
+    "feaMaintenance": "Planlı bakım modülü",
+    "feaStock": "Hammadde stok & tüketim",
+    "feaKpi": "KPI hedefleri & skorkart + alarm",
     "feaEverythingBasic": "Basic'teki her şey, ayrıca:",
     "feaEverythingPro": "AI Pro'daki her şey, ayrıca:",
     "feaAssistant": "Smart Manufacturing AI Asistan",
@@ -251,7 +255,10 @@
     "planMappingTitle": "Paket / fiyat eşlemesi",
     "colPlan": "Paket",
     "colPrice": "Aylık fiyat (USD)",
-    "colTier": "Katman","tierBasic": "MES çekirdeği","tierAipro": "AI Pro (asistan, kıyas, analiz)","tierUltimate": "AI Ultimate (çoklu tesis, API)",
+    "colTier": "Katman",
+    "tierBasic": "MES çekirdeği",
+    "tierAipro": "AI Pro (asistan, kıyas, analiz)",
+    "tierUltimate": "Enterprise (çoklu tesis, API)",
     "colLimit": "İstasyon limiti",
     "colPriceId": "Stripe fiyat kimliği",
     "lifecycleTitle": "Yaşam döngüsü kuralları",
@@ -486,7 +493,9 @@
       "utilTrendTitle": "Tesis kullanım trendi",
       "utilTrendSubtitle": "Son 7 iş günü",
       "noOperator": "Atanmamış",
-      "sinceMin": "{min} dk"
+      "sinceMin": "{min} dk",
+      "kpiTargetsTitle": "KPI hedefleri",
+      "kpiTargetsSubtitle": "Üretim & kalite hedefe göre"
     },
     "settings": {
       "title": "MES tanımları",
@@ -795,7 +804,9 @@
       "tabPerformance": "Performans",
       "tabCosts": "Maliyet & Fire",
       "tabAssistant": "Asistan",
-      "costsSubtitle": "Maliyet, kâr ve fire"
+      "costsSubtitle": "Maliyet, kâr ve fire",
+      "tabKpi": "Hedefler",
+      "kpiSubtitle": "KPI hedefleri & skorkart"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -843,7 +854,8 @@
       "unitPiece": "adet",
       "downtimeMsg": "{station} · \"{reason}\" {minutes} dk durdu",
       "scrapMsg": "{station} · fire oranı %{rate}",
-      "lowStockMsg": "{material} · kritik stok: {amount} kaldı (sipariş noktası {reorder})"
+      "lowStockMsg": "{material} · kritik stok: {amount} kaldı (sipariş noktası {reorder})",
+      "kpiMsg": "{kpi} hedef dışı: {value} (hedef {target})"
     },
     "stock": {
       "title": "Depo / Stok",
@@ -898,7 +910,12 @@
       "subtitle": "9 faktörden sürekli güncellenen 0–1000 skor",
       "outOf": "/ 1000",
       "improveTitle": "AI — skoru nasıl artırırsınız",
-      "band": { "weak": "Geliştirilmeli", "fair": "Orta", "good": "İyi", "excellent": "Mükemmel" },
+      "band": {
+        "weak": "Geliştirilmeli",
+        "fair": "Orta",
+        "good": "İyi",
+        "excellent": "Mükemmel"
+      },
       "factor": {
         "productivity": "Üretkenlik",
         "delivery": "Teslimat performansı",
@@ -946,7 +963,9 @@
       "aiAlertsHint": "Bir duruş eşiği aştığında eskalasyon motoru tarafından açılır.",
       "noAlerts": "Bakıma düşen açık AI uyarısı yok.",
       "autoRaised": "Otomatik açıldı",
-      "planned": "Planlı bakım"
+      "planned": "Planlı bakım",
+      "kpiTitle": "Bakım KPI'ları",
+      "kpiHint": "Hedefe göre"
     },
     "assistant": {
       "navAssistant": "Asistan",
@@ -1039,6 +1058,40 @@
       "adherenceSubtitle": "Plana ve kapasiteye uyum — parça sayısı değil",
       "utilShort": "kul. %{v}",
       "privacyNote": "Kıyas verileri toplulaştırılmış ve anonimdir — tekil şirketler asla tanımlanamaz."
+    },
+    "kpi": {
+      "utilization": "Kullanım oranı",
+      "outputAttainment": "Çıktı gerçekleşme",
+      "adherence": "Plana & kapasiteye uyum",
+      "scrapRate": "Fire / hurda oranı",
+      "qualityScore": "Kalite performansı",
+      "downtimeMin": "Duruş süresi",
+      "overdueMaint": "Gecikmiş bakım",
+      "onTimeDelivery": "Zamanında teslimat",
+      "score": "Performans skoru",
+      "profitMargin": "Kâr marjı",
+      "section": {
+        "production": "Üretim",
+        "quality": "Kalite",
+        "maintenance": "Bakım",
+        "sales": "Satış & Planlama",
+        "executive": "Üst Yönetim"
+      },
+      "status": {
+        "good": "hedefte",
+        "warn": "sınırda",
+        "bad": "hedef dışı"
+      },
+      "target": "Hedef",
+      "unitMin": "dk",
+      "targetsTitle": "KPI Hedefleri",
+      "targetsHint": "Bu şirketin hedeflerini bölüm bölüm ayarlayın.",
+      "saveTargets": "Hedefleri kaydet",
+      "saved": "Kaydedildi",
+      "scorecardTitle": "Hedef Skorkartı",
+      "scorecardHint": "Tüm bölümlerin KPI'ları hedeflerine göre.",
+      "salesTargetsTitle": "Satış hedefi",
+      "salesTargetsHint": "Zamanında teslimat performansı."
     }
   },
   "portalUsers": {

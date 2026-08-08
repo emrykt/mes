@@ -30,7 +30,7 @@ export type CurrencyCode = "USD" | "EUR" | "TRY";
 export type AlertTarget = "supervisor" | "maintenance" | "quality" | "purchasing";
 
 /** What condition raises an alert. */
-export type AlertTrigger = "scrapRate" | "downtime" | "lowStock";
+export type AlertTrigger = "scrapRate" | "downtime" | "lowStock" | "kpiTarget";
 
 /**
  * A configurable escalation rule. The plant tunes the threshold *and* the
@@ -205,6 +205,8 @@ export interface DemoSettings {
   scrapReasons: ScrapReason[];
   /** Configurable alert/escalation rules (scrap %, downtime minutes → target). */
   escalationRules: EscalationRule[];
+  /** Editable KPI targets, keyed by KpiId (see lib/kpi.ts). */
+  kpiTargets: Record<string, number>;
 }
 
 /** One recurring planned-maintenance task bound to a station. */
@@ -337,6 +339,7 @@ export type DemoAction =
   | { type: "setPlan"; plan: PlanId }
   | { type: "ackAlert"; id: string }
   | { type: "saveEscalationRules"; rules: EscalationRule[] }
+  | { type: "saveKpiTargets"; targets: Record<string, number> }
   | { type: "setMaintenanceDept"; own: boolean }
   | { type: "setWorkingCalendar"; calendar: WorkingCalendar }
   | { type: "saveQuote"; quote: Omit<SavedQuote, "id" | "at"> }

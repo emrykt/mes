@@ -26,7 +26,7 @@
   "plans": {
     "BASIC": "Basic",
     "AIPRO": "AI Pro",
-    "AIULTIMATE": "AI Ultimate"
+    "AIULTIMATE": "Enterprise"
   },
   "invoiceStatus": {
     "paid": "Paid",
@@ -54,12 +54,16 @@
     "contactCta": "Get a quote",
     "planTaglineBasic": "Full MES on the shop floor",
     "planTaglineAipro": "MES + Smart Manufacturing AI",
-    "planTaglineUltimate": "For multi-plant operations",
+    "planTaglineUltimate": "All modules + multi-plant & API",
     "feaMesCore": "Full MES: orders, kiosks, live boards, reports",
     "feaUnlimited": "Unlimited stations & users",
     "feaPaperless": "Paperless digital work orders",
     "feaTimeProgress": "Time-based progress & delay tracking",
     "feaCost": "Cost, revenue & lost-revenue analytics",
+    "feaQuoting": "Quoting & estimation module",
+    "feaMaintenance": "Planned-maintenance module",
+    "feaStock": "Raw-material stock & consumption",
+    "feaKpi": "KPI targets & scorecards with alerts",
     "feaEverythingBasic": "Everything in Basic, plus:",
     "feaEverythingPro": "Everything in AI Pro, plus:",
     "feaAssistant": "Smart Manufacturing AI Assistant",
@@ -251,7 +255,10 @@
     "planMappingTitle": "Plan / price mapping",
     "colPlan": "Plan",
     "colPrice": "Monthly price (USD)",
-    "colTier": "Tier","tierBasic": "MES core","tierAipro": "AI Pro (assistant, benchmark, analytics)","tierUltimate": "AI Ultimate (multi-plant, API)",
+    "colTier": "Tier",
+    "tierBasic": "MES core",
+    "tierAipro": "AI Pro (assistant, benchmark, analytics)",
+    "tierUltimate": "Enterprise (multi-plant, API)",
     "colLimit": "Station limit",
     "colPriceId": "Stripe price ID",
     "lifecycleTitle": "Lifecycle rules",
@@ -486,7 +493,9 @@
       "utilTrendTitle": "Plant utilization trend",
       "utilTrendSubtitle": "Last 7 working days",
       "noOperator": "Unassigned",
-      "sinceMin": "{min} min"
+      "sinceMin": "{min} min",
+      "kpiTargetsTitle": "KPI targets",
+      "kpiTargetsSubtitle": "Production & quality against target"
     },
     "settings": {
       "title": "MES definitions",
@@ -795,7 +804,9 @@
       "tabPerformance": "Performance",
       "tabCosts": "Cost & Scrap",
       "tabAssistant": "Assistant",
-      "costsSubtitle": "Cost, profit & scrap"
+      "costsSubtitle": "Cost, profit & scrap",
+      "tabKpi": "Targets",
+      "kpiSubtitle": "KPI targets & scorecard"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -843,7 +854,8 @@
       "unitPiece": "pcs",
       "downtimeMsg": "{station} · \"{reason}\" stopped for {minutes} min",
       "scrapMsg": "{station} · scrap rate at {rate}%",
-      "lowStockMsg": "{material} · low stock: {amount} left (reorder {reorder})"
+      "lowStockMsg": "{material} · low stock: {amount} left (reorder {reorder})",
+      "kpiMsg": "{kpi} off target: {value} (target {target})"
     },
     "stock": {
       "title": "Warehouse / stock",
@@ -898,7 +910,12 @@
       "subtitle": "0–1000 from nine factors, continuously updated",
       "outOf": "/ 1000",
       "improveTitle": "AI — how to raise the score",
-      "band": { "weak": "Needs work", "fair": "Fair", "good": "Good", "excellent": "Excellent" },
+      "band": {
+        "weak": "Needs work",
+        "fair": "Fair",
+        "good": "Good",
+        "excellent": "Excellent"
+      },
       "factor": {
         "productivity": "Productivity",
         "delivery": "Delivery performance",
@@ -946,7 +963,9 @@
       "aiAlertsHint": "Raised by the escalation engine when a stoppage crosses its threshold.",
       "noAlerts": "No open AI alerts for maintenance.",
       "autoRaised": "Raised automatically",
-      "planned": "Planned maintenance"
+      "planned": "Planned maintenance",
+      "kpiTitle": "Maintenance KPIs",
+      "kpiHint": "Against target"
     },
     "assistant": {
       "navAssistant": "Assistant",
@@ -1039,6 +1058,40 @@
       "adherenceSubtitle": "Plan & capacity adherence — not piece count",
       "utilShort": "util {v}%",
       "privacyNote": "Benchmark data is aggregated and anonymized — individual companies are never identifiable."
+    },
+    "kpi": {
+      "utilization": "Utilization",
+      "outputAttainment": "Output attainment",
+      "adherence": "Plan & capacity adherence",
+      "scrapRate": "Scrap rate",
+      "qualityScore": "Quality performance",
+      "downtimeMin": "Downtime",
+      "overdueMaint": "Overdue maintenance",
+      "onTimeDelivery": "On-time delivery",
+      "score": "Performance score",
+      "profitMargin": "Profit margin",
+      "section": {
+        "production": "Production",
+        "quality": "Quality",
+        "maintenance": "Maintenance",
+        "sales": "Sales & Planning",
+        "executive": "Executive"
+      },
+      "status": {
+        "good": "on target",
+        "warn": "at limit",
+        "bad": "off target"
+      },
+      "target": "Target",
+      "unitMin": "min",
+      "targetsTitle": "KPI Targets",
+      "targetsHint": "Set this company's targets, section by section.",
+      "saveTargets": "Save targets",
+      "saved": "Saved",
+      "scorecardTitle": "Target Scorecard",
+      "scorecardHint": "Every section's KPIs against target.",
+      "salesTargetsTitle": "Sales target",
+      "salesTargetsHint": "On-time delivery performance."
     }
   },
   "portalUsers": {

@@ -26,6 +26,7 @@ const TARGET_KEY: Record<AlertTarget, string> = {
 
 export default function ManagerAlertsPage() {
   const t = useTranslations("mes.alerts");
+  const tk = useTranslations("mes.kpi");
   const { snap, dispatch } = useDemo();
   const ent = useEntitlements();
   const [tab, setTab] = useState<"open" | "acked">("open");
@@ -66,6 +67,13 @@ export default function ManagerAlertsPage() {
         material: a.label ?? "—",
         amount: `${Math.round(a.value)} ${u}`,
         reorder: `${Math.round(a.threshold)} ${u}`,
+      });
+    }
+    if (a.trigger === "kpiTarget") {
+      return t("kpiMsg", {
+        kpi: tk(a.reasonId ?? "score"),
+        value: Math.round(a.value),
+        target: Math.round(a.threshold),
       });
     }
     return t("scrapMsg", {

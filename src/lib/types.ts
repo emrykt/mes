@@ -24,6 +24,12 @@ export interface PlanEntitlements {
   sectorBenchmark: boolean;
   /** Advanced analytics & deeper performance monitoring. */
   advancedAnalytics: boolean;
+  /** Quoting / estimation module (mid + top plans). */
+  quoting: boolean;
+  /** Planned-maintenance module (mid + top plans). */
+  maintenance: boolean;
+  /** Raw-material stock & consumption module (mid + top plans). */
+  stock: boolean;
   /** Multi-plant management (marketing only in this phase). */
   multiPlant: boolean;
   /** API integration (marketing only in this phase). */

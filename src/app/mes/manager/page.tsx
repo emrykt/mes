@@ -6,6 +6,7 @@ import { BadgeCheck, Bell, Factory, Loader2, Wrench } from "lucide-react";
 import TrendChart from "@/components/charts/TrendChart";
 import { useDemo, useEntitlements } from "@/components/demo/DemoProvider";
 import InsightsPanel from "@/components/mes/InsightsPanel";
+import KpiScorecard from "@/components/mes/KpiScorecard";
 import ScrapPanel from "@/components/mes/ScrapPanel";
 import BadgesStrip from "@/components/mes/BadgesStrip";
 import { StationStateBadge } from "@/components/mes/mes-ui";
@@ -86,6 +87,13 @@ export default function ManagerOverviewPage() {
         <StatCard label={t("kpiDown")} value={String(downCount)} />
         <StatCard label={t("kpiAndon")} value={String(openAndon.length)} />
       </div>
+
+      {/* KPI targets — production & quality (AI Pro+) */}
+      {ent.advancedAnalytics && (
+        <Card title={t("kpiTargetsTitle")} subtitle={t("kpiTargetsSubtitle")}>
+          <KpiScorecard sections={["production", "quality"]} />
+        </Card>
+      )}
 
       {/* smart suggestions — AI Pro */}
       {ent.advancedAnalytics && <InsightsPanel limit={3} />}

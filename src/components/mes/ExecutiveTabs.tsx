@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 
 const TABS = [
   { href: "/mes/executive", key: "tabPulse", exact: true },
+  { href: "/mes/executive/kpi", key: "tabKpi", exact: false },
   { href: "/mes/executive/performance", key: "tabPerformance", exact: false },
   { href: "/mes/executive/costs", key: "tabCosts", exact: false },
   { href: "/mes/executive/assistant", key: "tabAssistant", exact: false },

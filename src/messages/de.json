@@ -26,7 +26,7 @@
   "plans": {
     "BASIC": "Basic",
     "AIPRO": "AI Pro",
-    "AIULTIMATE": "AI Ultimate"
+    "AIULTIMATE": "Enterprise"
   },
   "invoiceStatus": {
     "paid": "Bezahlt",
@@ -54,12 +54,16 @@
     "contactCta": "Angebot anfordern",
     "planTaglineBasic": "Volles MES in der Fertigung",
     "planTaglineAipro": "MES + Smart Manufacturing AI",
-    "planTaglineUltimate": "Für Mehrwerk-Betriebe",
+    "planTaglineUltimate": "Alle Module + Mehrwerk & API",
     "feaMesCore": "Volles MES: Aufträge, Kiosks, Live-Boards, Berichte",
     "feaUnlimited": "Unbegrenzte Stationen & Benutzer",
     "feaPaperless": "Papierlose digitale Aufträge",
     "feaTimeProgress": "Zeitbasierter Fortschritt & Verzugsverfolgung",
     "feaCost": "Kosten-, Umsatz- & Verlustanalyse",
+    "feaQuoting": "Angebots- & Kalkulationsmodul",
+    "feaMaintenance": "Modul für geplante Wartung",
+    "feaStock": "Rohmaterial-Bestand & Verbrauch",
+    "feaKpi": "KPI-Ziele & Scorecards mit Alarmen",
     "feaEverythingBasic": "Alles aus Basic, plus:",
     "feaEverythingPro": "Alles aus AI Pro, plus:",
     "feaAssistant": "Smart-Manufacturing-KI-Assistent",
@@ -251,7 +255,10 @@
     "planMappingTitle": "Paket-/Preiszuordnung",
     "colPlan": "Paket",
     "colPrice": "Monatspreis (USD)",
-    "colTier": "Stufe","tierBasic": "MES-Kern","tierAipro": "AI Pro (Assistent, Vergleich, Analysen)","tierUltimate": "AI Ultimate (Mehrwerk, API)",
+    "colTier": "Stufe",
+    "tierBasic": "MES-Kern",
+    "tierAipro": "AI Pro (Assistent, Vergleich, Analysen)",
+    "tierUltimate": "Enterprise (Mehrwerk, API)",
     "colLimit": "Stationslimit",
     "colPriceId": "Stripe-Preis-ID",
     "lifecycleTitle": "Lebenszyklus-Regeln",
@@ -486,7 +493,9 @@
       "utilTrendTitle": "Auslastungstrend des Werks",
       "utilTrendSubtitle": "Letzte 7 Arbeitstage",
       "noOperator": "Nicht zugewiesen",
-      "sinceMin": "{min} Min."
+      "sinceMin": "{min} Min.",
+      "kpiTargetsTitle": "KPI-Ziele",
+      "kpiTargetsSubtitle": "Produktion & Qualität gegen Ziel"
     },
     "settings": {
       "title": "MES-Stammdaten",
@@ -795,7 +804,9 @@
       "tabPerformance": "Leistung",
       "tabCosts": "Kosten & Ausschuss",
       "tabAssistant": "Assistent",
-      "costsSubtitle": "Kosten, Gewinn & Ausschuss"
+      "costsSubtitle": "Kosten, Gewinn & Ausschuss",
+      "tabKpi": "Ziele",
+      "kpiSubtitle": "KPI-Ziele & Scorecard"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -843,7 +854,8 @@
       "unitPiece": "Stk",
       "downtimeMsg": "{station} · \"{reason}\" seit {minutes} Min gestoppt",
       "scrapMsg": "{station} · Ausschussrate {rate}%",
-      "lowStockMsg": "{material} · niedriger Bestand: {amount} übrig (Meldebestand {reorder})"
+      "lowStockMsg": "{material} · niedriger Bestand: {amount} übrig (Meldebestand {reorder})",
+      "kpiMsg": "{kpi} außer Ziel: {value} (Ziel {target})"
     },
     "stock": {
       "title": "Lager / Bestand",
@@ -898,7 +910,12 @@
       "subtitle": "0–1000 aus neun Faktoren, laufend aktualisiert",
       "outOf": "/ 1000",
       "improveTitle": "KI — so steigern Sie den Score",
-      "band": { "weak": "Verbesserungswürdig", "fair": "Mittel", "good": "Gut", "excellent": "Ausgezeichnet" },
+      "band": {
+        "weak": "Verbesserungswürdig",
+        "fair": "Mittel",
+        "good": "Gut",
+        "excellent": "Ausgezeichnet"
+      },
       "factor": {
         "productivity": "Produktivität",
         "delivery": "Liefertreue",
@@ -946,7 +963,9 @@
       "aiAlertsHint": "Von der Eskalations-Engine ausgelöst, wenn ein Stillstand den Schwellenwert überschreitet.",
       "noAlerts": "Keine offenen KI-Warnungen für die Instandhaltung.",
       "autoRaised": "Automatisch ausgelöst",
-      "planned": "Geplante Wartung"
+      "planned": "Geplante Wartung",
+      "kpiTitle": "Wartungs-KPIs",
+      "kpiHint": "Gegen Ziel"
     },
     "assistant": {
       "navAssistant": "Assistent",
@@ -1039,6 +1058,40 @@
       "adherenceSubtitle": "Plan- & Kapazitätseinhaltung — keine Stückzahl",
       "utilShort": "Ausl. {v}%",
       "privacyNote": "Vergleichsdaten sind aggregiert und anonymisiert — einzelne Firmen sind nie identifizierbar."
+    },
+    "kpi": {
+      "utilization": "Auslastung",
+      "outputAttainment": "Ausstoß-Erreichung",
+      "adherence": "Plan- & Kapazitätstreue",
+      "scrapRate": "Ausschussrate",
+      "qualityScore": "Qualitätsleistung",
+      "downtimeMin": "Stillstand",
+      "overdueMaint": "Überfällige Wartung",
+      "onTimeDelivery": "Termintreue",
+      "score": "Leistungs-Score",
+      "profitMargin": "Gewinnmarge",
+      "section": {
+        "production": "Produktion",
+        "quality": "Qualität",
+        "maintenance": "Wartung",
+        "sales": "Vertrieb & Planung",
+        "executive": "Management"
+      },
+      "status": {
+        "good": "im Ziel",
+        "warn": "an der Grenze",
+        "bad": "außer Ziel"
+      },
+      "target": "Ziel",
+      "unitMin": "Min",
+      "targetsTitle": "KPI-Ziele",
+      "targetsHint": "Ziele dieses Unternehmens je Bereich festlegen.",
+      "saveTargets": "Ziele speichern",
+      "saved": "Gespeichert",
+      "scorecardTitle": "Ziel-Scorecard",
+      "scorecardHint": "KPIs aller Bereiche gegen Ziel.",
+      "salesTargetsTitle": "Vertriebsziel",
+      "salesTargetsHint": "Termintreue-Leistung."
     }
   },
   "portalUsers": {

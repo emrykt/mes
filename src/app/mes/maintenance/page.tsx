@@ -6,7 +6,8 @@ import { ArrowLeft, BellRing, Check, Loader2, ShieldCheck, Wrench } from "lucide
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import PlannedMaintenance from "@/components/mes/PlannedMaintenance";
-import { useDemo } from "@/components/demo/DemoProvider";
+import KpiScorecard from "@/components/mes/KpiScorecard";
+import { useDemo, useEntitlements } from "@/components/demo/DemoProvider";
 import { Card } from "@/components/ui";
 import { minutesAgo } from "@/lib/mes-calc";
 import { SIM_STATIONS } from "@/lib/sim";
@@ -16,6 +17,7 @@ export default function MaintenanceScreen() {
   const ta = useTranslations("mes.alerts");
   const tc = useTranslations("common");
   const { snap, dispatch } = useDemo();
+  const ent = useEntitlements();
 
   if (!snap) {
     return (
@@ -55,6 +57,13 @@ export default function MaintenanceScreen() {
       </header>
 
       <div className="mt-6 space-y-5">
+        {/* maintenance KPI targets (AI Pro+) */}
+        {ent.advancedAnalytics && (
+          <Card title={t("kpiTitle")} subtitle={t("kpiHint")}>
+            <KpiScorecard sections={["maintenance"]} showSectionTitles={false} />
+          </Card>
+        )}
+
         {/* open maintenance andon calls */}
         <Card title={t("openCalls")} subtitle={t("openCallsHint")} padded={false}>
           {openCalls.length === 0 ? (

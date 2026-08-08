@@ -32,8 +32,17 @@ export default function LandingPage() {
   };
   const features: Record<string, string[]> = {
     BASIC: [t("feaMesCore"), t("feaUnlimited"), t("feaPaperless"), t("feaTimeProgress"), t("feaCost")],
-    AIPRO: [t("feaEverythingBasic"), t("feaAssistant"), t("feaAlerts"), t("feaBenchmark"), t("feaAdvanced"), t("feaRootCause"), t("feaPriority")],
-    AIULTIMATE: [t("feaEverythingPro"), t("feaMultiplant"), t("feaApi")],
+    AIPRO: [
+      t("feaEverythingBasic"), t("feaAssistant"), t("feaAlerts"), t("feaBenchmark"),
+      t("feaAdvanced"), t("feaRootCause"), t("feaQuoting"), t("feaMaintenance"),
+      t("feaStock"), t("feaKpi"), t("feaPriority"),
+    ],
+    AIULTIMATE: [
+      t("feaMesCore"), t("feaUnlimited"), t("feaPaperless"), t("feaTimeProgress"),
+      t("feaCost"), t("feaAssistant"), t("feaAlerts"), t("feaBenchmark"),
+      t("feaAdvanced"), t("feaRootCause"), t("feaQuoting"), t("feaMaintenance"),
+      t("feaStock"), t("feaKpi"), t("feaMultiplant"), t("feaApi"), t("feaPriority"),
+    ],
   };
 
   const aiCards = [

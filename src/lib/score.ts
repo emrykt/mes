@@ -54,7 +54,6 @@ const WEIGHTS: Record<ScoreFactorKey, number> = {
   maintenance: 90,
 };
 
-const DAILY_TARGET = SIM_STATIONS.reduce((s, st) => s + st.rate, 0) * 24 * 0.65;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 export function bandOf(total: number): ScoreBand {
@@ -70,10 +69,10 @@ export function plantScore(snap: DemoSnapshot, now: Date): PlantScore {
   const scrap = snap.today.scrap;
   const util = snap.today.util;
 
-  // productivity: output vs the time-prorated daily target
-  const elapsed = Math.max(0.05, (now.getUTCHours() + now.getUTCMinutes() / 60) / 24);
-  const expected = DAILY_TARGET * elapsed;
-  const productivity = clamp01(output / Math.max(1, expected));
+  // productivity: completed planned work (hours) vs realistic productive capacity
+  const elapsedH = now.getUTCHours() + now.getUTCMinutes() / 60;
+  const capacityHours = Math.max(0.1, snap.stations.length * elapsedH * 0.7);
+  const productivity = clamp01(snap.today.plannedHours / capacityHours);
 
   // delivery: share of open orders not overdue
   const late = lateOrders(snap, now).length;

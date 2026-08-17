@@ -495,7 +495,9 @@
       "noOperator": "Unassigned",
       "sinceMin": "{min} min",
       "kpiTargetsTitle": "KPI targets",
-      "kpiTargetsSubtitle": "Production & quality against target"
+      "kpiTargetsSubtitle": "Production & quality against target",
+      "kpiPlanPerf": "Plan performance",
+      "planPerfHint": "planned ÷ actual time"
     },
     "settings": {
       "title": "MES definitions",
@@ -689,7 +691,8 @@
       "scrapToday": "Scrap",
       "openCalls": "Open calls",
       "noCalls": "No open andon calls",
-      "clock": "{time}"
+      "clock": "{time}",
+      "planPerfToday": "Plan performance"
     },
     "orders": {
       "title": "Orders",
@@ -806,7 +809,16 @@
       "tabAssistant": "Assistant",
       "costsSubtitle": "Cost, profit & scrap",
       "tabKpi": "Targets",
-      "kpiSubtitle": "KPI targets & scorecard"
+      "kpiSubtitle": "KPI targets & scorecard",
+      "workDoneToday": "Work done",
+      "workDoneHint": "planned hours today",
+      "hoursUnit": "h",
+      "plannedVsActualTitle": "Planned vs actual",
+      "plannedVsActualHint": "Time comparison of the work completed today",
+      "plannedHours": "Planned",
+      "actualHours": "Actual",
+      "planPerfToday": "Plan performance",
+      "planPerfHint": "planned ÷ actual time"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -1091,7 +1103,8 @@
       "scorecardTitle": "Target Scorecard",
       "scorecardHint": "Every section's KPIs against target.",
       "salesTargetsTitle": "Sales target",
-      "salesTargetsHint": "On-time delivery performance."
+      "salesTargetsHint": "On-time delivery performance.",
+      "planPerformance": "Plan performance"
     }
   },
   "portalUsers": {

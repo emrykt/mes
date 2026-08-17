@@ -8,7 +8,7 @@ import { useDemo } from "@/components/demo/DemoProvider";
 import BadgesStrip from "@/components/mes/BadgesStrip";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { minutesAgo } from "@/lib/mes-calc";
-import { SIM_STATIONS } from "@/lib/sim";
+import { SIM_STATIONS, stationToday } from "@/lib/sim";
 import type { AndonType, StationState } from "@/lib/mes-types";
 
 const STATE_STYLE: Record<StationState, { bg: string; dot: string; label: string }> = {
@@ -80,10 +80,10 @@ export default function TvBoardPage() {
         <div className="grid grid-cols-3 gap-3 text-center md:ml-auto md:flex md:items-center md:gap-8 md:text-right">
           <div>
             <p className="text-[10px] tracking-wide text-chrome-ink uppercase md:text-xs">
-              {t("outputToday")}
+              {t("planPerfToday")}
             </p>
             <p className="text-2xl font-semibold tabular-nums md:text-4xl">
-              {snap.today.output.toLocaleString("en-US")}
+              {snap.today.planPerf}%
             </p>
           </div>
           <div>
@@ -143,7 +143,8 @@ export default function TvBoardPage() {
                   )}
                 </div>
                 <p className="shrink-0 text-xl font-semibold tabular-nums md:text-3xl">
-                  {s.todayOutput.toLocaleString("en-US")}
+                  {Math.round(stationToday(s.id, now).util * 100)}
+                  <span className="text-sm text-white/50 md:text-lg">%</span>
                 </p>
               </div>
             </div>

@@ -495,7 +495,9 @@
       "noOperator": "Atanmamış",
       "sinceMin": "{min} dk",
       "kpiTargetsTitle": "KPI hedefleri",
-      "kpiTargetsSubtitle": "Üretim & kalite hedefe göre"
+      "kpiTargetsSubtitle": "Üretim & kalite hedefe göre",
+      "kpiPlanPerf": "Plan performansı",
+      "planPerfHint": "tahmini ÷ gerçekleşen süre"
     },
     "settings": {
       "title": "MES tanımları",
@@ -689,7 +691,8 @@
       "scrapToday": "Fire",
       "openCalls": "Açık çağrılar",
       "noCalls": "Açık andon çağrısı yok",
-      "clock": "{time}"
+      "clock": "{time}",
+      "planPerfToday": "Plan performansı"
     },
     "orders": {
       "title": "Siparişler",
@@ -806,7 +809,16 @@
       "tabAssistant": "Asistan",
       "costsSubtitle": "Maliyet, kâr ve fire",
       "tabKpi": "Hedefler",
-      "kpiSubtitle": "KPI hedefleri & skorkart"
+      "kpiSubtitle": "KPI hedefleri & skorkart",
+      "workDoneToday": "Tamamlanan iş",
+      "workDoneHint": "planlı saat, bugün",
+      "hoursUnit": "sa",
+      "plannedVsActualTitle": "Planlanan vs Gerçekleşen",
+      "plannedVsActualHint": "Bugün tamamlanan işin süre karşılaştırması",
+      "plannedHours": "Planlanan",
+      "actualHours": "Gerçekleşen",
+      "planPerfToday": "Plan performansı",
+      "planPerfHint": "tahmini ÷ gerçekleşen süre"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -1091,7 +1103,8 @@
       "scorecardTitle": "Hedef Skorkartı",
       "scorecardHint": "Tüm bölümlerin KPI'ları hedeflerine göre.",
       "salesTargetsTitle": "Satış hedefi",
-      "salesTargetsHint": "Zamanında teslimat performansı."
+      "salesTargetsHint": "Zamanında teslimat performansı.",
+      "planPerformance": "Plan performansı"
     }
   },
   "portalUsers": {

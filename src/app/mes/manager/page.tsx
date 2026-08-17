@@ -77,7 +77,7 @@ export default function ManagerOverviewPage() {
           value={`${Math.round(snap.today.util * 100)}%`}
           sub={t("utilHint")}
         />
-        <StatCard label={t("kpiOutput")} value={String(snap.today.output)} />
+        <StatCard label={t("kpiPlanPerf")} value={`${snap.today.planPerf}%`} sub={t("planPerfHint")} />
         <StatCard label={t("kpiScrap")} value={String(snap.today.scrap)} />
         <StatCard
           label={t("kpiAdherence")}

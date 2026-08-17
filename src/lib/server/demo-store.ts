@@ -145,15 +145,20 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
     currentDay: isoDay(now),
     orderSeq: {},
     orders: [],
-    stations: stationDefs.map((def) => ({
-      id: def.id,
-      state: "idle",
-      operator: operatorFor(def.id, shiftForHour(now.getUTCHours()).id),
-      currentOrderIds: [],
-      todayOutput: plantTodayShare(def.id, now),
-      todayScrap: 0,
-      frac: 0,
-    })),
+    stations: stationDefs.map((def) => {
+      const mins = todayMinutesShare(def, now, profile.utilFactor);
+      return {
+        id: def.id,
+        state: "idle" as const,
+        operator: operatorFor(def.id, shiftForHour(now.getUTCHours()).id),
+        currentOrderIds: [],
+        todayOutput: plantTodayShare(def.id, now),
+        todayScrap: 0,
+        todayPlannedMin: mins.planned,
+        todayActualMin: mins.actual,
+        frac: 0,
+      };
+    }),
     andon: [],
     downtime: [],
     maintenance: seedMaintenance(now, profile.stationIds),
@@ -500,9 +505,20 @@ function migrate(store: DemoStore, now: Date): void {
   // reconcile live stations to exactly this company's station set
   const wanted = new Set(profile.stationIds);
   store.stations = store.stations.filter((st) => wanted.has(st.id));
+  for (const st of store.stations) {
+    if (st.todayPlannedMin == null || st.todayActualMin == null) {
+      const def = SIM_STATIONS.find((d) => d.id === st.id);
+      const mins = def
+        ? todayMinutesShare(def, now, profile.utilFactor)
+        : { planned: 0, actual: 0 };
+      st.todayPlannedMin ??= mins.planned;
+      st.todayActualMin ??= mins.actual;
+    }
+  }
   for (const id of profile.stationIds) {
     const def = SIM_STATIONS.find((d) => d.id === id);
     if (def && !store.stations.some((st) => st.id === id)) {
+      const mins = todayMinutesShare(def, now, profile.utilFactor);
       store.stations.push({
         id: def.id,
         state: "idle",
@@ -510,6 +526,8 @@ function migrate(store: DemoStore, now: Date): void {
         currentOrderIds: [],
         todayOutput: plantTodayShare(def.id, now),
         todayScrap: 0,
+        todayPlannedMin: mins.planned,
+        todayActualMin: mins.actual,
         frac: 0,
       });
     }
@@ -523,6 +541,17 @@ function plantTodayShare(stationId: string, now: Date): number {
     output += simHour(stationId, new Date(`${isoDay(now)}T${String(h).padStart(2, "0")}:00:00Z`)).output;
   }
   return output;
+}
+
+/** Realistic mid-day seed of planned/actual minutes completed so far today. */
+function todayMinutesShare(
+  def: { baseUtil: number },
+  now: Date,
+  utilFactor: number,
+): { planned: number; actual: number } {
+  const elapsedH = now.getUTCHours();
+  const actual = Math.round(elapsedH * 60 * Math.min(1, def.baseUtil * utilFactor));
+  return { planned: Math.round(actual * 1.03), actual };
 }
 
 /* --------------------------- persistence --------------------------- */
@@ -654,6 +683,8 @@ function tickMinute(store: DemoStore, now: Date): void {
     for (const st of store.stations) {
       st.todayOutput = 0;
       st.todayScrap = 0;
+      st.todayPlannedMin = 0;
+      st.todayActualMin = 0;
     }
     const keepFrom = now.getTime() - 5 * 86400000;
     store.orders = store.orders.filter(
@@ -810,6 +841,9 @@ function completeStep(
       ? step.runMinutes
       : Math.round((step.estMinutes ?? 60) * (0.85 + rand(`act:${order.id}:${step.seq}`) * 0.35));
   step.runMinutes = step.actualMinutes;
+  // time-based "completed work" today: planned (est) vs actual minutes
+  st.todayPlannedMin = (st.todayPlannedMin ?? 0) + (step.estMinutes ?? 0);
+  st.todayActualMin = (st.todayActualMin ?? 0) + (step.actualMinutes ?? 0);
   st.currentOrderIds = st.currentOrderIds.filter((x) => x !== order.id);
   // backflush: raw material is issued from stock once production starts moving
   issueMaterial(store, order, now);
@@ -1330,10 +1364,17 @@ export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
     stockMoves: [...store.stockMoves].slice(0, 40),
     scrapEvents: [...store.scrapEvents].slice(0, 200),
     settings: gatedSettings,
-    today: {
-      output: store.stations.reduce((s, st) => s + st.todayOutput, 0),
-      scrap: store.stations.reduce((s, st) => s + st.todayScrap, 0),
-      util: Math.max(0, Math.min(1, plantToday(now).util * profile.utilFactor)),
-    },
+    today: (() => {
+      const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);
+      const actualMin = store.stations.reduce((s, st) => s + (st.todayActualMin ?? 0), 0);
+      return {
+        output: store.stations.reduce((s, st) => s + st.todayOutput, 0),
+        scrap: store.stations.reduce((s, st) => s + st.todayScrap, 0),
+        util: Math.max(0, Math.min(1, plantToday(now).util * profile.utilFactor)),
+        plannedHours: Math.round((plannedMin / 60) * 10) / 10,
+        actualHours: Math.round((actualMin / 60) * 10) / 10,
+        planPerf: actualMin > 0 ? Math.round((plannedMin / actualMin) * 100) : 100,
+      };
+    })(),
   };
 }

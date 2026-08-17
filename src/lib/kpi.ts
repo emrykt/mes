@@ -22,7 +22,7 @@ export type KpiSection = "production" | "quality" | "maintenance" | "sales" | "e
 
 export type KpiId =
   | "utilization"
-  | "outputAttainment"
+  | "planPerformance"
   | "adherence"
   | "scrapRate"
   | "qualityScore"
@@ -50,7 +50,7 @@ export interface KpiDef {
 
 export const KPI_DEFS: KpiDef[] = [
   { id: "utilization", section: "production", unit: "percent", direction: "up", defaultTarget: 75, alarm: true },
-  { id: "outputAttainment", section: "production", unit: "percent", direction: "up", defaultTarget: 90 },
+  { id: "planPerformance", section: "production", unit: "percent", direction: "up", defaultTarget: 100 },
   { id: "adherence", section: "production", unit: "percent", direction: "up", defaultTarget: 85 },
   { id: "scrapRate", section: "quality", unit: "percent", direction: "down", defaultTarget: 4, alarm: true },
   { id: "qualityScore", section: "quality", unit: "percent", direction: "up", defaultTarget: 90 },
@@ -119,7 +119,6 @@ function targetFor(snap: DemoSnapshot, def: KpiDef): number {
 export function computeKpis(snap: DemoSnapshot, now: Date): KpiValue[] {
   const output = snap.today.output;
   const scrap = snap.today.scrap;
-  const plantTarget = plantTargetOutput(snap);
   const score = plantScore(snap, now);
   const qualityFactor = score.factors.find((f) => f.key === "quality");
   const openOrders = snap.orders.filter((o) => !orderDone(o));
@@ -132,7 +131,7 @@ export function computeKpis(snap: DemoSnapshot, now: Date): KpiValue[] {
 
   const raw: Record<KpiId, number> = {
     utilization: snap.today.util * 100,
-    outputAttainment: plantTarget > 0 ? Math.min(140, (output / plantTarget) * 100) : 0,
+    planPerformance: snap.today.planPerf,
     adherence: adherenceRate(planPerformanceOf(snap.orders), snap.today.util) * 100,
     scrapRate: output + scrap > 0 ? (scrap / (output + scrap)) * 100 : 0,
     qualityScore: (qualityFactor?.value ?? 0.9) * 100,

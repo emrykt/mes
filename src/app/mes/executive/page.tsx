@@ -26,7 +26,7 @@ import {
   paretoOf,
   planPerformanceOf,
 } from "@/lib/mes-calc";
-import { SIM_STATIONS, plantDailySeries } from "@/lib/sim";
+import { plantDailySeries } from "@/lib/sim";
 import { companyProfile } from "@/lib/companies";
 
 function dayLabel(iso: string, locale: string): string {
@@ -55,18 +55,7 @@ export default function ExecutivePage() {
   const now = new Date(snap.now);
   const settings = snap.settings;
   const util = snap.today.util;
-  const output = snap.today.output;
-
-  // per-company sizing: capacity target + trend scale with this plant, not all 16
   const profile = companyProfile(snap.companyId);
-  const plantTarget = Math.round(
-    snap.stations.reduce(
-      (s, st) => s + (SIM_STATIONS.find((d) => d.id === st.id)?.rate ?? 0),
-      0,
-    ) *
-      24 *
-      0.65,
-  );
 
   const downStations = snap.stations.filter((s) => s.state === "down");
   const openAndon = snap.andon.filter((a) => a.open);
@@ -80,11 +69,10 @@ export default function ExecutivePage() {
   const reasonName = (id: string) =>
     settings.downtimeReasons.find((r) => r.id === id)?.name ?? id;
 
-  // scale the shared time model to this company (util & output magnitude)
+  // utilization trend, scaled to this company
   const trend = plantDailySeries(now, 7).map((d) => ({
     day: d.day,
     util: Math.min(1, d.util * profile.utilFactor),
-    output: Math.round(d.output * profile.histFactor),
   }));
 
   const maintOverdue = settings.features.maintenance
@@ -163,19 +151,12 @@ export default function ExecutivePage() {
           </p>
         </Card>
         <Card className="text-center">
-          <p className="text-xs font-medium text-muted">{t("outputToday")}</p>
+          <p className="text-xs font-medium text-muted">{t("workDoneToday")}</p>
           <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
-            {output.toLocaleString(locale)}
+            {snap.today.plannedHours}
+            <span className="text-base text-ink-2 sm:text-2xl"> {t("hoursUnit")}</span>
           </p>
-          <p className="mt-1 text-xs text-muted">
-            {t("outputOf", { target: plantTarget.toLocaleString(locale) })}
-          </p>
-          <div className="mx-auto mt-2 h-1.5 w-full max-w-40 overflow-hidden rounded-full bg-accent-wash">
-            <div
-              className="h-full rounded-full bg-accent"
-              style={{ width: `${Math.min(100, (output / Math.max(1, plantTarget)) * 100)}%` }}
-            />
-          </div>
+          <p className="mt-1 text-xs text-muted">{t("workDoneHint")}</p>
         </Card>
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("adherenceToday")}</p>
@@ -185,6 +166,48 @@ export default function ExecutivePage() {
           </p>
         </Card>
       </div>
+
+      {/* planned vs actual — time-based, no piece counts */}
+      <Card title={t("plannedVsActualTitle")} subtitle={t("plannedVsActualHint")} className="mt-4">
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div>
+            <p className="text-xs font-medium text-muted">{t("plannedHours")}</p>
+            <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums">
+              {snap.today.plannedHours}{" "}
+              <span className="text-sm text-muted">{t("hoursUnit")}</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-medium text-muted">{t("actualHours")}</p>
+            <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums text-ink-2">
+              {snap.today.actualHours}{" "}
+              <span className="text-sm text-muted">{t("hoursUnit")}</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-medium text-muted">{t("planPerfToday")}</p>
+            <p
+              className="mt-1 text-2xl font-semibold tracking-tight tabular-nums"
+              style={{
+                color:
+                  snap.today.planPerf >= 100
+                    ? "var(--color-good)"
+                    : snap.today.planPerf >= 90
+                      ? "var(--color-warning)"
+                      : "var(--color-critical)",
+              }}
+            >
+              {snap.today.planPerf}%
+            </p>
+          </div>
+        </div>
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-soft">
+          <div
+            className="h-full rounded-full bg-accent"
+            style={{ width: `${Math.min(100, snap.today.planPerf)}%` }}
+          />
+        </div>
+      </Card>
 
       {/* smart suggestions — AI Pro */}
       {ent.advancedAnalytics && (
@@ -250,25 +273,6 @@ export default function ExecutivePage() {
           ]}
           unit="percent"
           yMax={100}
-          height={160}
-        />
-      </Card>
-
-      <Card title={t("outputTrend")} className="mt-4">
-        <TrendChart
-          labels={trend.map((d) => dayLabel(d.day, locale))}
-          series={[
-            {
-              name: t("outputSeries"),
-              color: "var(--color-accent)",
-              values: trend.map((d) => d.output),
-            },
-            {
-              name: t("targetSeries"),
-              color: "#898781",
-              values: trend.map(() => plantTarget),
-            },
-          ]}
           height={160}
         />
       </Card>

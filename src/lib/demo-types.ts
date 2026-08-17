@@ -20,6 +20,10 @@ export interface LiveStation {
   downtimeUntil?: string;
   todayOutput: number;
   todayScrap: number;
+  /** Planned (estimated) minutes of work completed today — time-based, not pieces. */
+  todayPlannedMin: number;
+  /** Actual minutes taken for the work completed today. */
+  todayActualMin: number;
   /** Fractional parts accumulator for the simulation tick. */
   frac: number;
 }
@@ -294,7 +298,18 @@ export interface DemoSnapshot {
   stockMoves: StockMove[];
   scrapEvents: ScrapEvent[];
   settings: DemoSettings;
-  today: { output: number; scrap: number; util: number };
+  today: {
+    /** total pieces today (per-station only; not shown as a plant headline) */
+    output: number;
+    scrap: number;
+    util: number;
+    /** planned (estimated) hours of work completed today */
+    plannedHours: number;
+    /** actual hours taken for that completed work */
+    actualHours: number;
+    /** plan performance = planned ÷ actual (×100); >100 = faster than plan */
+    planPerf: number;
+  };
 }
 
 export type DemoAction =

@@ -495,7 +495,9 @@
       "noOperator": "Nicht zugewiesen",
       "sinceMin": "{min} Min.",
       "kpiTargetsTitle": "KPI-Ziele",
-      "kpiTargetsSubtitle": "Produktion & Qualität gegen Ziel"
+      "kpiTargetsSubtitle": "Produktion & Qualität gegen Ziel",
+      "kpiPlanPerf": "Plan-Performance",
+      "planPerfHint": "geplant ÷ Ist-Zeit"
     },
     "settings": {
       "title": "MES-Stammdaten",
@@ -689,7 +691,8 @@
       "scrapToday": "Ausschuss",
       "openCalls": "Offene Rufe",
       "noCalls": "Keine offenen Andon-Rufe",
-      "clock": "{time}"
+      "clock": "{time}",
+      "planPerfToday": "Plan-Performance"
     },
     "orders": {
       "title": "Aufträge",
@@ -806,7 +809,16 @@
       "tabAssistant": "Assistent",
       "costsSubtitle": "Kosten, Gewinn & Ausschuss",
       "tabKpi": "Ziele",
-      "kpiSubtitle": "KPI-Ziele & Scorecard"
+      "kpiSubtitle": "KPI-Ziele & Scorecard",
+      "workDoneToday": "Erledigte Arbeit",
+      "workDoneHint": "geplante Stunden heute",
+      "hoursUnit": "Std",
+      "plannedVsActualTitle": "Plan vs. Ist",
+      "plannedVsActualHint": "Zeitvergleich der heute erledigten Arbeit",
+      "plannedHours": "Geplant",
+      "actualHours": "Ist",
+      "planPerfToday": "Plan-Performance",
+      "planPerfHint": "geplant ÷ Ist-Zeit"
     },
     "upsell": {
       "badge": "AI Pro",
@@ -1091,7 +1103,8 @@
       "scorecardTitle": "Ziel-Scorecard",
       "scorecardHint": "KPIs aller Bereiche gegen Ziel.",
       "salesTargetsTitle": "Vertriebsziel",
-      "salesTargetsHint": "Termintreue-Leistung."
+      "salesTargetsHint": "Termintreue-Leistung.",
+      "planPerformance": "Plan-Performance"
     }
   },
   "portalUsers": {

@@ -140,7 +140,8 @@
     "settings": "Einstellungen",
     "internal": "Internes Team",
     "userName": "Sarah Cohen",
-    "userRole": "Plattform-Admin"
+    "userRole": "Plattform-Admin",
+    "site": "Website-Inhalt"
   },
   "adminDashboard": {
     "title": "Übersicht",

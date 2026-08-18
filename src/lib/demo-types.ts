@@ -233,6 +233,32 @@ export interface AddonTier {
   price: number;
 }
 
+/** One link inside a mega-menu panel (title + optional description + href). */
+export interface NavLink {
+  title: string;
+  description?: string;
+  href?: string;
+}
+
+/** One top-level mega-menu (label) with its dropdown panel content. */
+export interface NavMenu {
+  id: string;
+  label: string;
+  /** Panel headline + intro shown above the link grid. */
+  headline?: string;
+  intro?: string;
+  /** Optional primary call-to-action on the panel. */
+  ctaLabel?: string;
+  ctaHref?: string;
+  /** Grid of links (title + description). */
+  items: NavLink[];
+}
+
+/** Global, admin-editable marketing navigation shown on the landing page. */
+export interface SiteNav {
+  menus: NavMenu[];
+}
+
 /** Global, admin-editable pricing (not per-company). */
 export interface PricingConfig {
   /** Base monthly plan prices, by plan id. */
@@ -322,6 +348,8 @@ export interface MultiStore {
   companies: Record<string, DemoStore>;
   /** Global, admin-editable pricing shared across tenants. */
   pricing?: PricingConfig;
+  /** Global, admin-editable marketing navigation for the landing page. */
+  siteNav?: SiteNav;
 }
 
 /** A company entry for the switcher. */
@@ -353,6 +381,8 @@ export interface DemoSnapshot {
   /** Global pricing (admin-editable) + this tenant's effective retention. */
   pricing: PricingConfig;
   retention: RetentionInfo;
+  /** Global, admin-editable landing-page navigation. */
+  siteNav: SiteNav;
   today: {
     /** total pieces today (per-station only; not shown as a plant headline) */
     output: number;
@@ -411,6 +441,7 @@ export type DemoAction =
   | { type: "saveEscalationRules"; rules: EscalationRule[] }
   | { type: "saveKpiTargets"; targets: Record<string, number> }
   | { type: "savePricing"; pricing: PricingConfig }
+  | { type: "saveSiteNav"; siteNav: SiteNav }
   | { type: "setRetentionAddon"; years: number }
   | { type: "setBrandLogo"; logo: string }
   | { type: "setMaintenanceDept"; own: boolean }

@@ -7,6 +7,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {
   Factory,
   LayoutDashboard,
+  LayoutTemplate,
   ReceiptText,
   Settings,
   SlidersHorizontal,
@@ -17,6 +18,7 @@ const NAV = [
   { href: "/admin", key: "dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/customers", key: "customers", icon: Users, exact: false },
   { href: "/admin/invoices", key: "invoices", icon: ReceiptText, exact: false },
+  { href: "/admin/site", key: "site", icon: LayoutTemplate, exact: false },
   { href: "/admin/mes", key: "mesSettings", icon: SlidersHorizontal, exact: false },
   { href: "/admin/settings", key: "settings", icon: Settings, exact: false },
 ] as const;

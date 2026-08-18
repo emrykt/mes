@@ -10,7 +10,7 @@ import type {
   Tenant,
   TenantUser,
 } from "./types";
-import type { PricingConfig } from "./demo-types";
+import type { PricingConfig, SiteNav } from "./demo-types";
 
 /** Fixed demo clock so heartbeat states and countdowns render deterministically. */
 export const NOW = new Date("2026-07-07T09:00:00Z");
@@ -82,6 +82,85 @@ export const DEFAULT_PRICING: PricingConfig = {
     { years: 2, price: 19 },
     { years: 3, price: 29 },
     { years: 5, price: 39 },
+  ],
+};
+
+/**
+ * Default landing-page mega-menu (admin-editable at runtime). Seeded with rich,
+ * trust-building content that mirrors the actual Prodgence product surface.
+ */
+export const DEFAULT_SITE_NAV: SiteNav = {
+  menus: [
+    {
+      id: "products",
+      label: "Products",
+      headline: "One AI platform for the whole shop floor",
+      intro: "From the operator kiosk to the executive cockpit — every role on one connected system.",
+      ctaLabel: "See the live demo",
+      ctaHref: "#demo",
+      items: [
+        { title: "Operator Kiosk", description: "Touch-first start/stop, quantity, scrap and andon — paperless work orders.", href: "/mes/operator" },
+        { title: "Production Management", description: "Live station grid, andon feed, downtime pareto and order routing.", href: "/mes/manager" },
+        { title: "Executive Cockpit", description: "Utilization, cost, revenue and a 0–1000 performance score at a glance.", href: "/mes/executive" },
+        { title: "Sales & Quoting", description: "Price jobs from station rates, save quotes and check free capacity.", href: "/mes/sales" },
+        { title: "Maintenance", description: "Planned maintenance calendar plus AI escalations from live faults.", href: "/mes/maintenance" },
+        { title: "Stock & Materials", description: "Weight- and piece-aware raw-material stock with automatic backflush.", href: "/mes/stock" },
+        { title: "Andon TV Board", description: "Full-screen live shop-floor status — never license-gated.", href: "/mes/tv" },
+        { title: "Smart Assistant", description: "Ask the plant anything; get grounded, data-driven answers.", href: "/mes/manager/assistant" },
+      ],
+    },
+    {
+      id: "solutions",
+      label: "Solutions",
+      headline: "Built for how metalworking shops actually run",
+      intro: "Whether you cut sheet, turn shafts or do both, Prodgence adapts to your operations — no two-year rollout.",
+      ctaLabel: "Explore pricing",
+      ctaHref: "#pricing",
+      items: [
+        { title: "Sheet-metal fabrication", description: "Laser, plasma, press-brake and welding with nesting-aware batches.", href: "#features" },
+        { title: "CNC machining", description: "Sawing, turning, milling and drilling with tool and material tracking.", href: "#features" },
+        { title: "Mixed fabrication", description: "Run cutting and machining side by side on one shared routing model.", href: "#features" },
+        { title: "Small job shops", description: "Full MES on the Basic plan — no per-station limits, live in days.", href: "#pricing" },
+        { title: "For operators", description: "Less paperwork, clearer priorities, instant help calls.", href: "/mes/operator" },
+        { title: "For plant managers", description: "See the bottleneck, the root cause and what to do next.", href: "/mes/manager" },
+        { title: "For executives", description: "Turn production data into measurable profit and lost-cost recovery.", href: "/mes/executive" },
+        { title: "For sales teams", description: "Quote faster with real capacity and real station costs.", href: "/mes/sales" },
+      ],
+    },
+    {
+      id: "resources",
+      label: "Resources",
+      headline: "Everything you need to succeed",
+      intro: "Guides, proof and answers — from first evaluation to full rollout.",
+      ctaLabel: "Start the demo",
+      ctaHref: "#demo",
+      items: [
+        { title: "Product tour", description: "Walk the operator, manager and executive screens in minutes.", href: "#features" },
+        { title: "ROI & value", description: "How recovered capacity and avoided downtime pay for the platform.", href: "#features" },
+        { title: "Implementation guide", description: "A pragmatic path to go live without disrupting production.", href: "#" },
+        { title: "Data security & privacy", description: "Encryption, access control and clear data-retention windows.", href: "#" },
+        { title: "Release notes", description: "What's new — shipped continuously, migrated without downtime.", href: "#" },
+        { title: "Customer stories", description: "How real shops cut scrap, downtime and quoting time.", href: "#" },
+        { title: "Help & documentation", description: "Setup, catalogs, plans and day-to-day how-tos.", href: "#" },
+        { title: "Community", description: "Share tips and best practices with other shops.", href: "#" },
+      ],
+    },
+    {
+      id: "company",
+      label: "Company",
+      headline: "Building the future of production intelligence",
+      intro: "A focused team helping metalworking shops run measurably better.",
+      ctaLabel: "Talk to sales",
+      ctaHref: "/portal",
+      items: [
+        { title: "About Prodgence", description: "Our mission: turn shop-floor data into profit.", href: "#" },
+        { title: "Trust & compliance", description: "The measures we take to keep your data secure and available.", href: "#" },
+        { title: "Careers", description: "Join us building the platform for modern manufacturing.", href: "#" },
+        { title: "Newsroom", description: "Announcements, milestones and press.", href: "#" },
+        { title: "Partners", description: "Integrators and resellers extending Prodgence.", href: "#" },
+        { title: "Contact sales", description: "Get a tailored walkthrough for your shop.", href: "/portal" },
+      ],
+    },
   ],
 };
 

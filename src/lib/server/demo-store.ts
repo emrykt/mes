@@ -17,8 +17,8 @@ import {
   companyProfile,
   type CompanyProfile,
 } from "../companies";
-import { DEFAULT_PRICING, PLAN_ENTITLEMENTS, PLAN_RETENTION_MONTHS } from "../data";
-import type { PricingConfig } from "../demo-types";
+import { DEFAULT_PRICING, DEFAULT_SITE_NAV, PLAN_ENTITLEMENTS, PLAN_RETENTION_MONTHS } from "../data";
+import type { PricingConfig, SiteNav } from "../demo-types";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -229,13 +229,28 @@ function clonePricing(): PricingConfig {
   };
 }
 
+function cloneSiteNav(): SiteNav {
+  return {
+    menus: DEFAULT_SITE_NAV.menus.map((m) => ({
+      ...m,
+      items: m.items.map((it) => ({ ...it })),
+    })),
+  };
+}
+
 /** Seed the whole multi-tenant store: one independent plant per company. */
 function seedMulti(now: Date): MultiStore {
   const companies: Record<string, DemoStore> = {};
   for (const profile of COMPANY_PROFILES) {
     companies[profile.id] = seedStore(now, profile);
   }
-  return { version: 2, createdAt: now.toISOString(), companies, pricing: clonePricing() };
+  return {
+    version: 2,
+    createdAt: now.toISOString(),
+    companies,
+    pricing: clonePricing(),
+    siteNav: cloneSiteNav(),
+  };
 }
 
 /**
@@ -631,6 +646,7 @@ function reviveMulti(raw: string, now: Date): MultiStore {
     }
   }
   multi.pricing ??= clonePricing();
+  multi.siteNav ??= cloneSiteNav();
   return multi as MultiStore;
 }
 
@@ -686,7 +702,7 @@ export function advanceMulti(multi: MultiStore, now: Date): boolean {
 /** Snapshot one company by id (defaults to the first configured company). */
 export function snapshotFor(multi: MultiStore, companyId: string, now: Date): DemoSnapshot {
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
-  return snapshot(store, now, multi.pricing ?? clonePricing());
+  return snapshot(store, now, multi.pricing ?? clonePricing(), multi.siteNav ?? cloneSiteNav());
 }
 
 /** Apply an action to one company. resetDemo reseeds the whole multi store. */
@@ -701,10 +717,15 @@ export function applyActionMulti(
     multi.companies = fresh.companies;
     multi.createdAt = fresh.createdAt;
     multi.pricing = fresh.pricing;
+    multi.siteNav = fresh.siteNav;
     return;
   }
   if (action.type === "savePricing") {
     multi.pricing = action.pricing;
+    return;
+  }
+  if (action.type === "saveSiteNav") {
+    multi.siteNav = action.siteNav;
     return;
   }
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
@@ -1397,7 +1418,12 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
 
 /* ------------------------------ snapshot --------------------------- */
 
-export function snapshot(store: DemoStore, now: Date, pricing: PricingConfig): DemoSnapshot {
+export function snapshot(
+  store: DemoStore,
+  now: Date,
+  pricing: PricingConfig,
+  siteNav: SiteNav,
+): DemoSnapshot {
   const profile = companyProfile(store.id);
   const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
   const addonYears = store.settings.retentionAddonYears ?? 0;
@@ -1436,6 +1462,7 @@ export function snapshot(store: DemoStore, now: Date, pricing: PricingConfig): D
     scrapEvents: [...store.scrapEvents].slice(0, 200),
     settings: gatedSettings,
     pricing,
+    siteNav,
     retention: { planMonths, addonYears, totalMonths, addonMonthlyPrice },
     today: (() => {
       const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);

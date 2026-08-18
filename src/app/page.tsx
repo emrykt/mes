@@ -2,6 +2,10 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Reveal from "@/components/landing/Reveal";
 import SiteNav from "@/components/landing/SiteNav";
+import TrustBar from "@/components/landing/TrustBar";
+import Testimonials from "@/components/landing/Testimonials";
+import Faq from "@/components/landing/Faq";
+import SiteFooter from "@/components/landing/SiteFooter";
 import {
   ArrowRight,
   Bot,
@@ -126,6 +130,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- TRUST BAR (managed) ---------- */}
+      <TrustBar />
 
       {/* ---------- AI FEATURES ---------- */}
       <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
@@ -269,18 +276,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ---------- FOOTER ---------- */}
-      <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-muted sm:flex-row">
-          <div className="flex items-center gap-2">
-            <span className="flex size-6 items-center justify-center rounded-md bg-accent text-white">
-              <Factory className="size-3.5" />
-            </span>
-            <span className="font-medium text-ink-2">{tc("appName")}</span>
-          </div>
-          <p>{t("footerTagline")}</p>
-        </div>
-      </footer>
+      {/* ---------- TESTIMONIALS (managed) ---------- */}
+      <Testimonials />
+
+      {/* ---------- FAQ (managed) ---------- */}
+      <Faq />
+
+      {/* ---------- FOOTER (managed) ---------- */}
+      <SiteFooter />
     </main>
   );
 }

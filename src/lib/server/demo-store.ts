@@ -17,8 +17,14 @@ import {
   companyProfile,
   type CompanyProfile,
 } from "../companies";
-import { DEFAULT_PRICING, DEFAULT_SITE_NAV, PLAN_ENTITLEMENTS, PLAN_RETENTION_MONTHS } from "../data";
-import type { PricingConfig, SiteNav } from "../demo-types";
+import {
+  DEFAULT_PRICING,
+  DEFAULT_SITE_CONTENT,
+  DEFAULT_SITE_NAV,
+  PLAN_ENTITLEMENTS,
+  PLAN_RETENTION_MONTHS,
+} from "../data";
+import type { PricingConfig, SiteContent, SiteNav } from "../demo-types";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -65,6 +71,14 @@ declare global {
  *   1 — order-number prefix SIP- → WO-
  */
 const CURRENT_SCHEMA = 1;
+
+/**
+ * Version of the bundled default marketing content (nav + landing sections).
+ * Bump when shipping new curated defaults so existing stores refresh to them on
+ * load (admin edits persist until the next bump). See MultiStore.siteVersion.
+ *   1 — mega-menu + trust bar / testimonials / FAQ / footer + item icons
+ */
+const CURRENT_SITE_VERSION = 1;
 
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -238,6 +252,11 @@ function cloneSiteNav(): SiteNav {
   };
 }
 
+function cloneSiteContent(): SiteContent {
+  // structuredClone keeps the nested arrays independent from the module default
+  return structuredClone(DEFAULT_SITE_CONTENT);
+}
+
 /** Seed the whole multi-tenant store: one independent plant per company. */
 function seedMulti(now: Date): MultiStore {
   const companies: Record<string, DemoStore> = {};
@@ -250,6 +269,8 @@ function seedMulti(now: Date): MultiStore {
     companies,
     pricing: clonePricing(),
     siteNav: cloneSiteNav(),
+    siteContent: cloneSiteContent(),
+    siteVersion: CURRENT_SITE_VERSION,
   };
 }
 
@@ -646,7 +667,16 @@ function reviveMulti(raw: string, now: Date): MultiStore {
     }
   }
   multi.pricing ??= clonePricing();
-  multi.siteNav ??= cloneSiteNav();
+  // Marketing content: refresh to the current curated defaults when the store
+  // predates them (or has none). Plant/company state is untouched.
+  if ((multi.siteVersion ?? 0) < CURRENT_SITE_VERSION) {
+    multi.siteNav = cloneSiteNav();
+    multi.siteContent = cloneSiteContent();
+    multi.siteVersion = CURRENT_SITE_VERSION;
+  } else {
+    multi.siteNav ??= cloneSiteNav();
+    multi.siteContent ??= cloneSiteContent();
+  }
   return multi as MultiStore;
 }
 
@@ -702,7 +732,13 @@ export function advanceMulti(multi: MultiStore, now: Date): boolean {
 /** Snapshot one company by id (defaults to the first configured company). */
 export function snapshotFor(multi: MultiStore, companyId: string, now: Date): DemoSnapshot {
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
-  return snapshot(store, now, multi.pricing ?? clonePricing(), multi.siteNav ?? cloneSiteNav());
+  return snapshot(
+    store,
+    now,
+    multi.pricing ?? clonePricing(),
+    multi.siteNav ?? cloneSiteNav(),
+    multi.siteContent ?? cloneSiteContent(),
+  );
 }
 
 /** Apply an action to one company. resetDemo reseeds the whole multi store. */
@@ -718,6 +754,8 @@ export function applyActionMulti(
     multi.createdAt = fresh.createdAt;
     multi.pricing = fresh.pricing;
     multi.siteNav = fresh.siteNav;
+    multi.siteContent = fresh.siteContent;
+    multi.siteVersion = fresh.siteVersion;
     return;
   }
   if (action.type === "savePricing") {
@@ -726,6 +764,10 @@ export function applyActionMulti(
   }
   if (action.type === "saveSiteNav") {
     multi.siteNav = action.siteNav;
+    return;
+  }
+  if (action.type === "saveSiteContent") {
+    multi.siteContent = action.siteContent;
     return;
   }
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
@@ -1423,6 +1465,7 @@ export function snapshot(
   now: Date,
   pricing: PricingConfig,
   siteNav: SiteNav,
+  siteContent: SiteContent,
 ): DemoSnapshot {
   const profile = companyProfile(store.id);
   const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
@@ -1463,6 +1506,7 @@ export function snapshot(
     settings: gatedSettings,
     pricing,
     siteNav,
+    siteContent,
     retention: { planMonths, addonYears, totalMonths, addonMonthlyPrice },
     today: (() => {
       const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUp, Plus, RotateCcw, Save, Trash2, Upload } from "lucide-react";
 import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 import { Card } from "@/components/ui";
+import { NAV_ICON_NAMES } from "@/lib/nav-icons";
 import type { NavMenu } from "@/lib/demo-types";
 
 const inputCls =
@@ -11,6 +12,32 @@ const inputCls =
 
 function clone(menus: NavMenu[]): NavMenu[] {
   return menus.map((m) => ({ ...m, items: m.items.map((it) => ({ ...it })) }));
+}
+
+const MAX_IMG = 400 * 1024;
+function MenuImageUpload({ url, onChange }: { url?: string; onChange: (u: string) => void }) {
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <button onClick={() => ref.current?.click()} className="inline-flex items-center gap-1 rounded-lg border border-line px-2.5 py-1.5 text-xs hover:bg-neutral-soft">
+        <Upload className="size-3.5" /> {url ? "Change" : "Upload"}
+      </button>
+      <input
+        ref={ref}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (!file || !file.type.startsWith("image/") || file.size > MAX_IMG) return;
+          const r = new FileReader();
+          r.onload = () => typeof r.result === "string" && onChange(r.result);
+          r.readAsDataURL(file);
+        }}
+      />
+    </>
+  );
 }
 
 function move<T>(arr: T[], i: number, dir: -1 | 1): T[] {
@@ -143,6 +170,15 @@ function Editor() {
             </label>
           </div>
 
+          <div className="mt-3 flex items-center gap-3">
+            <span className="text-xs font-medium text-ink-2">Panel image</span>
+            {m.image && <img src={m.image} alt="" className="h-9 max-w-24 rounded object-cover" />}
+            <MenuImageUpload url={m.image} onChange={(u) => setMenu(mi, { image: u })} />
+            {m.image && (
+              <button onClick={() => setMenu(mi, { image: undefined })} className="text-xs text-critical-text hover:underline">Remove</button>
+            )}
+          </div>
+
           <div className="mt-4 border-t border-line pt-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-ink-2">Links ({m.items.length})</p>
@@ -152,10 +188,14 @@ function Editor() {
             </div>
             <div className="mt-2 space-y-2">
               {m.items.map((it, ii) => (
-                <div key={ii} className="grid gap-2 rounded-lg border border-line p-2.5 sm:grid-cols-[1fr_1.4fr_0.8fr_auto]">
+                <div key={ii} className="grid gap-2 rounded-lg border border-line p-2.5 sm:grid-cols-[1fr_1.4fr_0.8fr_0.8fr_auto]">
                   <input value={it.title} onChange={(e) => setItem(mi, ii, { title: e.target.value })} className={inputCls} placeholder="Title" />
                   <input value={it.description ?? ""} onChange={(e) => setItem(mi, ii, { description: e.target.value })} className={inputCls} placeholder="Description" />
                   <input value={it.href ?? ""} onChange={(e) => setItem(mi, ii, { href: e.target.value })} className={inputCls} placeholder="Link" />
+                  <select value={it.icon ?? ""} onChange={(e) => setItem(mi, ii, { icon: e.target.value || undefined })} className={inputCls}>
+                    <option value="">no icon</option>
+                    {NAV_ICON_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
+                  </select>
                   <div className="flex gap-1">
                     <button onClick={() => moveItem(mi, ii, -1)} disabled={ii === 0} className="rounded-lg border border-line p-1.5 hover:bg-neutral-soft disabled:opacity-40" aria-label="Move up">
                       <ArrowUp className="size-3.5" />

@@ -5,23 +5,31 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown, Factory, Menu, X } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { DEFAULT_SITE_NAV } from "@/lib/data";
-import type { NavLink as NavLinkT, NavMenu } from "@/lib/demo-types";
+import { NavIcon } from "@/lib/nav-icons";
+import { useSiteConfig } from "@/lib/useSiteConfig";
+import type { NavLink as NavLinkT } from "@/lib/demo-types";
 
 /** Internal paths use client-side routing; anchors/hash use a plain link. */
 function PanelLink({ item, onClick }: { item: NavLinkT; onClick: () => void }) {
   const href = item.href || "#";
   const inner = (
-    <>
-      <span className="block text-sm font-semibold text-ink group-hover/item:text-accent-strong">
-        {item.title}
-      </span>
-      {item.description && (
-        <span className="mt-0.5 block text-xs leading-relaxed text-ink-2">
-          {item.description}
+    <div className="flex gap-2.5">
+      {item.icon && (
+        <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-strong">
+          <NavIcon name={item.icon} className="size-4" />
         </span>
       )}
-    </>
+      <div>
+        <span className="block text-sm font-semibold text-ink group-hover/item:text-accent-strong">
+          {item.title}
+        </span>
+        {item.description && (
+          <span className="mt-0.5 block text-xs leading-relaxed text-ink-2">
+            {item.description}
+          </span>
+        )}
+      </div>
+    </div>
   );
   const cls = "group/item block rounded-lg p-2.5 transition-colors hover:bg-accent-soft/50";
   return href.startsWith("/") ? (
@@ -47,7 +55,7 @@ export default function SiteNav() {
   const [solid, setSolid] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [menus, setMenus] = useState<NavMenu[]>(DEFAULT_SITE_NAV.menus);
+  const menus = useSiteConfig().nav.menus;
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -55,19 +63,6 @@ export default function SiteNav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    let alive = true;
-    fetch("/api/site-nav")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (alive && d?.menus?.length) setMenus(d.menus);
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
   }, []);
 
   useEffect(() => {
@@ -171,7 +166,11 @@ export default function SiteNav() {
           onMouseLeave={scheduleClose}
         >
           <div className="mx-auto max-w-6xl px-6 py-8">
-            <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
+            <div
+              className={`grid gap-8 ${
+                openMenu.image ? "lg:grid-cols-[260px_1fr_240px]" : "lg:grid-cols-[300px_1fr]"
+              }`}
+            >
               <div>
                 {openMenu.headline && (
                   <h3 className="text-xl font-semibold tracking-tight text-ink">
@@ -193,11 +192,21 @@ export default function SiteNav() {
                   </a>
                 )}
               </div>
-              <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
                 {openMenu.items.map((it, i) => (
                   <PanelLink key={i} item={it} onClick={() => setOpenId(null)} />
                 ))}
               </div>
+              {openMenu.image && (
+                <div className="hidden xl:block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={openMenu.image}
+                    alt=""
+                    className="h-full max-h-56 w-full rounded-xl object-cover"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

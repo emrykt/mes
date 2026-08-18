@@ -238,6 +238,8 @@ export interface NavLink {
   title: string;
   description?: string;
   href?: string;
+  /** Optional icon name from the curated set (see lib/nav-icons). */
+  icon?: string;
 }
 
 /** One top-level mega-menu (label) with its dropdown panel content. */
@@ -250,6 +252,8 @@ export interface NavMenu {
   /** Optional primary call-to-action on the panel. */
   ctaLabel?: string;
   ctaHref?: string;
+  /** Optional promo image (data URL) shown on the right of the panel. */
+  image?: string;
   /** Grid of links (title + description). */
   items: NavLink[];
 }
@@ -257,6 +261,88 @@ export interface NavMenu {
 /** Global, admin-editable marketing navigation shown on the landing page. */
 export interface SiteNav {
   menus: NavMenu[];
+}
+
+/* ---- Landing content sections (admin-managed) ---- */
+
+/** A headline stat, e.g. "23%" / "less downtime". */
+export interface TrustStat {
+  value: string;
+  label: string;
+}
+
+/** A customer logo (name, optional image data URL). */
+export interface TrustLogo {
+  name: string;
+  image?: string;
+}
+
+/** Trust bar under the hero: logos + compliance badges + stats. */
+export interface TrustBar {
+  enabled: boolean;
+  logosTitle?: string;
+  logos: TrustLogo[];
+  badges: string[];
+  stats: TrustStat[];
+}
+
+/** A customer testimonial / quote. */
+export interface Testimonial {
+  quote: string;
+  name: string;
+  role?: string;
+  company?: string;
+}
+
+export interface TestimonialsSection {
+  enabled: boolean;
+  headline?: string;
+  intro?: string;
+  items: Testimonial[];
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface FaqSection {
+  enabled: boolean;
+  headline?: string;
+  intro?: string;
+  items: FaqItem[];
+}
+
+export interface FooterLink {
+  title: string;
+  href?: string;
+}
+
+export interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+export interface SocialLink {
+  /** Icon name from the curated set (see lib/nav-icons). */
+  icon: string;
+  label: string;
+  href?: string;
+}
+
+export interface FooterConfig {
+  tagline?: string;
+  columns: FooterColumn[];
+  socials: SocialLink[];
+  legal?: string;
+}
+
+/** Global, admin-editable landing content beyond the nav. */
+export interface SiteContent {
+  trustBar: TrustBar;
+  testimonials: TestimonialsSection;
+  faq: FaqSection;
+  footer: FooterConfig;
 }
 
 /** Global, admin-editable pricing (not per-company). */
@@ -350,6 +436,15 @@ export interface MultiStore {
   pricing?: PricingConfig;
   /** Global, admin-editable marketing navigation for the landing page. */
   siteNav?: SiteNav;
+  /** Global, admin-editable landing content (trust bar, testimonials, FAQ, footer). */
+  siteContent?: SiteContent;
+  /**
+   * Version of the bundled default marketing content (nav + sections). When the
+   * product ships new curated defaults we bump this; on load, stores below the
+   * current version are refreshed to the new defaults. Admin edits persist until
+   * the next deliberate bump. Does NOT touch plant/company state.
+   */
+  siteVersion?: number;
 }
 
 /** A company entry for the switcher. */
@@ -383,6 +478,8 @@ export interface DemoSnapshot {
   retention: RetentionInfo;
   /** Global, admin-editable landing-page navigation. */
   siteNav: SiteNav;
+  /** Global, admin-editable landing content sections. */
+  siteContent: SiteContent;
   today: {
     /** total pieces today (per-station only; not shown as a plant headline) */
     output: number;
@@ -442,6 +539,7 @@ export type DemoAction =
   | { type: "saveKpiTargets"; targets: Record<string, number> }
   | { type: "savePricing"; pricing: PricingConfig }
   | { type: "saveSiteNav"; siteNav: SiteNav }
+  | { type: "saveSiteContent"; siteContent: SiteContent }
   | { type: "setRetentionAddon"; years: number }
   | { type: "setBrandLogo"; logo: string }
   | { type: "setMaintenanceDept"; own: boolean }

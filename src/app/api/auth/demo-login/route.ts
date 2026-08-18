@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { loadStore, persist } from "@/lib/server/demo-store";
 import { SESSION_COOKIE } from "@/lib/server/session";
 import { ALL_MODULES, sanitizeUser } from "@/lib/auth";
+import { hashPassword } from "@/lib/server/password";
 import { DEFAULT_COMPANY_ID } from "@/lib/companies";
 import type { AuthUser } from "@/lib/demo-types";
 
@@ -23,7 +24,7 @@ export async function POST() {
       kind: "tenant",
       name: "Demo Viewer",
       email: "demo@prodgence.com",
-      password: "demo",
+      password: hashPassword("demo"),
       status: "active",
       createdAt: now.toISOString(),
       readOnly: true,

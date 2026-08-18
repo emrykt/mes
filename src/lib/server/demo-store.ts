@@ -26,6 +26,7 @@ import {
 } from "../data";
 import type { AuthState, AuthUser, Lead, PricingConfig, SiteContent, SiteNav, TenantRole } from "../demo-types";
 import { defaultModules } from "../auth";
+import { hashPassword } from "./password";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -272,10 +273,11 @@ function companyDomain(id: string): string {
  */
 function seedAuth(now: Date): AuthState {
   const iso = now.toISOString();
+  const hp = hashPassword;
   const users: AuthUser[] = [
-    { id: "pu-owner", kind: "platform", name: "Platform Owner", username: "owner", password: "prodgence", status: "active", createdAt: iso, platformRole: "owner" },
-    { id: "pu-admin", kind: "platform", name: "Alex Admin", username: "admin", password: "prodgence", status: "active", createdAt: iso, platformRole: "admin" },
-    { id: "pu-sales", kind: "platform", name: "Sam Sales", username: "sales", password: "prodgence", status: "active", createdAt: iso, platformRole: "sales" },
+    { id: "pu-owner", kind: "platform", name: "Platform Owner", username: "owner", password: hp("prodgence"), status: "active", createdAt: iso, platformRole: "owner" },
+    { id: "pu-admin", kind: "platform", name: "Alex Admin", username: "admin", password: hp("prodgence"), status: "active", createdAt: iso, platformRole: "admin" },
+    { id: "pu-sales", kind: "platform", name: "Sam Sales", username: "sales", password: hp("prodgence"), status: "active", createdAt: iso, platformRole: "sales" },
   ];
 
   for (const p of COMPANY_PROFILES) {
@@ -285,7 +287,7 @@ function seedAuth(now: Date): AuthState {
       kind: "tenant",
       name: `${p.name} Owner`,
       email: `owner@${dom}`,
-      password: "demo1234",
+      password: hp("demo1234"),
       status: "active",
       createdAt: iso,
       tenantId: p.id,
@@ -303,7 +305,7 @@ function seedAuth(now: Date): AuthState {
       kind: "tenant",
       name,
       email: `${local}@${dom}`,
-      password: status === "active" ? "demo1234" : undefined,
+      password: status === "active" ? hp("demo1234") : undefined,
       status,
       createdAt: iso,
       tenantId: first.id,
@@ -325,7 +327,7 @@ function seedAuth(now: Date): AuthState {
       kind: "tenant",
       name: "Demo Viewer",
       email: "demo@prodgence.com",
-      password: "demo",
+      password: hp("demo"),
       status: "active",
       createdAt: iso,
       readOnly: true,

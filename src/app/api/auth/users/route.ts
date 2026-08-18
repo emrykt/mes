@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { loadStore, persist } from "@/lib/server/demo-store";
 import { getSessionUser } from "@/lib/server/session";
 import { canManagePlatform, canManageTenant, defaultModules, sanitizeUser } from "@/lib/auth";
+import { hashPassword } from "@/lib/server/password";
 import type { AppModule, AuthUser, PlatformRole, TenantRole } from "@/lib/demo-types";
 
 export const dynamic = "force-dynamic";
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
       kind: "platform",
       name,
       username,
-      password,
+      password: hashPassword(password),
       status: "active",
       createdAt: now.toISOString(),
       platformRole: role,

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { loadStore, persist } from "@/lib/server/demo-store";
 import { SESSION_COOKIE } from "@/lib/server/session";
+import { hashPassword } from "@/lib/server/password";
 import { sanitizeUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
   if (!u) return NextResponse.json({ error: "invalid" }, { status: 404 });
 
   if (body.name?.trim()) u.name = body.name.trim();
-  u.password = password;
+  u.password = hashPassword(password);
   u.status = "active";
   u.inviteToken = undefined;
   u.lastLoginAt = now.toISOString();

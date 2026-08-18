@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { loadStore, persist } from "@/lib/server/demo-store";
 import { SESSION_COOKIE } from "@/lib/server/session";
+import { hashPassword, isHashed, verifyPassword } from "@/lib/server/password";
 import { sanitizeUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -23,10 +24,12 @@ export async function POST(req: Request) {
       u.status === "active" &&
       (u.email?.toLowerCase() === id || u.username?.toLowerCase() === id),
   );
-  if (!user || user.password !== pw) {
+  if (!user || !verifyPassword(pw, user.password)) {
     return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
   }
 
+  // lazy migration: upgrade any legacy plain-text password to a hash on login
+  if (!isHashed(user.password)) user.password = hashPassword(pw);
   user.lastLoginAt = now.toISOString();
   await persist(multi, true);
 

@@ -28,7 +28,7 @@ export interface LiveStation {
   frac: number;
 }
 
-export type CurrencyCode = "USD" | "EUR" | "TRY";
+export type CurrencyCode = "USD" | "EUR" | "GBP";
 
 /** Who an escalation notifies. */
 export type AlertTarget = "supervisor" | "maintenance" | "quality" | "purchasing";
@@ -211,6 +211,29 @@ export interface DemoSettings {
   escalationRules: EscalationRule[];
   /** Editable KPI targets, keyed by KpiId (see lib/kpi.ts). */
   kpiTargets: Record<string, number>;
+  /** Extra data-retention months this tenant has purchased (add-on). */
+  retentionAddonMonths: number;
+}
+
+/** One purchasable data-retention add-on tier. */
+export interface AddonTier {
+  years: number;
+  price: number;
+}
+
+/** Global, admin-editable pricing (not per-company). */
+export interface PricingConfig {
+  /** Base monthly plan prices, by plan id. */
+  plans: Record<PlanId, number>;
+  /** Data-retention extension add-ons sold from the customer portal. */
+  addonTiers: AddonTier[];
+}
+
+/** Effective data retention for a tenant (plan window + purchased add-on). */
+export interface RetentionInfo {
+  planMonths: number;
+  addonMonths: number;
+  totalMonths: number;
 }
 
 /** One recurring planned-maintenance task bound to a station. */
@@ -270,6 +293,8 @@ export interface MultiStore {
   version: 2;
   createdAt: string;
   companies: Record<string, DemoStore>;
+  /** Global, admin-editable pricing shared across tenants. */
+  pricing?: PricingConfig;
 }
 
 /** A company entry for the switcher. */
@@ -298,6 +323,9 @@ export interface DemoSnapshot {
   stockMoves: StockMove[];
   scrapEvents: ScrapEvent[];
   settings: DemoSettings;
+  /** Global pricing (admin-editable) + this tenant's effective retention. */
+  pricing: PricingConfig;
+  retention: RetentionInfo;
   today: {
     /** total pieces today (per-station only; not shown as a plant headline) */
     output: number;
@@ -355,6 +383,8 @@ export type DemoAction =
   | { type: "ackAlert"; id: string }
   | { type: "saveEscalationRules"; rules: EscalationRule[] }
   | { type: "saveKpiTargets"; targets: Record<string, number> }
+  | { type: "savePricing"; pricing: PricingConfig }
+  | { type: "buyRetentionAddon"; months: number }
   | { type: "setMaintenanceDept"; own: boolean }
   | { type: "setWorkingCalendar"; calendar: WorkingCalendar }
   | { type: "saveQuote"; quote: Omit<SavedQuote, "id" | "at"> }

@@ -22,12 +22,11 @@ import { SIM_STATIONS } from "@/lib/sim";
 
 export const dynamic = "force-dynamic";
 
-const LANG: Record<string, string> = { en: "English", tr: "Turkish", de: "German" };
+const LANG: Record<string, string> = { en: "English", de: "German" };
 
 const REFUSAL: Record<string, string> = {
-  en: "I'm the KioskMES AI assistant — I can only provide information about production and efficiency.",
-  tr: "Ben KioskMES Yapay Zeka Asistanıyım, sadece Üretim ve Verimlilik ile ilgili bilgi verebilirim.",
-  de: "Ich bin der KioskMES-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
+  en: "I'm the Prodgence AI assistant — I can only provide information about production and efficiency.",
+  de: "Ich bin der Prodgence-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
 };
 
 /** Compact, model-friendly snapshot of the live plant. */
@@ -162,7 +161,7 @@ export async function POST(req: Request) {
     ? `\nThis is the PRODUCTION MANAGEMENT assistant: it has no money remit. Do NOT discuss cost, revenue, profit, margin, lost revenue or pricing — if asked, briefly say those belong to Sales and the Executive view and offer an operational answer instead (efficiency, bottleneck, downtime, orders, quality). Ignore any money fields in the data for your answers.`
     : "";
 
-  const system = `You are the KioskMES Smart Manufacturing Assistant for a sheet-metal factory's MES (manufacturing execution system).
+  const system = `You are the Prodgence Smart Manufacturing Assistant for a sheet-metal fabrication shop.
 You answer ONLY questions about production and efficiency, using the live plant data provided below as JSON.
 Scope you may answer: utilization/OEE-style efficiency, output vs target, plan performance, daily and downtime cost, revenue/profit/margin, lost revenue (opportunity cost of downtime), which machines are down and for how long, scrap, maintenance plan, order/backlog status and due-date risk, shift and operator comparison, andon calls, the current bottleneck and how to relieve it (smartSuggestions), open escalations/alerts (openEscalations), why a late order is behind (lateOrderRootCauses), the 0–1000 performance score and how to raise it (performanceScore — improving its weakest factors adds the most points), and rough quoting/pricing questions using the station billing rates.
 If the user asks about anything outside production and efficiency (general knowledge, coding, chit-chat, politics, personal advice, etc.), you MUST reply with exactly this sentence and nothing else: "${refusal}"

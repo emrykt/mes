@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Card, Table, Td, Th } from "@/components/ui";
 import AdminPlanSelector from "@/components/admin/AdminPlanSelector";
+import AdminPricing from "@/components/admin/AdminPricing";
 import { PLANS, PLAN_ENTITLEMENTS, PLAN_ORDER } from "@/lib/data";
 import { formatMoney } from "@/lib/format";
 
@@ -31,8 +32,11 @@ export default function SettingsPage() {
         <p className="mt-1 text-sm text-ink-2">{t("subtitle")}</p>
       </div>
 
-      {/* subscription plan (moved here from MES definitions) */}
+      {/* subscription plan (moved here from Definitions) */}
       <AdminPlanSelector />
+
+      {/* editable package + data-retention add-on pricing */}
+      <AdminPricing />
 
       <Card title={t("planMappingTitle")} padded={false}>
         <Table>

@@ -47,7 +47,7 @@ export default function OperatorKioskPage() {
   const locale = useLocale();
   const { snap, dispatch } = useDemo();
 
-  const [stationId, setStationId] = useState("st-lazer-1");
+  const [stationId, setStationId] = useState("st-laser-1");
   const [showDowntime, setShowDowntime] = useState(false);
   const [showAndon, setShowAndon] = useState(false);
   const [showScan, setShowScan] = useState(false);
@@ -142,7 +142,7 @@ export default function OperatorKioskPage() {
         <Link
           href="/mes"
           className="flex size-9 items-center justify-center rounded-lg bg-accent"
-          aria-label="KioskMES"
+          aria-label="Prodgence"
         >
           <Factory className="size-5" />
         </Link>

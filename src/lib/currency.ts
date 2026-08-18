@@ -1,6 +1,6 @@
 import type { CurrencyCode } from "./demo-types";
 
-export const CURRENCIES: CurrencyCode[] = ["USD", "EUR", "TRY"];
+export const CURRENCIES: CurrencyCode[] = ["USD", "EUR", "GBP"];
 
 /**
  * Format an amount in the selected display currency. The product is global:

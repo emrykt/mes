@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import { Card, StatusBadge } from "@/components/ui";
 import { DEMO_DATES, usePortalState } from "@/components/portal/PortalState";
+import PortalRetention from "@/components/portal/PortalRetention";
 import {
   PLANS,
   PLAN_ENTITLEMENTS,
@@ -60,6 +61,8 @@ export default function PortalSubscriptionPage() {
           <p className="mt-1 text-xs text-good-text">{t("noLimit")}</p>
         </Card>
       </div>
+
+      <PortalRetention />
 
       <Card title={t("planChangeTitle")} subtitle={t("planChangeNote")}>
         <div className="grid gap-4 md:grid-cols-3">

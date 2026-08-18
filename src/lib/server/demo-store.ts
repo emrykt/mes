@@ -17,7 +17,8 @@ import {
   companyProfile,
   type CompanyProfile,
 } from "../companies";
-import { PLAN_ENTITLEMENTS } from "../data";
+import { DEFAULT_PRICING, PLAN_ENTITLEMENTS, PLAN_RETENTION_MONTHS } from "../data";
+import type { PricingConfig } from "../demo-types";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -175,6 +176,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
       scrapReasons: [...DEFAULT_SCRAP_REASONS],
       escalationRules: DEFAULT_ESCALATION_RULES.map((r) => ({ ...r })),
       kpiTargets: defaultKpiTargets(profile),
+      retentionAddonMonths: 0,
     },
     alerts: [],
     quotes: seedQuotes(now),
@@ -195,13 +197,20 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
   return store;
 }
 
+function clonePricing(): PricingConfig {
+  return {
+    plans: { ...DEFAULT_PRICING.plans },
+    addonTiers: DEFAULT_PRICING.addonTiers.map((a) => ({ ...a })),
+  };
+}
+
 /** Seed the whole multi-tenant store: one independent plant per company. */
 function seedMulti(now: Date): MultiStore {
   const companies: Record<string, DemoStore> = {};
   for (const profile of COMPANY_PROFILES) {
     companies[profile.id] = seedStore(now, profile);
   }
-  return { version: 2, createdAt: now.toISOString(), companies };
+  return { version: 2, createdAt: now.toISOString(), companies, pricing: clonePricing() };
 }
 
 /**
@@ -210,18 +219,18 @@ function seedMulti(now: Date): MultiStore {
  * 30-min rule escalates to the Supervisor.
  */
 function seedOpenIncident(store: DemoStore, now: Date): void {
-  const st = store.stations.find((s) => s.id === "st-kaynak-1") ?? store.stations[0];
+  const st = store.stations.find((s) => s.id === "st-welding-1") ?? store.stations[0];
   if (!st) return;
   const since = new Date(now.getTime() - 35 * 60000);
   st.state = "down";
-  st.downtimeReasonId = "dt-ariza";
+  st.downtimeReasonId = "dt-breakdown";
   st.downtimeSince = since.toISOString();
   st.downtimeUntil = new Date(now.getTime() + 15 * 60000).toISOString();
   st.currentOrderIds = [];
   store.downtime.push({
     id: `dt-seed-open-${st.id}`,
     stationId: st.id,
-    reasonId: "dt-ariza",
+    reasonId: "dt-breakdown",
     startedAt: since.toISOString(),
   });
   store.andon.push({
@@ -237,13 +246,13 @@ function seedOpenIncident(store: DemoStore, now: Date): void {
 function seedQuotes(now: Date): SavedQuote[] {
   const rates = { ...DEFAULT_BILLING_RATES };
   const specs: { customer: string; part: string; qty: number; lines: { op: string; h: number }[]; material: number; margin: number; days: number }[] = [
-    { customer: CUSTOMER_POOL[0], part: "Şasi bağlantı sacı", qty: 120, lines: [{ op: "op-lazer", h: 6 }, { op: "op-abkant", h: 4 }, { op: "op-kaynak", h: 5 }], material: 4200, margin: 22, days: 3 },
-    { customer: CUSTOMER_POOL[1], part: "Pano gövdesi PG-12", qty: 40, lines: [{ op: "op-lazer", h: 3 }, { op: "op-abkant", h: 2.5 }, { op: "op-boya", h: 2 }], material: 1800, margin: 25, days: 8 },
-    { customer: CUSTOMER_POOL[2], part: "Konveyör yan profili", qty: 60, lines: [{ op: "op-plazma", h: 5 }, { op: "op-kaynak", h: 6 }], material: 3100, margin: 18, days: 12 },
-    { customer: CUSTOMER_POOL[3], part: "Menfez çerçevesi MF-30", qty: 200, lines: [{ op: "op-punch", h: 4 }, { op: "op-abkant", h: 5 }, { op: "op-paket", h: 2 }], material: 2600, margin: 20, days: 17 },
-    { customer: CUSTOMER_POOL[0], part: "Kabin arka paneli", qty: 80, lines: [{ op: "op-lazer", h: 4 }, { op: "op-abkant", h: 3 }], material: 2200, margin: 24, days: 23 },
-    { customer: CUSTOMER_POOL[4], part: "Filtre kasası FK-8", qty: 150, lines: [{ op: "op-lazer", h: 7 }, { op: "op-kaynak", h: 8 }, { op: "op-montaj", h: 4 }], material: 5400, margin: 19, days: 31 },
-    { customer: CUSTOMER_POOL[2], part: "Davlumbaz gövdesi DV-450", qty: 55, lines: [{ op: "op-lazer", h: 3.5 }, { op: "op-abkant", h: 4 }, { op: "op-boya", h: 2.5 }], material: 2900, margin: 21, days: 40 },
+    { customer: CUSTOMER_POOL[0], part: "Chassis mounting plate", qty: 120, lines: [{ op: "op-laser", h: 6 }, { op: "op-pressbrake", h: 4 }, { op: "op-welding", h: 5 }], material: 4200, margin: 22, days: 3 },
+    { customer: CUSTOMER_POOL[1], part: "Panel body PG-12", qty: 40, lines: [{ op: "op-laser", h: 3 }, { op: "op-pressbrake", h: 2.5 }, { op: "op-coating", h: 2 }], material: 1800, margin: 25, days: 8 },
+    { customer: CUSTOMER_POOL[2], part: "Conveyor side profile", qty: 60, lines: [{ op: "op-plasma", h: 5 }, { op: "op-welding", h: 6 }], material: 3100, margin: 18, days: 12 },
+    { customer: CUSTOMER_POOL[3], part: "Vent frame MF-30", qty: 200, lines: [{ op: "op-punch", h: 4 }, { op: "op-pressbrake", h: 5 }, { op: "op-packaging", h: 2 }], material: 2600, margin: 20, days: 17 },
+    { customer: CUSTOMER_POOL[0], part: "Kabin arka paneli", qty: 80, lines: [{ op: "op-laser", h: 4 }, { op: "op-pressbrake", h: 3 }], material: 2200, margin: 24, days: 23 },
+    { customer: CUSTOMER_POOL[4], part: "Filter housing FK-8", qty: 150, lines: [{ op: "op-laser", h: 7 }, { op: "op-welding", h: 8 }, { op: "op-assembly", h: 4 }], material: 5400, margin: 19, days: 31 },
+    { customer: CUSTOMER_POOL[2], part: "Hood body DV-450", qty: 55, lines: [{ op: "op-laser", h: 3.5 }, { op: "op-pressbrake", h: 4 }, { op: "op-coating", h: 2.5 }], material: 2900, margin: 21, days: 40 },
   ];
   return specs.map((s, i) => {
     const lines = s.lines.map((l) => ({ operationId: l.op, hours: l.h }));
@@ -271,7 +280,7 @@ function seedQuotes(now: Date): SavedQuote[] {
 
 /* ------------------------------ stock ------------------------------ */
 
-const MACHINING_OPS = new Set(["op-testere", "op-torna", "op-freze", "op-matkap"]);
+const MACHINING_OPS = new Set(["op-sawing", "op-turning", "op-milling", "op-drilling"]);
 
 /** Seeded raw-material stock. Bars are kept in kg; sheet metal in pieces (adet)
  *  with size + thickness + weight/sheet. Two items start below reorder so the
@@ -279,17 +288,17 @@ const MACHINING_OPS = new Set(["op-testere", "op-torna", "op-freze", "op-matkap"
 function seedStock(): StockItem[] {
   return [
     // bars & block — kg
-    { id: "stk-bar-st37-40", materialType: "St37", form: "bar", unit: "kg", dimension: "Ø40", onHand: 1450, reorder: 400, costPerKg: 0.9 },
-    { id: "stk-bar-st37-25", materialType: "St37", form: "bar", unit: "kg", dimension: "Ø25", onHand: 300, reorder: 350, costPerKg: 0.95 },
-    { id: "stk-bar-304-30", materialType: "Paslanmaz 304", form: "bar", unit: "kg", dimension: "Ø30", onHand: 680, reorder: 250, costPerKg: 3.2 },
-    { id: "stk-bar-al-50", materialType: "Alüminyum 6061", form: "bar", unit: "kg", dimension: "Ø50", onHand: 410, reorder: 200, costPerKg: 2.8 },
-    { id: "stk-tube-st37-60", materialType: "St37", form: "tube", unit: "kg", dimension: "60×60 kutu", onHand: 540, reorder: 200, costPerKg: 1.05 },
-    { id: "stk-block-al", materialType: "Alüminyum 6061", form: "block", unit: "kg", dimension: "blok", onHand: 260, reorder: 120, costPerKg: 3.0 },
+    { id: "stk-bar-st37-40", materialType: "Mild steel S235", form: "bar", unit: "kg", dimension: "Ø40", onHand: 1450, reorder: 400, costPerKg: 0.9 },
+    { id: "stk-bar-st37-25", materialType: "Mild steel S235", form: "bar", unit: "kg", dimension: "Ø25", onHand: 300, reorder: 350, costPerKg: 0.95 },
+    { id: "stk-bar-304-30", materialType: "Stainless 304", form: "bar", unit: "kg", dimension: "Ø30", onHand: 680, reorder: 250, costPerKg: 3.2 },
+    { id: "stk-bar-al-50", materialType: "Aluminum 6061", form: "bar", unit: "kg", dimension: "Ø50", onHand: 410, reorder: 200, costPerKg: 2.8 },
+    { id: "stk-tube-st37-60", materialType: "Mild steel S235", form: "tube", unit: "kg", dimension: "60×60 tube", onHand: 540, reorder: 200, costPerKg: 1.05 },
+    { id: "stk-block-al", materialType: "Aluminum 6061", form: "block", unit: "kg", dimension: "block", onHand: 260, reorder: 120, costPerKg: 3.0 },
     // sheet metal — pieces (adet), size × thickness, weight per sheet
-    { id: "stk-plate-dkp-2", materialType: "DKP", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 2, weightKgPerPiece: 49, onHand: 45, reorder: 15, costPerKg: 0.85 },
-    { id: "stk-plate-dkp-4", materialType: "DKP", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 4, weightKgPerPiece: 98, onHand: 8, reorder: 12, costPerKg: 0.85 },
-    { id: "stk-plate-304-15", materialType: "Paslanmaz 304", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 1.5, weightKgPerPiece: 38, onHand: 24, reorder: 10, costPerKg: 3.1 },
-    { id: "stk-plate-st37-6", materialType: "St37", form: "plate", unit: "piece", dimension: "1500 × 3000", thicknessMm: 6, weightKgPerPiece: 212, onHand: 16, reorder: 6, costPerKg: 0.88 },
+    { id: "stk-plate-dkp-2", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 2, weightKgPerPiece: 49, onHand: 45, reorder: 15, costPerKg: 0.85 },
+    { id: "stk-plate-dkp-4", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 4, weightKgPerPiece: 98, onHand: 8, reorder: 12, costPerKg: 0.85 },
+    { id: "stk-plate-304-15", materialType: "Stainless 304", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 1.5, weightKgPerPiece: 38, onHand: 24, reorder: 10, costPerKg: 3.1 },
+    { id: "stk-plate-st37-6", materialType: "Mild steel S235", form: "plate", unit: "piece", dimension: "1500 × 3000", thicknessMm: 6, weightKgPerPiece: 212, onHand: 16, reorder: 6, costPerKg: 0.88 },
   ];
 }
 
@@ -360,7 +369,7 @@ function issueMaterial(store: DemoStore, order: MesOrder, now: Date): void {
       const remId = `${item.id}-rem`;
       let remItem = store.stock.find((s) => s.id === remId);
       if (!remItem) {
-        remItem = { id: remId, materialType: item.materialType, form: item.form, unit: "kg", dimension: `${item.dimension} artık`, onHand: 0, reorder: 0, costPerKg: item.costPerKg, isRemnant: true };
+        remItem = { id: remId, materialType: item.materialType, form: item.form, unit: "kg", dimension: `${item.dimension} offcut`, onHand: 0, reorder: 0, costPerKg: item.costPerKg, isRemnant: true };
         store.stock.push(remItem);
       }
       remItem.onHand = r1(remItem.onHand + offcut);
@@ -410,7 +419,7 @@ function seedRecentEvents(store: DemoStore, now: Date): void {
       }
     }
   }
-  // today's scrap so the fire/hurda board is populated on a fresh store
+  // today's scrap so the scrap board is populated on a fresh store
   const hoursToday = now.getUTCHours() + 1;
   for (const def of SIM_STATIONS) {
     const n = 2 + Math.floor(rand(`${def.id}:sct`) * 4); // 2–5 events today
@@ -443,23 +452,23 @@ function seedRecentEvents(store: DemoStore, now: Date): void {
 function seedMaintenance(now: Date, stationIds: string[]) {
   const have = new Set(stationIds);
   const allDefs: [string, string, number][] = [
-    ["st-lazer-1", "Lens temizliği", 7],
-    ["st-lazer-2", "Lens temizliği", 7],
-    ["st-lazer-1", "Nozül kontrolü", 30],
-    ["st-plazma-1", "Elektrot / nozül değişimi", 14],
-    ["st-punch-1", "Zımba bileme", 30],
-    ["st-abkant-1", "Hidrolik yağ kontrolü", 90],
-    ["st-abkant-2", "Arka dayama kalibrasyonu", 180],
-    ["st-kaynak-1", "Torç bakımı", 30],
-    ["st-montaj-1", "Havalı alet bakımı", 60],
-    ["st-paket-1", "Çemberleme makinesi bakımı", 90],
-    ["st-testere-1", "Şerit değişimi", 14],
-    ["st-torna-1", "Ayna / punta kontrolü", 30],
-    ["st-torna-2", "Kızak yağlama", 30],
-    ["st-freze-1", "Mil rulman kontrolü", 60],
-    ["st-freze-2", "Soğutma sıvısı değişimi", 45],
-    ["st-matkap-1", "Mandren bakımı", 90],
-    ["st-kalite-1", "Ölçü cihazı kalibrasyonu", 90],
+    ["st-laser-1", "Lens cleaning", 7],
+    ["st-laser-2", "Lens cleaning", 7],
+    ["st-laser-1", "Nozzle check", 30],
+    ["st-plasma-1", "Electrode / nozzle change", 14],
+    ["st-punch-1", "Punch sharpening", 30],
+    ["st-pressbrake-1", "Hydraulic oil check", 90],
+    ["st-pressbrake-2", "Backgauge calibration", 180],
+    ["st-welding-1", "Torch maintenance", 30],
+    ["st-assembly-1", "Air tool maintenance", 60],
+    ["st-packaging-1", "Strapping machine service", 90],
+    ["st-sawing-1", "Blade change", 14],
+    ["st-turning-1", "Chuck / tailstock check", 30],
+    ["st-turning-2", "Slideway lubrication", 30],
+    ["st-milling-1", "Spindle bearing check", 60],
+    ["st-milling-2", "Coolant change", 45],
+    ["st-drilling-1", "Chuck maintenance", 90],
+    ["st-quality-1", "Gauge calibration", 90],
   ];
   const defs = allDefs.filter(([stationId]) => have.has(stationId));
   return defs.map(([stationId, title, intervalDays], i) => {
@@ -486,6 +495,7 @@ function migrate(store: DemoStore, now: Date): void {
   store.settings.maintenanceOwnDepartment ??= true;
   store.settings.workingCalendar ??= { shifts: 3, restDays: [] };
   store.settings.kpiTargets ??= defaultKpiTargets(companyProfile(store.id));
+  store.settings.retentionAddonMonths ??= 0;
   store.alerts ??= [];
   store.quotes ??= seedQuotes(now);
   store.stock ??= seedStock();
@@ -579,6 +589,7 @@ function reviveMulti(raw: string, now: Date): MultiStore {
       migrate(c, now);
     }
   }
+  multi.pricing ??= clonePricing();
   return multi as MultiStore;
 }
 
@@ -634,7 +645,7 @@ export function advanceMulti(multi: MultiStore, now: Date): boolean {
 /** Snapshot one company by id (defaults to the first configured company). */
 export function snapshotFor(multi: MultiStore, companyId: string, now: Date): DemoSnapshot {
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
-  return snapshot(store, now);
+  return snapshot(store, now, multi.pricing ?? clonePricing());
 }
 
 /** Apply an action to one company. resetDemo reseeds the whole multi store. */
@@ -648,6 +659,11 @@ export function applyActionMulti(
     const fresh = seedMulti(now);
     multi.companies = fresh.companies;
     multi.createdAt = fresh.createdAt;
+    multi.pricing = fresh.pricing;
+    return;
+  }
+  if (action.type === "savePricing") {
+    multi.pricing = action.pricing;
     return;
   }
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
@@ -730,7 +746,7 @@ function tickMinute(store: DemoStore, now: Date): void {
 
     if (st.state === "running" && st.currentOrderIds.length > 0) {
       // Time-based progress: each running minute adds one effective minute to
-      // every active step (çoklu iş steps advance in parallel on one machine).
+      // every active step (multi-job steps advance in parallel on one machine).
       // Pieces are derived from time progress, not counted per-part.
       for (const orderId of [...st.currentOrderIds]) {
         const order = store.orders.find((o) => o.id === orderId);
@@ -762,9 +778,9 @@ function tickMinute(store: DemoStore, now: Date): void {
       // occasional automatic downtime (breakdown, material wait…)
       if (rand(`${st.id}:${epochMin}:dt`) < scn.breakdownRate) {
         const reasonId =
-          rand(`${st.id}:${epochMin}:dtr`) < 0.4 ? "dt-ariza" : rand(`${st.id}:${epochMin}:dtr2`) < 0.5 ? "dt-malzeme" : "dt-setup";
+          rand(`${st.id}:${epochMin}:dtr`) < 0.4 ? "dt-breakdown" : rand(`${st.id}:${epochMin}:dtr2`) < 0.5 ? "dt-material" : "dt-setup";
         startDowntimeInternal(store, st, reasonId, now, 8 + Math.round(rand(`${st.id}:${epochMin}:dtl`) * 22));
-        if (reasonId === "dt-ariza") {
+        if (reasonId === "dt-breakdown") {
           store.andon.push({
             id: `an-${epochMin}-${st.id}`,
             stationId: st.id,
@@ -1252,6 +1268,10 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
     case "saveKpiTargets":
       store.settings.kpiTargets = { ...store.settings.kpiTargets, ...action.targets };
       break;
+    case "buyRetentionAddon":
+      store.settings.retentionAddonMonths =
+        (store.settings.retentionAddonMonths ?? 0) + Math.max(0, action.months);
+      break;
     case "setMaintenanceDept":
       store.settings.maintenanceOwnDepartment = action.own;
       break;
@@ -1332,8 +1352,10 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
 
 /* ------------------------------ snapshot --------------------------- */
 
-export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
+export function snapshot(store: DemoStore, now: Date, pricing: PricingConfig): DemoSnapshot {
   const profile = companyProfile(store.id);
+  const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
+  const addonMonths = store.settings.retentionAddonMonths ?? 0;
   // Gate modules by plan: quoting/maintenance/stock are AI Pro+ only. Return a
   // copy so the stored flags are never mutated (admin still edits the raw ones).
   const ent = PLAN_ENTITLEMENTS[store.settings.plan];
@@ -1364,6 +1386,8 @@ export function snapshot(store: DemoStore, now: Date): DemoSnapshot {
     stockMoves: [...store.stockMoves].slice(0, 40),
     scrapEvents: [...store.scrapEvents].slice(0, 200),
     settings: gatedSettings,
+    pricing,
+    retention: { planMonths, addonMonths, totalMonths: planMonths + addonMonths },
     today: (() => {
       const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);
       const actualMin = store.stations.reduce((s, st) => s + (st.todayActualMin ?? 0), 0);

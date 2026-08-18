@@ -20,7 +20,7 @@ export default function CompanySwitcher({ dark = false }: { dark?: boolean }) {
       <select
         value={company}
         onChange={(e) => setCompany(e.target.value)}
-        aria-label="Şirket"
+        aria-label="Company"
         className={`max-w-[10.5rem] truncate rounded-lg border px-2 py-1.5 text-xs font-medium focus:border-accent focus:outline-none ${
           dark ? "border-white/15 bg-chrome-2 text-white" : "border-line bg-surface text-ink"
         }`}

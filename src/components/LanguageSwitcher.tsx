@@ -7,7 +7,6 @@ import { Globe } from "lucide-react";
 // Language names stay in their own language (standard practice).
 const LOCALES = [
   ["en", "English"],
-  ["tr", "Türkçe"],
   ["de", "Deutsch"],
 ] as const;
 

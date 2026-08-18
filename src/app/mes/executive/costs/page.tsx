@@ -17,7 +17,7 @@ import { SIM_STATIONS, plantDailySeries } from "@/lib/sim";
 import { companyProfile } from "@/lib/companies";
 import type { DemoSettings } from "@/lib/demo-types";
 
-const CUTTING = new Set(["op-lazer", "op-plazma", "op-oksijen"]);
+const CUTTING = new Set(["op-laser", "op-plasma", "op-oxyfuel"]);
 
 /** Rough plant cost for a day at the given utilization, for this plant's size. */
 function costOfDay(

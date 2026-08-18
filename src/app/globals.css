@@ -103,6 +103,19 @@ body {
 }
 .btn-sheen:hover::after { animation: sheen 0.9s ease; }
 
+/* Subtle card interaction for dashboards — hover only, no entrance (data refreshes live) */
+.card-elev { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.card-elev:hover {
+  box-shadow: 0 6px 20px -8px rgba(14, 131, 144, 0.22);
+  border-color: var(--color-accent-wash);
+}
+.card-lift { transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px -8px rgba(14, 131, 144, 0.24);
+  border-color: var(--color-accent-wash);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .anim-spin-slow, .anim-spin-rev, .anim-float, .anim-twinkle, .anim-aurora, .anim-pulse, .anim-grad, .text-grad {
     animation: none !important;
@@ -110,4 +123,5 @@ body {
   .reveal { opacity: 1 !important; }
   .reveal.in { animation: none !important; }
   .btn-sheen:hover::after { animation: none !important; }
+  .card-lift:hover { transform: none; }
 }

@@ -11,8 +11,9 @@ export default function UserMenu({ dark = false }: { dark?: boolean }) {
   const router = useRouter();
   if (!user) return null;
 
-  const roleLabel =
-    user.kind === "platform"
+  const roleLabel = user.readOnly
+    ? "Demo · view-only"
+    : user.kind === "platform"
       ? PLATFORM_ROLE_LABELS[user.platformRole ?? "admin"]
       : TENANT_ROLE_LABELS[user.tenantRole ?? "operator"];
 

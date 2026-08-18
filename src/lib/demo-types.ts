@@ -410,6 +410,8 @@ export interface AuthUser {
   status: UserStatus;
   createdAt: string;
   lastLoginAt?: string;
+  /** View-only account: may open every granted screen but cannot write. */
+  readOnly?: boolean;
   /* platform */
   platformRole?: PlatformRole;
   /* tenant */

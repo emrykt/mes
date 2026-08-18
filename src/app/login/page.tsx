@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Factory, Loader2, Lock } from "lucide-react";
+import { Eye, Factory, Loader2, Lock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function LoginPage() {
@@ -13,7 +13,25 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showHint, setShowHint] = useState(false);
+  const [tourBusy, setTourBusy] = useState(false);
+
+  const startTour = async () => {
+    setError(null);
+    setTourBusy(true);
+    try {
+      const r = await fetch("/api/auth/demo-login", { method: "POST" });
+      if (!r.ok) {
+        setError("Could not start the demo tour.");
+        setTourBusy(false);
+        return;
+      }
+      await refresh();
+      router.push("/mes");
+    } catch {
+      setError("Could not start the demo tour.");
+      setTourBusy(false);
+    }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,20 +109,17 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <button
-            onClick={() => setShowHint((v) => !v)}
-            className="mt-4 text-xs font-medium text-accent-strong hover:underline"
-          >
-            {showHint ? "Hide demo logins" : "Show demo logins"}
-          </button>
-          {showHint && (
-            <div className="mt-2 space-y-1 rounded-lg bg-neutral-soft p-3 text-xs text-ink-2">
-              <p><span className="font-semibold">Platform owner:</span> owner / prodgence</p>
-              <p><span className="font-semibold">Platform admin / sales:</span> admin · sales / prodgence</p>
-              <p><span className="font-semibold">Customer owner:</span> owner@baylorsheet.com / demo1234</p>
-              <p><span className="font-semibold">Team member:</span> elena@baylorsheet.com / demo1234</p>
-            </div>
-          )}
+          <div className="mt-5 border-t border-line pt-4">
+            <p className="text-xs text-muted">Just exploring? Take a guided, view-only tour — no account needed.</p>
+            <button
+              onClick={startTour}
+              disabled={tourBusy}
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line px-4 py-2.5 text-sm font-medium text-ink-2 hover:bg-neutral-soft disabled:opacity-60"
+            >
+              {tourBusy ? <Loader2 className="size-4 animate-spin" /> : <Eye className="size-4" />}
+              View-only demo tour
+            </button>
+          </div>
         </div>
 
         <p className="mt-5 text-center text-xs text-muted">

@@ -8,7 +8,9 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RequireAuth kind="tenant">
+    // any signed-in user: tenants see their own account; platform staff manage
+    // the customer they've entered (full owner-equivalent access).
+    <RequireAuth>
       <PortalStateProvider>
         <PortalShell>{children}</PortalShell>
       </PortalStateProvider>

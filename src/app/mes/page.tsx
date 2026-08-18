@@ -80,7 +80,7 @@ export default function MesChooserPage() {
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs">
-        {user?.kind === "tenant" && canManageTenant(user) && (
+        {((user?.kind === "tenant" && canManageTenant(user)) || user?.kind === "platform") && (
           <Link href="/portal" className="font-medium text-accent-strong hover:underline">
             Account, billing & team
           </Link>

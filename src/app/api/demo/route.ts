@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import type { DemoAction } from "@/lib/demo-types";
 import { DEFAULT_COMPANY_ID } from "@/lib/companies";
+import { SESSION_COOKIE } from "@/lib/server/session";
 import {
   advanceMulti,
   applyActionMulti,
@@ -30,7 +32,13 @@ export async function POST(req: Request) {
   const multi = await loadStore(now);
   advanceMulti(multi, now);
   const action = (await req.json()) as DemoAction;
-  applyActionMulti(multi, company, action, now);
-  await persist(multi, true);
+
+  // view-only accounts cannot write (defense-in-depth; client blocks too)
+  const uid = (await cookies()).get(SESSION_COOKIE)?.value;
+  const me = uid ? multi.auth?.users.find((u) => u.id === uid) : null;
+  if (!me?.readOnly) {
+    applyActionMulti(multi, company, action, now);
+    await persist(multi, true);
+  }
   return NextResponse.json(snapshotFor(multi, company, now));
 }

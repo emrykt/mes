@@ -19,8 +19,14 @@ export default function MembersAdmin() {
   const [lastLink, setLastLink] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
-  const canManage = canManageTenant(me);
-  const members = users.filter((u) => u.kind === "tenant");
+  // platform staff act on the customer they've entered (mes_company cookie)
+  const enteredCompany =
+    typeof document !== "undefined"
+      ? document.cookie.match(/(?:^|;\s*)mes_company=([^;]+)/)?.[1]
+      : undefined;
+  const actingTenantId = me?.kind === "platform" ? (enteredCompany && decodeURIComponent(enteredCompany)) : me?.tenantId;
+  const canManage = canManageTenant(me) || me?.kind === "platform";
+  const members = users.filter((u) => u.kind === "tenant" && (!actingTenantId || u.tenantId === actingTenantId));
 
   const linkFor = (token?: string) =>
     token ? `${typeof window !== "undefined" ? window.location.origin : ""}/join?token=${token}` : "";
@@ -44,7 +50,7 @@ export default function MembersAdmin() {
     setError(null);
     if (!form.name.trim() || !/.+@.+\..+/.test(form.email)) return;
     setBusy(true);
-    const r = await invite({ name: form.name.trim(), email: form.email.trim(), tenantRole: form.role, modules: form.modules });
+    const r = await invite({ name: form.name.trim(), email: form.email.trim(), tenantRole: form.role, modules: form.modules, tenantId: actingTenantId || undefined });
     setBusy(false);
     if (!r.ok) {
       setError(r.error === "exists" ? "That email is already a member." : "Could not send the invite.");

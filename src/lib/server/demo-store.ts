@@ -79,8 +79,9 @@ const CURRENT_SCHEMA = 1;
  * load (admin edits persist until the next bump). See MultiStore.siteVersion.
  *   1 — mega-menu + trust bar / testimonials / FAQ / footer + item icons
  *   2 — default menu panel images + contact / demo-request section
+ *   3 — demo CTAs point to /login (demo tour is gated behind sign-in)
  */
-const CURRENT_SITE_VERSION = 2;
+const CURRENT_SITE_VERSION = 3;
 
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -317,6 +318,21 @@ function seedAuth(now: Date): AuthState {
       member("operator", "Marco Reyes", "marco", "active"),
       member("sales", "Nina Patel", "nina", "invited"),
     );
+
+    // View-only demo account for the guided product tour (all screens, no writes).
+    users.push({
+      id: "tu-demo-viewer",
+      kind: "tenant",
+      name: "Demo Viewer",
+      email: "demo@prodgence.com",
+      password: "demo",
+      status: "active",
+      createdAt: iso,
+      readOnly: true,
+      tenantId: first.id,
+      tenantRole: "executive",
+      modules: ["operator", "production", "sales", "maintenance", "executive", "tv"],
+    });
   }
 
   return { users };

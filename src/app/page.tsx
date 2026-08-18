@@ -11,10 +11,7 @@ import {
   ArrowRight,
   Bot,
   Check,
-  Factory,
   Gauge,
-  LayoutDashboard,
-  MonitorSmartphone,
   Rocket,
   ShieldCheck,
   Sparkles,
@@ -95,7 +92,7 @@ export default function LandingPage() {
             <p className="mt-5 max-w-xl text-lg text-white/70 text-pretty">{t("heroSubtitle")}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href="/portal"
+                href="/login"
                 className="btn-sheen inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-base font-medium text-white shadow-lg shadow-accent/30 hover:bg-accent-strong"
               >
                 {t("ctaTrial")}
@@ -240,41 +237,13 @@ export default function LandingPage() {
             <p className="mt-2 max-w-xl text-white/85">{t("ctaBandSubtitle")}</p>
           </div>
           <Link
-            href="/portal"
+            href="/login"
             className="btn-sheen inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-accent-strong shadow-lg hover:bg-white/90"
           >
             {t("ctaTrial")}
             <ArrowRight className="size-4" />
           </Link>
         </Reveal>
-      </section>
-
-      {/* ---------- DEMO PREVIEWS ---------- */}
-      <section id="demo" className="scroll-mt-24 border-t border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-16">
-          <Reveal>
-            <h2 className="text-center text-sm font-medium text-muted">{t("demosTitle")}</h2>
-          </Reveal>
-          <div className="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-3">
-            {[
-              { href: "/admin", icon: LayoutDashboard, k: "adminDemo", d: "adminDemoDesc" },
-              { href: "/portal", icon: MonitorSmartphone, k: "portalDemo", d: "portalDemoDesc" },
-              { href: "/mes", icon: Factory, k: "mesDemo", d: "mesDemoDesc" },
-            ].map(({ href, icon: Icon, k, d }, i) => (
-              <Reveal key={k} delay={i * 70}>
-                <Link href={href} className="group block h-full rounded-xl border border-line bg-page p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-lg">
-                  <Icon className="size-5 text-accent" />
-                  <p className="mt-3 flex items-center gap-1.5 font-medium">
-                    {t(k)}
-                    <ArrowRight className="size-4 text-muted transition-transform group-hover:translate-x-0.5" />
-                  </p>
-                  <p className="mt-1 text-sm text-ink-2">{t(d)}</p>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-          <p className="mt-6 text-center text-xs text-muted">{tc("demoData")}</p>
-        </div>
       </section>
 
       {/* ---------- TESTIMONIALS (managed) ---------- */}

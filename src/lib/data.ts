@@ -112,7 +112,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
       headline: "One AI platform for the whole shop floor",
       intro: "From the operator kiosk to the executive cockpit — every role on one connected system.",
       ctaLabel: "See the live demo",
-      ctaHref: "#demo",
+      ctaHref: "/login",
       items: [
         { title: "Operator Kiosk", description: "Touch-first start/stop, quantity, scrap and andon — paperless work orders.", href: "/mes/operator", icon: "cpu" },
         { title: "Production Management", description: "Live station grid, andon feed, downtime pareto and order routing.", href: "/mes/manager", icon: "dashboard" },
@@ -150,7 +150,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
       headline: "Everything you need to succeed",
       intro: "Guides, proof and answers — from first evaluation to full rollout.",
       ctaLabel: "Start the demo",
-      ctaHref: "#demo",
+      ctaHref: "/login",
       items: [
         { title: "Product tour", description: "Walk the operator, manager and executive screens in minutes.", href: "#features", icon: "sparkles" },
         { title: "ROI & value", description: "How recovered capacity and avoided downtime pay for the platform.", href: "#features", icon: "trending" },

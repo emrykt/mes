@@ -12,6 +12,7 @@ import type { CompanyRef, DemoAction, DemoSnapshot } from "@/lib/demo-types";
 import { DEFAULT_COMPANY_ID } from "@/lib/companies";
 import { PLAN_ENTITLEMENTS } from "@/lib/data";
 import type { PlanEntitlements } from "@/lib/types";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 /**
  * Live bridge to the demo store: polls GET /api/demo?company=<id> every few
@@ -46,6 +47,11 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const companyRef = useRef(company);
   companyRef.current = company;
 
+  // view-only accounts never write (server enforces too)
+  const { user } = useAuth();
+  const readOnlyRef = useRef(false);
+  readOnlyRef.current = !!user?.readOnly;
+
   // adopt the remembered company on mount (client-only cookie read)
   useEffect(() => {
     const c = readCompanyCookie();
@@ -78,6 +84,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const dispatch = useCallback(async (action: DemoAction) => {
+    if (readOnlyRef.current) return; // view-only demo: ignore writes
     busy.current = true;
     try {
       const res = await fetch(`/api/demo?company=${companyRef.current}`, {

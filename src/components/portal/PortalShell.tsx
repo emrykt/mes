@@ -6,13 +6,13 @@ import { useTranslations } from "next-intl";
 import {
   AlertTriangle,
   CreditCard,
-  Factory,
   Gauge,
   Lock,
   MonitorSmartphone,
   Users,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import PortalBrand from "@/components/portal/PortalBrand";
 import { getTenant, portalTenantId } from "@/lib/data";
 import { daysUntil, formatDate } from "@/lib/format";
 import type { LicenseStatus } from "@/lib/types";
@@ -38,7 +38,6 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const t = useTranslations("portalNav");
   const tb = useTranslations("portalBanners");
   const ts = useTranslations("status");
-  const tc = useTranslations("common");
   const { status, setStatus } = usePortalState();
 
   const tenant = getTenant(portalTenantId)!;
@@ -49,14 +48,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen">
       <aside className="fixed inset-y-0 left-0 flex w-60 flex-col border-r border-line bg-surface">
-        <div className="flex items-center gap-2.5 px-5 py-5">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
-            <Factory className="size-4.5" />
-          </span>
-          <div>
-            <p className="text-sm font-semibold">{tc("appName")}</p>
-            <p className="text-[11px] text-muted">{t("title")}</p>
-          </div>
+        <div className="px-5 py-5">
+          <PortalBrand />
         </div>
 
         <nav className="mt-2 flex-1 space-y-1 px-3">

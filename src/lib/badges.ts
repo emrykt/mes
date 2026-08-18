@@ -74,10 +74,10 @@ export function plantBadges(snap: DemoSnapshot, now: Date): Badge[] {
     { key: "operatorDay", holder: topDay?.name ?? "—", detail: topDay ? pctOf(topDay.adherence) : "", active: !!topDay },
     { key: "operatorWeek", holder: topWeek?.name ?? "—", detail: topWeek ? pctOf(topWeek.adherence) : "", active: !!topWeek },
     { key: "operatorMonth", holder: topMonth?.name ?? "—", detail: topMonth ? pctOf(topMonth.adherence) : "", active: !!topMonth },
-    { key: "zeroDelay", holder: "Tesis", detail: `${late}`, active: late === 0 },
+    { key: "zeroDelay", holder: "Plant", detail: `${late}`, active: late === 0 },
     { key: "lowestScrap", holder: leastScrap ? stName(leastScrap.id) : "—", detail: leastScrap ? `${Math.round(scrapByStation.get(leastScrap.id) ?? 0)} kg` : "", active: !!leastScrap },
-    { key: "bestDelivery", holder: "Tesis", detail: pctOf(onTime), active: onTime >= 0.85 },
-    { key: "stableQuality", holder: "Tesis", detail: pctOf(1 - scrapRate), active: scrapRate <= 0.02 },
+    { key: "bestDelivery", holder: "Plant", detail: pctOf(onTime), active: onTime >= 0.85 },
+    { key: "stableQuality", holder: "Plant", detail: pctOf(1 - scrapRate), active: scrapRate <= 0.02 },
     { key: "fastestOp", holder: fastest ? opName(fastest.id) : "—", detail: fastest ? pctOf(fastest.perf) : "", active: !!fastest && fastest.perf >= 1 },
   ];
 }

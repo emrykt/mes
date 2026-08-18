@@ -6,6 +6,7 @@ import { Card, StatusBadge } from "@/components/ui";
 import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 import { DEMO_DATES, usePortalState } from "@/components/portal/PortalState";
 import PortalRetention from "@/components/portal/PortalRetention";
+import BrandLogoUpload from "@/components/BrandLogoUpload";
 import { PLANS, PLAN_ENTITLEMENTS, PLAN_ORDER } from "@/lib/data";
 import { formatDate, formatMoney } from "@/lib/format";
 
@@ -149,6 +150,9 @@ function SubscriptionBody() {
           })}
         </div>
       </Card>
+
+      {/* company logo — appears on quotes and in the portal header */}
+      <BrandLogoUpload />
 
       <Card title={t("cancelTitle")}>
         <p className="text-sm text-ink-2">

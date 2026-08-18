@@ -694,7 +694,7 @@ export function historicalOrdersForMonth(year: number, month1: number, now: Date
     const day = 1 + Math.floor(rand(`hist:${year}-${month1}:${i}:d`) * 27);
     const createdAt = new Date(Date.UTC(year, month1 - 1, day, 8 + (i % 8)));
     if (createdAt.getTime() > now.getTime() - 6 * 86400000) continue; // recent ones live in the store
-    const id = `SIP-${year}-${String(month1).padStart(2, "0")}-${String(i).padStart(3, "0")}`;
+    const id = `WO-${year}-${String(month1).padStart(2, "0")}-${String(i).padStart(3, "0")}`;
     orders.push(buildOrder(`hist:${id}`, id, createdAt, true));
   }
   return orders;

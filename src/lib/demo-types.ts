@@ -76,7 +76,7 @@ export type MaterialForm = "bar" | "plate" | "tube" | "block";
 
 /**
  * Stock-keeping unit. Bars/blocks are tracked by weight (kg); sheet metal is
- * tracked by piece count (adet) with size + thickness, weight known per sheet —
+ * tracked by piece count with size + thickness, weight known per sheet —
  * how these shops actually stock and consume.
  */
 export type StockUnit = "kg" | "piece";
@@ -217,6 +217,12 @@ export interface DemoSettings {
    * recurring monthly fee on top of the base plan price.
    */
   retentionAddonYears: number;
+  /**
+   * Company logo as a data: URL (PNG/JPG/SVG), uploaded from the customer
+   * portal or the quote settings. Shown on printed quotes and in the portal
+   * header. Empty/undefined = use the product wordmark.
+   */
+  brandLogo?: string;
 }
 
 /** One purchasable data-retention add-on tier. `price` is the monthly fee (USD). */
@@ -277,6 +283,16 @@ export interface LiveDowntime {
 
 export interface DemoStore {
   version: 1;
+  /**
+   * Data-shape revision within a v2 multi-store. Bumped when the store gains a
+   * structural change that must be applied to EXISTING live stores without
+   * reseeding. `migrate()` runs the ordered, additive steps for any store below
+   * the current revision, preserving all live orders/stations/counters — so a
+   * deploy never interrupts a running plant. (Distinct from `version`, which
+   * only guards the outer multi-store shape and must NOT be bumped for content
+   * changes.)
+   */
+  schemaVersion?: number;
   /** Company (tenant) id this plant state belongs to — see lib/companies.ts. */
   id: string;
   createdAt: string;
@@ -396,6 +412,7 @@ export type DemoAction =
   | { type: "saveKpiTargets"; targets: Record<string, number> }
   | { type: "savePricing"; pricing: PricingConfig }
   | { type: "setRetentionAddon"; years: number }
+  | { type: "setBrandLogo"; logo: string }
   | { type: "setMaintenanceDept"; own: boolean }
   | { type: "setWorkingCalendar"; calendar: WorkingCalendar }
   | { type: "saveQuote"; quote: Omit<SavedQuote, "id" | "at"> }

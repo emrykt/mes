@@ -58,12 +58,36 @@ declare global {
 
 /* ----------------------------- helpers ---------------------------- */
 
+/**
+ * Current data-shape revision (see DemoStore.schemaVersion). Bump by 1 and add
+ * a matching `if (store.schemaVersion < N)` block in `migrate()` whenever a
+ * structural change must reach EXISTING live stores without a reseed.
+ *   1 — order-number prefix SIP- → WO-
+ */
+const CURRENT_SCHEMA = 1;
+
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+/**
+ * Relabel every order-id reference in place from one prefix to another. Touches
+ * order ids, the per-month sequence keys, station work queues and stock moves —
+ * the only places an order id is stored — so a running plant keeps flowing with
+ * the new numbering and nothing is lost.
+ */
+function renameOrderPrefix(store: DemoStore, from: string, to: string): void {
+  const swap = (s: string) => (s.startsWith(from) ? to + s.slice(from.length) : s);
+  for (const o of store.orders) o.id = swap(o.id);
+  const seq: Record<string, number> = {};
+  for (const [k, v] of Object.entries(store.orderSeq)) seq[swap(k)] = v;
+  store.orderSeq = seq;
+  for (const st of store.stations) st.currentOrderIds = st.currentOrderIds.map(swap);
+  for (const mv of store.stockMoves) if (mv.orderId) mv.orderId = swap(mv.orderId);
+}
+
 function monthPrefix(d: Date): string {
-  return `SIP-${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  return `WO-${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
 function nextOrderId(store: DemoStore, now: Date): string {
@@ -97,7 +121,7 @@ function seedActiveOrders(store: DemoStore, now: Date): void {
   const { seedWip, seedBacklog } = companyProfile(store.id).scenario;
   const pool = poolFor(store);
   // WIP: current step distributed *uniformly* across each order's routing, so
-  // downstream operations (montaj/kalite/paket) get queued work too, not just
+  // downstream operations (assembly/quality/packaging) get queued work too, not just
   // the front of the line. Seed keys are company-scoped for per-plant variety.
   for (let i = 0; i < seedWip; i++) {
     const id = nextOrderId(store, now);
@@ -140,6 +164,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
     .filter((d): d is (typeof SIM_STATIONS)[number] => !!d);
   const store: DemoStore = {
     version: 1,
+    schemaVersion: CURRENT_SCHEMA,
     id: profile.id,
     createdAt: now.toISOString(),
     lastTickAt: now.toISOString(),
@@ -282,7 +307,7 @@ function seedQuotes(now: Date): SavedQuote[] {
 
 const MACHINING_OPS = new Set(["op-sawing", "op-turning", "op-milling", "op-drilling"]);
 
-/** Seeded raw-material stock. Bars are kept in kg; sheet metal in pieces (adet)
+/** Seeded raw-material stock. Bars are kept in kg; sheet metal in pieces
  *  with size + thickness + weight/sheet. Two items start below reorder so the
  *  low-stock alert shows immediately. */
 function seedStock(): StockItem[] {
@@ -294,7 +319,7 @@ function seedStock(): StockItem[] {
     { id: "stk-bar-al-50", materialType: "Aluminum 6061", form: "bar", unit: "kg", dimension: "Ø50", onHand: 410, reorder: 200, costPerKg: 2.8 },
     { id: "stk-tube-st37-60", materialType: "Mild steel S235", form: "tube", unit: "kg", dimension: "60×60 tube", onHand: 540, reorder: 200, costPerKg: 1.05 },
     { id: "stk-block-al", materialType: "Aluminum 6061", form: "block", unit: "kg", dimension: "block", onHand: 260, reorder: 120, costPerKg: 3.0 },
-    // sheet metal — pieces (adet), size × thickness, weight per sheet
+    // sheet metal — pieces, size × thickness, weight per sheet
     { id: "stk-plate-dkp-2", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 2, weightKgPerPiece: 49, onHand: 45, reorder: 15, costPerKg: 0.85 },
     { id: "stk-plate-dkp-4", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 4, weightKgPerPiece: 98, onHand: 8, reorder: 12, costPerKg: 0.85 },
     { id: "stk-plate-304-15", materialType: "Stainless 304", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 1.5, weightKgPerPiece: 38, onHand: 24, reorder: 10, costPerKg: 3.1 },
@@ -550,6 +575,14 @@ function migrate(store: DemoStore, now: Date): void {
       });
     }
   }
+
+  // Ordered, additive schema migrations — applied to existing live stores on
+  // load without a reseed (see DemoStore.schemaVersion / CURRENT_SCHEMA).
+  store.schemaVersion ??= 0;
+  if (store.schemaVersion < 1) {
+    renameOrderPrefix(store, "SIP-", "WO-");
+  }
+  store.schemaVersion = CURRENT_SCHEMA;
 }
 
 /** Station's already-produced share of today (so day 1 doesn't start at 0). */
@@ -1279,6 +1312,10 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
     case "setRetentionAddon":
       // Select a single add-on tier (0 = none). Not cumulative.
       store.settings.retentionAddonYears = Math.max(0, action.years);
+      break;
+    case "setBrandLogo":
+      // Empty string clears it (back to the product wordmark).
+      store.settings.brandLogo = action.logo || undefined;
       break;
     case "setMaintenanceDept":
       store.settings.maintenanceOwnDepartment = action.own;

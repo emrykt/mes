@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Loader2, Plus, Printer, Save, Search, Trash2, X } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
+import BrandLogoUpload from "@/components/BrandLogoUpload";
 import { Card, Table, Td, Th } from "@/components/ui";
 import { formatCost } from "@/lib/currency";
 import { formatShortDate } from "@/lib/format";
@@ -142,15 +143,19 @@ export default function SalesQuotePage() {
     ]
       .filter(Boolean)
       .join(" &nbsp;·&nbsp; ");
+    const logo = snap?.settings.brandLogo;
+    const brandHead = logo
+      ? `<img src="${logo}" alt="" style="max-height:52px;max-width:240px;object-fit:contain"/>`
+      : `<h1>${appName}</h1>`;
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>${t("printTitle")}</title>
 <style>body{font-family:system-ui,-apple-system,Arial,sans-serif;color:#111;padding:36px;max-width:720px;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #111;padding-bottom:10px}
-h1{font-size:19px;margin:0}table{width:100%;border-collapse:collapse;margin-top:18px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:10px}
+h1{font-size:19px;margin:0}.sub{font-size:13px;color:#555;margin-top:4px}table{width:100%;border-collapse:collapse;margin-top:18px}
 th,td{border-bottom:1px solid #ddd;padding:8px 6px;font-size:13px}th{text-align:left;color:#555}
 .r{text-align:right}.tot{margin-top:16px;font-size:13px;max-width:320px;margin-left:auto}
 .tot div{display:flex;justify-content:space-between;padding:3px 0}
 .grand{font-size:19px;font-weight:600;border-top:2px solid #111;margin-top:6px;padding-top:8px}</style></head>
-<body><div class="top"><h1>${appName} — ${t("printTitle")}</h1><span>${esc(d.date)}</span></div>
+<body><div class="top"><div>${brandHead}<div class="sub">${t("printTitle")}</div></div><span style="font-size:13px">${esc(d.date)}</span></div>
 <p style="font-size:13px">${meta}</p>
 <table><thead><tr><th>${t("colOperation")}</th><th class="r">${t("colHours")}</th><th class="r">${t("colRate")}</th><th class="r">${t("colLineTotal")}</th></tr></thead><tbody>${rows}</tbody></table>
 <div class="tot">
@@ -351,6 +356,9 @@ th,td{border-bottom:1px solid #ddd;padding:8px 6px;font-size:13px}th{text-align:
               </label>
             </div>
           </Card>
+
+          {/* company logo shown on the printed quote */}
+          <BrandLogoUpload />
         </div>
 
         {/* summary */}

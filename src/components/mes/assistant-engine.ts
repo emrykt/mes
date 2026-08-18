@@ -51,8 +51,8 @@ const PLANT_TARGET = Math.round(
 
 const CUTTING = new Set(["op-laser", "op-plasma", "op-oxyfuel"]);
 
-/** Order-number pattern (SIP-YYYY-MM-NNN); also matches a bare suffix. */
-const ORDER_RE = /\bSIP-\d{4}-\d{2}-\d{3}\b/i;
+/** Order-number pattern (WO-YYYY-MM-NNN; legacy SIP- still recognized). */
+const ORDER_RE = /\b(?:WO|SIP)-\d{4}-\d{2}-\d{3}\b/i;
 
 /** Greetings / small talk that should get a friendly on-topic nudge. */
 const GREETING_KW = [

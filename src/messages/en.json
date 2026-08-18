@@ -467,7 +467,7 @@
       "scanButton": "Scan work order",
       "scanTitle": "Scan barcode / QR",
       "scanHint": "Type or scan the order number — the real product uses the tablet camera or a handheld scanner.",
-      "scanPlaceholder": "e.g. SIP-2026-07-064",
+      "scanPlaceholder": "e.g. WO-2026-07-064",
       "scanNotFound": "No waiting job with this number at this station.",
       "accepted": "Accepted",
       "rejected": "Rejected",
@@ -1056,7 +1056,7 @@
       "lostRevenueNone": "No lost revenue today — no billable downtime.",
       "greetingReply": "Hello! I'm the Prodgence Smart Manufacturing assistant. Ask me where the bottleneck is, what to improve today, how much revenue we're losing, which machines are down, or an order by its number.",
       "offtopic": "I'm the Prodgence AI assistant — I can only provide information about production and efficiency.",
-      "help": "I can help with: the current bottleneck, improvement suggestions, open alerts, efficiency, daily and downtime cost, revenue and lost revenue, machines down, maintenance, output, scrap, backlog, shift and operator comparison, orders at risk, or an order by its number (e.g. SIP-2026-07-084).",
+      "help": "I can help with: the current bottleneck, improvement suggestions, open alerts, efficiency, daily and downtime cost, revenue and lost revenue, machines down, maintenance, output, scrap, backlog, shift and operator comparison, orders at risk, or an order by its number (e.g. WO-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "No clear bottleneck right now — capacity is balanced across operations.",
       "suggestions": "Here's where to focus right now:\n{list}",
@@ -1143,5 +1143,15 @@
     "invited": "Invited",
     "roleOwnerHelp": "Manages subscription, billing, stations and users",
     "roleUserHelp": "Views dashboards and reports only"
+  },
+  "branding": {
+    "title": "Company logo",
+    "hint": "Shown on your printed quotes and in the customer portal. PNG, JPG or SVG, up to 400 KB.",
+    "upload": "Upload logo",
+    "replace": "Replace",
+    "remove": "Remove",
+    "none": "No logo yet",
+    "tooLarge": "File too large (max 400 KB).",
+    "invalid": "Please choose an image file (PNG, JPG or SVG)."
   }
 }

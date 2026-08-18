@@ -467,7 +467,7 @@
       "scanButton": "Auftrag scannen",
       "scanTitle": "Barcode / QR scannen",
       "scanHint": "Auftragsnummer scannen oder eintippen — im echten Produkt per Tablet-Kamera oder Handscanner.",
-      "scanPlaceholder": "z. B. SIP-2026-07-064",
+      "scanPlaceholder": "z. B. WO-2026-07-064",
       "scanNotFound": "Kein wartender Auftrag mit dieser Nummer an dieser Station.",
       "accepted": "Angenommen",
       "rejected": "Abgelehnt",
@@ -1056,7 +1056,7 @@
       "lostRevenueNone": "Heute kein entgangener Umsatz — kein abrechenbarer Stillstand.",
       "greetingReply": "Hallo! Ich bin der Prodgence Smart-Manufacturing-Assistent. Fragen Sie mich, wo der Engpass ist, was Sie heute verbessern sollten, wie viel Umsatz verloren geht, welche Maschinen stehen oder nach einem Auftrag per Nummer.",
       "offtopic": "Ich bin der Prodgence-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
-      "help": "Ich kann helfen bei: aktueller Engpass, Verbesserungsvorschläge, offene Warnungen, Effizienz, Tages- und Stillstandskosten, Umsatz und entgangener Umsatz, stehende Maschinen, Wartung, Ausstoß, Ausschuss, Rückstand, Schicht- und Bedienervergleich, gefährdete Aufträge oder einem Auftrag per Nummer (z. B. SIP-2026-07-084).",
+      "help": "Ich kann helfen bei: aktueller Engpass, Verbesserungsvorschläge, offene Warnungen, Effizienz, Tages- und Stillstandskosten, Umsatz und entgangener Umsatz, stehende Maschinen, Wartung, Ausstoß, Ausschuss, Rückstand, Schicht- und Bedienervergleich, gefährdete Aufträge oder einem Auftrag per Nummer (z. B. WO-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "Derzeit kein klarer Engpass — die Kapazität ist über die Arbeitsgänge ausgeglichen.",
       "suggestions": "Worauf Sie sich jetzt konzentrieren sollten:\n{list}",
@@ -1143,5 +1143,15 @@
     "invited": "Eingeladen",
     "roleOwnerHelp": "Verwaltet Abo, Abrechnung, Stationen und Benutzer",
     "roleUserHelp": "Sieht nur Dashboards und Berichte"
+  },
+  "branding": {
+    "title": "Firmenlogo",
+    "hint": "Auf Ihren gedruckten Angeboten und im Kundenportal sichtbar. PNG, JPG oder SVG, bis 400 KB.",
+    "upload": "Logo hochladen",
+    "replace": "Ersetzen",
+    "remove": "Entfernen",
+    "none": "Noch kein Logo",
+    "tooLarge": "Datei zu groß (max. 400 KB).",
+    "invalid": "Bitte eine Bilddatei wählen (PNG, JPG oder SVG)."
   }
 }

@@ -4,16 +4,17 @@ import Reveal from "@/components/landing/Reveal";
 import SiteNav from "@/components/landing/SiteNav";
 import {
   ArrowRight,
-  Award,
-  Bell,
-  Boxes,
   Bot,
   Check,
   Factory,
   Gauge,
   LayoutDashboard,
   MonitorSmartphone,
+  Rocket,
+  ShieldCheck,
   Sparkles,
+  TrendingUp,
+  Wallet,
 } from "lucide-react";
 import { PLANS, PLAN_ORDER } from "@/lib/data";
 import { formatMoney } from "@/lib/format";
@@ -47,11 +48,11 @@ export default function LandingPage() {
 
   const aiCards = [
     { icon: Bot, title: t("aiCard1Title"), desc: t("aiCard1Desc") },
-    { icon: Sparkles, title: t("aiCard2Title"), desc: t("aiCard2Desc") },
+    { icon: TrendingUp, title: t("aiCard2Title"), desc: t("aiCard2Desc") },
     { icon: Gauge, title: t("aiCard3Title"), desc: t("aiCard3Desc") },
-    { icon: Bell, title: t("aiCard4Title"), desc: t("aiCard4Desc") },
-    { icon: Boxes, title: t("aiCard5Title"), desc: t("aiCard5Desc") },
-    { icon: Award, title: t("aiCard6Title"), desc: t("aiCard6Desc") },
+    { icon: Wallet, title: t("aiCard4Title"), desc: t("aiCard4Desc") },
+    { icon: Rocket, title: t("aiCard5Title"), desc: t("aiCard5Desc") },
+    { icon: ShieldCheck, title: t("aiCard6Title"), desc: t("aiCard6Desc") },
   ];
 
   return (

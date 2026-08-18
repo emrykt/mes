@@ -99,7 +99,7 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-xl border border-line bg-surface shadow-[0_1px_2px_rgba(11,11,11,0.04)] ${className}`}
+      className={`card-elev rounded-xl border border-line bg-surface shadow-[0_1px_2px_rgba(11,11,11,0.04)] ${className}`}
     >
       {(title || action) && (
         <header className="flex items-start justify-between gap-4 px-5 pt-4 pb-3">
@@ -131,7 +131,7 @@ export function StatCard({
   sub?: string;
 }) {
   return (
-    <div className="rounded-xl border border-line bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(11,11,11,0.04)]">
+    <div className="card-lift rounded-xl border border-line bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(11,11,11,0.04)]">
       <p className="text-xs font-medium text-muted">{label}</p>
       <p className="mt-1.5 text-2xl font-semibold text-ink">{value}</p>
       {(delta || sub) && (

@@ -16,7 +16,7 @@ import { SIM_STATIONS, performanceFor } from "@/lib/sim";
 
 /**
  * A data-driven plant assistant. It does NOT call an external model — it maps
- * the question to an intent by keywords (TR/EN/DE) and answers from the live
+ * the question to an intent by keywords (EN/DE) and answers from the live
  * demo store, adding a short recommendation. Deterministic and offline.
  */
 
@@ -49,51 +49,44 @@ const PLANT_TARGET = Math.round(
   SIM_STATIONS.reduce((s, st) => s + st.rate, 0) * 24 * 0.65,
 );
 
-const CUTTING = new Set(["op-lazer", "op-plazma", "op-oksijen"]);
+const CUTTING = new Set(["op-laser", "op-plasma", "op-oxyfuel"]);
 
 /** Order-number pattern (SIP-YYYY-MM-NNN); also matches a bare suffix. */
 const ORDER_RE = /\bSIP-\d{4}-\d{2}-\d{3}\b/i;
 
 /** Greetings / small talk that should get a friendly on-topic nudge. */
 const GREETING_KW = [
-  "merhaba", "selam", "günaydın", "gunaydin", "iyi günler", "teşekkür", "tesekkur",
   "hello", "hi ", "hey", "thanks", "thank you", "good morning",
   "hallo", "guten tag", "danke", "moin",
 ];
 
 /**
  * Broad on-topic vocabulary. If the question matches none of these AND no
- * intent, it's off-topic → the fixed refusal. Covers TR/EN/DE.
+ * intent, it's off-topic → the fixed refusal. Covers EN/DE.
  */
 const ON_TOPIC_KW = [
   // production / plant
-  "üret", "uret", "imalat", "fabrika", "tesis", "saha", "atölye", "atolye", "vardiya",
   "production", "plant", "factory", "shop floor", "shift", "manufactur", "output",
   "produkt", "fertigung", "werk", "schicht", "ausstoß", "ausstoss",
   // machines / stations / operations
-  "makine", "makina", "istasyon", "operasyon", "operatör", "operator", "tezgah",
-  "hat", "kesim", "büküm", "bukum", "kaynak", "montaj", "punch", "abkant", "lazer",
   "machine", "station", "operation", "line", "cutting", "welding", "bending", "assembly",
-  "maschine", "anlage", "arbeitsgang", "bediener", "schneiden", "schweißen", "montage",
+  "laser", "punch", "maschine", "anlage", "arbeitsgang", "bediener", "schneiden",
+  "schweißen", "montage",
   // metrics
-  "verim", "kullanım", "kullanim", "oee", "performans", "efficiency", "utilization",
-  "performance", "auslastung", "effizienz", "leistung", "kapasite", "capacity", "kapazität",
+  "oee", "efficiency", "utilization", "performance", "auslastung", "effizienz",
+  "leistung", "capacity", "kapazität",
   // orders / schedule
-  "sipariş", "siparis", "iş emri", "is emri", "termin", "rota", "kuyruk", "yığın", "yigin",
   "order", "work order", "due", "routing", "queue", "backlog", "schedule",
   "auftrag", "fälligkeit", "faelligkeit", "rückstand", "warteschlange",
   // cost / quality / maintenance / downtime / andon
-  "maliyet", "cost", "kosten", "fire", "hurda", "scrap", "ausschuss", "kalite", "quality",
-  "qualität", "bakım", "bakim", "maintenance", "wartung", "duruş", "durus", "downtime",
-  "stillstand", "andon", "enerji", "energy", "energie", "gaz", "gas",
+  "cost", "kosten", "scrap", "ausschuss", "quality", "qualität", "maintenance",
+  "wartung", "downtime", "stillstand", "andon", "energy", "energie", "gas",
   // revenue / profit
-  "ciro", "kazanç", "kazanc", "kâr", "kar", "gelir", "marj", "teklif", "fiyat",
   "revenue", "profit", "margin", "quote", "price", "umsatz", "gewinn", "marge", "angebot", "preis",
   // smart manufacturing: bottleneck / suggestions / alerts / score
-  "darboğaz", "darbogaz", "tıkan", "tikan", "öneri", "oneri", "iyileş", "iyiles", "tavsiye",
   "bottleneck", "improve", "recommend", "suggestion", "advice", "alert", "escalation",
   "engpass", "vorschlag", "verbesser", "empfehl", "warnung", "eskal",
-  "skor", "puan", "score", "punkt", "rating", "bewertung",
+  "score", "punkt", "rating", "bewertung",
 ];
 
 /** Keyword → intent. Order matters: more specific intents first. */
@@ -101,32 +94,27 @@ const RULES: { intent: Intent; kw: string[] }[] = [
   {
     intent: "score",
     kw: [
-      "skor", "puan", "performans skoru", "kaç puan", "1000",
-      "score", "rating", "how many points",
+      "score", "rating", "how many points", "1000",
       "punktzahl", "bewertung", "punkte",
     ],
   },
   {
     intent: "alerts",
     kw: [
-      "uyarı", "uyari", "eskalasyon", "eskale", "alarm",
-      "alert", "escalation", "escalate",
+      "alert", "escalation", "escalate", "alarm",
       "warnung", "eskalation", "warnmeldung",
     ],
   },
   {
     intent: "bottleneck",
     kw: [
-      "darboğaz", "darbogaz", "tıkanma", "tikanma", "tıkanık", "tikanik", "en yoğun",
-      "bottleneck", "constraint", "choke",
+      "bottleneck", "constraint", "choke", "busiest",
       "engpass", "flaschenhals",
     ],
   },
   {
     intent: "suggestions",
     kw: [
-      "öneri", "oneri", "öner", "tavsiye", "ne yapmalı", "ne yapabilir",
-      "nasıl iyileş", "nasil iyiles", "iyileştir", "iyilestir", "neyi düzelt", "neyi duzelt",
       "improve", "recommend", "suggestion", "advice", "what should",
       "vorschlag", "empfehl", "verbesser", "ratschlag",
     ],
@@ -134,8 +122,6 @@ const RULES: { intent: Intent; kw: string[] }[] = [
   {
     intent: "lostRevenue",
     kw: [
-      "kaybedilen", "kayıp kazanç", "kayip kazanc", "kazanç kayb", "kazanc kayb",
-      "kazanç kaybett", "kaçan kazanç", "kacan kazanc", "fırsat maliyet", "firsat maliyet",
       "lost revenue", "opportunity cost", "missed revenue", "revenue lost",
       "entgangen", "verlorener umsatz", "opportunitätskosten", "umsatz verlor",
     ],
@@ -143,14 +129,12 @@ const RULES: { intent: Intent; kw: string[] }[] = [
   {
     intent: "downtimeCost",
     kw: [
-      "duruş maliyet", "durus maliyet", "duruşun maliyet", "duruş kaynaklı",
       "downtime cost", "cost of downtime", "stillstandskosten", "stillstand kosten",
     ],
   },
   {
     intent: "machinesDown",
     kw: [
-      "hangi makine", "hangi istasyon", "duran", "duruyor", "duruş", "durus",
       "which machine", "which station", "down", "stopped", "stoppage",
       "welche maschine", "steht", "stillstand", "stört", "störung",
     ],
@@ -158,74 +142,69 @@ const RULES: { intent: Intent; kw: string[] }[] = [
   {
     intent: "revenue",
     kw: [
-      "ciro", "kazanç", "kazanc", "kâr", "kar", "gelir", "kârlılık", "karlilik", "marj",
       "revenue", "profit", "earning", "margin", "turnover",
       "umsatz", "gewinn", "erlös", "erloes", "marge", "ertrag",
     ],
   },
   {
     intent: "downtimeCost",
-    kw: ["duruş", "durus", "downtime", "stillstand"],
+    kw: ["downtime", "stillstand"],
   },
   {
     intent: "maintenance",
     kw: [
-      "bakım", "bakim", "maintenance", "wartung", "instand", "servis", "periyodik",
+      "maintenance", "wartung", "instand", "service", "periodic",
     ],
   },
   {
     intent: "scrap",
-    kw: ["fire", "hurda", "scrap", "ausschuss", "reject", "reddet", "hatalı parça"],
+    kw: ["scrap", "ausschuss", "reject", "waste", "defective part"],
   },
   {
     intent: "workload",
     kw: [
-      "iş yük", "is yuk", "yığın", "yigin", "bekleyen", "kuyruk", "backlog",
       "workload", "queue", "auslastung der", "rückstand", "warteschlange",
-      "kapasite", "capacity", "kapazität",
+      "capacity", "kapazität", "backlog", "pending",
     ],
   },
   {
     intent: "andon",
-    kw: ["andon", "çağrı", "cagri", "yardım çağ", "hilferuf"],
+    kw: ["andon", "help call", "call for help", "hilferuf"],
   },
   {
     intent: "dueRisk",
     kw: [
-      "termin", "geciken", "gecikme", "riskli", "risk alt", "acil sipariş", "acil siparis",
-      "geç kal", "gec kal", "zaman", "yetişe", "yetise",
       "due", "late", "overdue", "at risk", "rush", "deadline", "on time",
       "termin", "verspätet", "verspaetet", "überfällig", "ueberfaellig", "gefährdet", "eilauftrag",
     ],
   },
   {
     intent: "shifts",
-    kw: ["vardiya", "shift", "schicht"],
+    kw: ["shift", "schicht"],
   },
   {
     intent: "operators",
     kw: [
-      "operatör", "operator", "en iyi", "en kötü", "en kotu", "kim daha", "personel",
-      "best operator", "worst", "who is", "bediener", "beste", "schlechteste", "mitarbeiter",
+      "operator", "best operator", "worst", "who is", "staff", "personnel",
+      "bediener", "beste", "schlechteste", "mitarbeiter",
     ],
   },
   {
     intent: "output",
     kw: [
-      "üretim adet", "kaç adet", "çıktı", "cikti", "output", "produktion",
-      "ausstoß", "ausstoss", "hedef", "target", "ziel", "ne kadar üret",
+      "output", "produktion", "how many parts", "units produced",
+      "ausstoß", "ausstoss", "target", "ziel",
     ],
   },
   {
     intent: "dailyCost",
-    kw: ["maliyet", "cost", "kosten", "para", "gider", "harca", "money", "ne kadara"],
+    kw: ["cost", "kosten", "money", "spend", "expense", "how much"],
   },
   {
     intent: "efficiency",
     kw: [
-      "verim", "verimlilik", "kullanım", "kullanim", "efficiency", "utilization",
-      "effizienz", "auslastung", "oee", "performans", "performance", "leistung",
-      "nasıl gidiyor", "durum ne", "genel durum",
+      "efficiency", "utilization", "effizienz", "auslastung", "oee",
+      "performance", "leistung", "how is it going", "overall status",
     ],
   },
 ];

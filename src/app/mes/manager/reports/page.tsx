@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Loader2 } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import TrendChart from "@/components/charts/TrendChart";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card, Table, Td, Th } from "@/components/ui";
@@ -18,7 +18,7 @@ import {
 import type { MesOrder } from "@/lib/mes-types";
 import { formatShortDate } from "@/lib/format";
 
-const RANGES = [7, 30, 90] as const;
+const RANGES = [7, 30, 90, 180, 365] as const;
 
 function dayLabel(iso: string, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
@@ -79,6 +79,7 @@ export default function ReportsPage() {
     { output: 0, scrap: 0, downMin: 0, util: 0 },
   );
   const reasonMax = Math.max(1, ...byReason.map((r) => r.minutes));
+  const retentionDays = snap.retention.totalMonths * 30;
 
   return (
     <div className="space-y-5">
@@ -87,19 +88,34 @@ export default function ReportsPage() {
         <p className="mt-1 text-sm text-ink-2">{t("subtitle")}</p>
       </div>
 
-      {/* range selector */}
-      <div className="flex gap-1 rounded-xl border border-line bg-surface p-1 sm:max-w-md">
-        {RANGES.map((r) => (
-          <button
-            key={r}
-            onClick={() => setDays(r)}
-            className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
-              r === days ? "bg-accent text-white" : "text-ink-2 hover:bg-neutral-soft"
-            }`}
-          >
-            {t(`range${r}`)}
-          </button>
-        ))}
+      {/* range selector — capped to the plan's data-retention window */}
+      <div>
+        <div className="flex gap-1 rounded-xl border border-line bg-surface p-1 sm:max-w-xl">
+          {RANGES.map((r) => {
+            const locked = r > retentionDays;
+            return (
+              <button
+                key={r}
+                onClick={() => !locked && setDays(r)}
+                disabled={locked}
+                title={locked ? t("lockedHint") : undefined}
+                className={`flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                  r === days
+                    ? "bg-accent text-white"
+                    : locked
+                      ? "cursor-not-allowed text-muted"
+                      : "text-ink-2 hover:bg-neutral-soft"
+                }`}
+              >
+                {locked && <Lock className="size-3" />}
+                {t(`range${r}`)}
+              </button>
+            );
+          })}
+        </div>
+        {RANGES.some((r) => r > retentionDays) && (
+          <p className="mt-1.5 text-xs text-muted">{t("lockedHint")}</p>
+        )}
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">

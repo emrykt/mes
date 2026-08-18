@@ -13,7 +13,7 @@ import { SIM_STATIONS, stationToday } from "./sim";
  * - profit: revenue − cost; margin = profit ÷ revenue
  */
 
-const CUTTING = new Set(["op-lazer", "op-plazma", "op-oksijen"]);
+const CUTTING = new Set(["op-laser", "op-plasma", "op-oxyfuel"]);
 
 export interface PlantEconomics {
   revenue: number;

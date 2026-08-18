@@ -54,30 +54,30 @@ export type MachineKind =
   | "packaging";
 
 export const DEFAULT_OPERATIONS: OperationDef[] = [
-  { id: "op-testere", name: "Band Saw", batchable: true },
-  { id: "op-torna", name: "CNC Lathe" },
-  { id: "op-freze", name: "CNC Mill" },
-  { id: "op-matkap", name: "Drilling" },
-  { id: "op-lazer", name: "Laser Cutting", batchable: true },
-  { id: "op-plazma", name: "Plasma Cutting", batchable: true },
-  { id: "op-oksijen", name: "Oxy-fuel Cutting", batchable: true },
+  { id: "op-sawing", name: "Band Saw", batchable: true },
+  { id: "op-turning", name: "CNC Lathe" },
+  { id: "op-milling", name: "CNC Mill" },
+  { id: "op-drilling", name: "Drilling" },
+  { id: "op-laser", name: "Laser Cutting", batchable: true },
+  { id: "op-plasma", name: "Plasma Cutting", batchable: true },
+  { id: "op-oxyfuel", name: "Oxy-fuel Cutting", batchable: true },
   { id: "op-punch", name: "Punch Press" },
-  { id: "op-abkant", name: "Press Brake" },
-  { id: "op-rulo", name: "Roll Forming" },
-  { id: "op-kaynak", name: "Welding", batchable: true },
-  { id: "op-montaj", name: "Assembly" },
-  { id: "op-boya", name: "Powder Coating" },
-  { id: "op-kalite", name: "Quality Control" },
-  { id: "op-paket", name: "Packaging / Shipping" },
+  { id: "op-pressbrake", name: "Press Brake" },
+  { id: "op-rollform", name: "Roll Forming" },
+  { id: "op-welding", name: "Welding", batchable: true },
+  { id: "op-assembly", name: "Assembly" },
+  { id: "op-coating", name: "Powder Coating" },
+  { id: "op-quality", name: "Quality Control" },
+  { id: "op-packaging", name: "Packaging / Shipping" },
 ];
 
 export const DEFAULT_DOWNTIME_REASONS: DowntimeReason[] = [
-  { id: "dt-ariza", name: "Machine breakdown" },
+  { id: "dt-breakdown", name: "Machine breakdown" },
   { id: "dt-setup", name: "Setup / changeover" },
-  { id: "dt-malzeme", name: "Waiting for material" },
+  { id: "dt-material", name: "Waiting for material" },
   { id: "dt-operator", name: "No operator" },
-  { id: "dt-kalite", name: "Quality hold" },
-  { id: "dt-mola", name: "Break" },
+  { id: "dt-quality", name: "Quality hold" },
+  { id: "dt-break", name: "Break" },
 ];
 
 /**
@@ -87,22 +87,22 @@ export const DEFAULT_DOWNTIME_REASONS: DowntimeReason[] = [
  */
 /** Scrap/waste reasons (tenant data → Turkish mock). */
 export const DEFAULT_SCRAP_REASONS = [
-  { id: "sc-olcu", name: "Out of tolerance" },
-  { id: "sc-ayar", name: "Setup scrap" },
-  { id: "sc-malzeme", name: "Material defect" },
-  { id: "sc-takim", name: "Tooling / die" },
-  { id: "sc-yuzey", name: "Surface / burr" },
+  { id: "sc-tolerance", name: "Out of tolerance" },
+  { id: "sc-setup", name: "Setup scrap" },
+  { id: "sc-material", name: "Material defect" },
+  { id: "sc-tooling", name: "Tooling / die" },
+  { id: "sc-surface", name: "Surface / burr" },
   { id: "sc-operator", name: "Operator error" },
 ];
 
 /** Weighted scrap-reason picker (deterministic via seed). */
 export function pickScrapReason(seed: string): string {
   const weights: [string, number][] = [
-    ["sc-olcu", 0.26],
-    ["sc-ayar", 0.22],
-    ["sc-malzeme", 0.18],
-    ["sc-takim", 0.14],
-    ["sc-yuzey", 0.12],
+    ["sc-tolerance", 0.26],
+    ["sc-setup", 0.22],
+    ["sc-material", 0.18],
+    ["sc-tooling", 0.14],
+    ["sc-surface", 0.12],
     ["sc-operator", 0.08],
   ];
   let r = rand(seed);
@@ -110,7 +110,7 @@ export function pickScrapReason(seed: string): string {
     if (r < w) return id;
     r -= w;
   }
-  return "sc-olcu";
+  return "sc-tolerance";
 }
 
 export const DEFAULT_ESCALATION_RULES: EscalationRule[] = [
@@ -133,22 +133,22 @@ export interface SimStationDef {
 /** Demo stations, one kiosk each — machining (turning/milling/drilling/sawing)
  *  and sheet-metal (cutting/bending/welding) side by side (metal workshop). */
 export const SIM_STATIONS: SimStationDef[] = [
-  { id: "st-testere-1", name: "Band Saw", operationId: "op-testere", kind: "sawing", rate: 42, baseUtil: 0.66 },
-  { id: "st-torna-1", name: "CNC Lathe 1", operationId: "op-torna", kind: "turning", rate: 15, baseUtil: 0.78 },
-  { id: "st-torna-2", name: "CNC Lathe 2", operationId: "op-torna", kind: "turning", rate: 13, baseUtil: 0.7 },
-  { id: "st-freze-1", name: "CNC Machining Center 1", operationId: "op-freze", kind: "milling", rate: 11, baseUtil: 0.75 },
-  { id: "st-freze-2", name: "CNC Machining Center 2", operationId: "op-freze", kind: "milling", rate: 9, baseUtil: 0.68 },
-  { id: "st-matkap-1", name: "Radial Drill", operationId: "op-matkap", kind: "drilling", rate: 34, baseUtil: 0.6 },
-  { id: "st-lazer-1", name: "Laser Cutter 1", operationId: "op-lazer", kind: "cutting", rate: 46, baseUtil: 0.8 },
-  { id: "st-lazer-2", name: "Laser Cutter 2", operationId: "op-lazer", kind: "cutting", rate: 40, baseUtil: 0.72 },
-  { id: "st-plazma-1", name: "Plasma Cutter", operationId: "op-plazma", kind: "cutting", rate: 28, baseUtil: 0.6 },
+  { id: "st-sawing-1", name: "Band Saw", operationId: "op-sawing", kind: "sawing", rate: 42, baseUtil: 0.66 },
+  { id: "st-turning-1", name: "CNC Lathe 1", operationId: "op-turning", kind: "turning", rate: 15, baseUtil: 0.78 },
+  { id: "st-turning-2", name: "CNC Lathe 2", operationId: "op-turning", kind: "turning", rate: 13, baseUtil: 0.7 },
+  { id: "st-milling-1", name: "CNC Machining Center 1", operationId: "op-milling", kind: "milling", rate: 11, baseUtil: 0.75 },
+  { id: "st-milling-2", name: "CNC Machining Center 2", operationId: "op-milling", kind: "milling", rate: 9, baseUtil: 0.68 },
+  { id: "st-drilling-1", name: "Radial Drill", operationId: "op-drilling", kind: "drilling", rate: 34, baseUtil: 0.6 },
+  { id: "st-laser-1", name: "Laser Cutter 1", operationId: "op-laser", kind: "cutting", rate: 46, baseUtil: 0.8 },
+  { id: "st-laser-2", name: "Laser Cutter 2", operationId: "op-laser", kind: "cutting", rate: 40, baseUtil: 0.72 },
+  { id: "st-plasma-1", name: "Plasma Cutter", operationId: "op-plasma", kind: "cutting", rate: 28, baseUtil: 0.6 },
   { id: "st-punch-1", name: "Punch Press", operationId: "op-punch", kind: "punching", rate: 95, baseUtil: 0.68 },
-  { id: "st-abkant-1", name: "Press Brake 1", operationId: "op-abkant", kind: "bending", rate: 36, baseUtil: 0.77 },
-  { id: "st-abkant-2", name: "Press Brake 2", operationId: "op-abkant", kind: "bending", rate: 31, baseUtil: 0.66 },
-  { id: "st-kaynak-1", name: "Welding Station", operationId: "op-kaynak", kind: "welding", rate: 18, baseUtil: 0.63 },
-  { id: "st-montaj-1", name: "Assembly Line", operationId: "op-montaj", kind: "assembly", rate: 22, baseUtil: 0.62 },
-  { id: "st-kalite-1", name: "Quality Control", operationId: "op-kalite", kind: "quality", rate: 70, baseUtil: 0.7 },
-  { id: "st-paket-1", name: "Packaging / Shipping", operationId: "op-paket", kind: "packaging", rate: 55, baseUtil: 0.64 },
+  { id: "st-pressbrake-1", name: "Press Brake 1", operationId: "op-pressbrake", kind: "bending", rate: 36, baseUtil: 0.77 },
+  { id: "st-pressbrake-2", name: "Press Brake 2", operationId: "op-pressbrake", kind: "bending", rate: 31, baseUtil: 0.66 },
+  { id: "st-welding-1", name: "Welding Station", operationId: "op-welding", kind: "welding", rate: 18, baseUtil: 0.63 },
+  { id: "st-assembly-1", name: "Assembly Line", operationId: "op-assembly", kind: "assembly", rate: 22, baseUtil: 0.62 },
+  { id: "st-quality-1", name: "Quality Control", operationId: "op-quality", kind: "quality", rate: 70, baseUtil: 0.7 },
+  { id: "st-packaging-1", name: "Packaging / Shipping", operationId: "op-packaging", kind: "packaging", rate: 55, baseUtil: 0.64 },
 ];
 
 export function getSimStation(id: string): SimStationDef | undefined {
@@ -157,22 +157,22 @@ export function getSimStation(id: string): SimStationDef | undefined {
 
 /** Default market billing rate per station-hour (base currency figures). */
 export const DEFAULT_BILLING_RATES: Record<string, number> = {
-  "st-testere-1": 48,
-  "st-torna-1": 88,
-  "st-torna-2": 82,
-  "st-freze-1": 98,
-  "st-freze-2": 92,
-  "st-matkap-1": 52,
-  "st-lazer-1": 78,
-  "st-lazer-2": 72,
-  "st-plazma-1": 58,
+  "st-sawing-1": 48,
+  "st-turning-1": 88,
+  "st-turning-2": 82,
+  "st-milling-1": 98,
+  "st-milling-2": 92,
+  "st-drilling-1": 52,
+  "st-laser-1": 78,
+  "st-laser-2": 72,
+  "st-plasma-1": 58,
   "st-punch-1": 50,
-  "st-abkant-1": 46,
-  "st-abkant-2": 44,
-  "st-kaynak-1": 42,
-  "st-montaj-1": 36,
-  "st-kalite-1": 30,
-  "st-paket-1": 26,
+  "st-pressbrake-1": 46,
+  "st-pressbrake-2": 44,
+  "st-welding-1": 42,
+  "st-assembly-1": 36,
+  "st-quality-1": 30,
+  "st-packaging-1": 26,
 };
 
 /** Billing rate for the station(s) bound to an operation (average). */
@@ -227,10 +227,10 @@ export interface HourCell {
 }
 
 const REASON_WEIGHTS: [string, number][] = [
-  ["dt-ariza", 0.28],
+  ["dt-breakdown", 0.28],
   ["dt-setup", 0.26],
-  ["dt-malzeme", 0.2],
-  ["dt-mola", 0.14],
+  ["dt-material", 0.2],
+  ["dt-break", 0.14],
   ["dt-operator", 0.12],
 ];
 
@@ -240,7 +240,7 @@ function weightedReason(key: string): string {
     if (r < w) return id;
     r -= w;
   }
-  return "dt-kalite";
+  return "dt-quality";
 }
 
 function hourKey(d: Date): string {
@@ -581,26 +581,26 @@ export type PartKind = "sheet" | "machined";
 export interface PartTemplate { part: string; ops: string[]; qty: [number, number]; kind: PartKind; }
 
 const PART_POOL: PartTemplate[] = [
-  { part: "Hood body DV-450", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 200], kind: "sheet" },
-  { part: "Panel cover PK-1200", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [40, 120], kind: "sheet" },
-  { part: "Rack leg profile RA-90", ops: ["op-lazer", "op-punch", "op-abkant", "op-paket"], qty: [200, 600], kind: "sheet" },
-  { part: "Vent frame MF-30", ops: ["op-plazma", "op-abkant", "op-kaynak", "op-paket"], qty: [100, 350], kind: "sheet" },
-  { part: "Device chassis CS-77", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-kalite"], qty: [20, 80], kind: "sheet" },
-  { part: "Drawer slide bracket", ops: ["op-punch", "op-abkant", "op-paket"], qty: [300, 900], kind: "sheet" },
-  { part: "Cabinet side panel KP-2", ops: ["op-lazer", "op-abkant", "op-kalite", "op-paket"], qty: [50, 160], kind: "sheet" },
-  { part: "Transformer guard cage", ops: ["op-plazma", "op-kaynak", "op-kalite"], qty: [8, 30], kind: "sheet" },
-  { part: "Conveyor sheet bed", ops: ["op-lazer", "op-abkant", "op-kaynak", "op-montaj", "op-paket"], qty: [30, 110], kind: "sheet" },
-  { part: "Electrical panel body EP-60", ops: ["op-lazer", "op-abkant", "op-montaj", "op-kalite", "op-paket"], qty: [25, 90], kind: "sheet" },
-  { part: "Filter housing FK-8", ops: ["op-punch", "op-abkant", "op-kaynak", "op-kalite", "op-paket"], qty: [60, 220], kind: "sheet" },
+  { part: "Hood body DV-450", ops: ["op-laser", "op-pressbrake", "op-welding", "op-quality", "op-packaging"], qty: [60, 200], kind: "sheet" },
+  { part: "Panel cover PK-1200", ops: ["op-laser", "op-pressbrake", "op-quality", "op-packaging"], qty: [40, 120], kind: "sheet" },
+  { part: "Rack leg profile RA-90", ops: ["op-laser", "op-punch", "op-pressbrake", "op-packaging"], qty: [200, 600], kind: "sheet" },
+  { part: "Vent frame MF-30", ops: ["op-plasma", "op-pressbrake", "op-welding", "op-packaging"], qty: [100, 350], kind: "sheet" },
+  { part: "Device chassis CS-77", ops: ["op-laser", "op-pressbrake", "op-welding", "op-assembly", "op-quality"], qty: [20, 80], kind: "sheet" },
+  { part: "Drawer slide bracket", ops: ["op-punch", "op-pressbrake", "op-packaging"], qty: [300, 900], kind: "sheet" },
+  { part: "Cabinet side panel KP-2", ops: ["op-laser", "op-pressbrake", "op-quality", "op-packaging"], qty: [50, 160], kind: "sheet" },
+  { part: "Transformer guard cage", ops: ["op-plasma", "op-welding", "op-quality"], qty: [8, 30], kind: "sheet" },
+  { part: "Conveyor sheet bed", ops: ["op-laser", "op-pressbrake", "op-welding", "op-assembly", "op-packaging"], qty: [30, 110], kind: "sheet" },
+  { part: "Electrical panel body EP-60", ops: ["op-laser", "op-pressbrake", "op-assembly", "op-quality", "op-packaging"], qty: [25, 90], kind: "sheet" },
+  { part: "Filter housing FK-8", ops: ["op-punch", "op-pressbrake", "op-welding", "op-quality", "op-packaging"], qty: [60, 220], kind: "sheet" },
   // machined (turning/milling) parts — bar/billet stock
-  { part: "Shaft Ø40 MS-40", ops: ["op-testere", "op-torna", "op-matkap", "op-kalite", "op-paket"], qty: [20, 120], kind: "machined" },
-  { part: "Flange coupling FL-125", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [30, 150], kind: "machined" },
-  { part: "Gearbox body RG-8", ops: ["op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [10, 60], kind: "machined" },
-  { part: "Bushing Ø25", ops: ["op-testere", "op-torna", "op-kalite"], qty: [80, 400], kind: "machined" },
-  { part: "Coupling half KP-60", ops: ["op-testere", "op-torna", "op-freze", "op-kalite"], qty: [40, 180], kind: "machined" },
-  { part: "Gear hub DG-32", ops: ["op-testere", "op-torna", "op-freze", "op-matkap", "op-kalite"], qty: [15, 90], kind: "machined" },
-  { part: "Bearing housing RY-6205", ops: ["op-torna", "op-freze", "op-matkap", "op-montaj", "op-kalite", "op-paket"], qty: [25, 130], kind: "machined" },
-  { part: "Hydraulic block HB-14", ops: ["op-freze", "op-matkap", "op-kalite"], qty: [8, 45], kind: "machined" },
+  { part: "Shaft Ø40 MS-40", ops: ["op-sawing", "op-turning", "op-drilling", "op-quality", "op-packaging"], qty: [20, 120], kind: "machined" },
+  { part: "Flange coupling FL-125", ops: ["op-sawing", "op-turning", "op-milling", "op-drilling", "op-quality"], qty: [30, 150], kind: "machined" },
+  { part: "Gearbox body RG-8", ops: ["op-milling", "op-drilling", "op-assembly", "op-quality", "op-packaging"], qty: [10, 60], kind: "machined" },
+  { part: "Bushing Ø25", ops: ["op-sawing", "op-turning", "op-quality"], qty: [80, 400], kind: "machined" },
+  { part: "Coupling half KP-60", ops: ["op-sawing", "op-turning", "op-milling", "op-quality"], qty: [40, 180], kind: "machined" },
+  { part: "Gear hub DG-32", ops: ["op-sawing", "op-turning", "op-milling", "op-drilling", "op-quality"], qty: [15, 90], kind: "machined" },
+  { part: "Bearing housing RY-6205", ops: ["op-turning", "op-milling", "op-drilling", "op-assembly", "op-quality", "op-packaging"], qty: [25, 130], kind: "machined" },
+  { part: "Hydraulic block HB-14", ops: ["op-milling", "op-drilling", "op-quality"], qty: [8, 45], kind: "machined" },
 ];
 
 /** Operation ids a set of stations can perform (via the master catalog). */

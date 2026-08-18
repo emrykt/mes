@@ -10,6 +10,7 @@ import type {
   Tenant,
   TenantUser,
 } from "./types";
+import type { PricingConfig } from "./demo-types";
 
 /** Fixed demo clock so heartbeat states and countdowns render deterministically. */
 export const NOW = new Date("2026-07-07T09:00:00Z");
@@ -60,12 +61,30 @@ export const PLAN_ENTITLEMENTS: Record<PlanId, PlanEntitlements> = {
   },
 };
 
+/** Data-retention window (months) included with each plan. */
+export const PLAN_RETENTION_MONTHS: Record<PlanId, number> = {
+  BASIC: 3,
+  AIPRO: 6,
+  AIULTIMATE: 12,
+};
+
+/** Default global pricing (admin-editable at runtime; this is the seed). */
+export const DEFAULT_PRICING: PricingConfig = {
+  plans: { BASIC: 199, AIPRO: 299, AIULTIMATE: 499 },
+  addonTiers: [
+    { years: 1, price: 99 },
+    { years: 2, price: 149 },
+    { years: 3, price: 199 },
+    { years: 5, price: 299 },
+  ],
+};
+
 export const tenants: Tenant[] = [
   {
     id: "t-001",
     company: "Ironworks Metal Inc.",
     country: "TR",
-    ownerEmail: "murat@demirmetal.com.tr",
+    ownerEmail: "owner@ironworksmetal.com",
     plan: "AIPRO",
     status: "ACTIVE",
     stationsUsed: 8,
@@ -76,7 +95,7 @@ export const tenants: Tenant[] = [
     id: "t-002",
     company: "Stella Sheet Ltd.",
     country: "TR",
-    ownerEmail: "info@yildizsac.com",
+    ownerEmail: "info@stellasheet.com",
     plan: "BASIC",
     status: "TRIALING",
     stationsUsed: 3,
@@ -97,9 +116,9 @@ export const tenants: Tenant[] = [
   },
   {
     id: "t-004",
-    company: "Kaya Makina San.",
+    company: "Riverside Machining",
     country: "TR",
-    ownerEmail: "kaya@kayamakina.com.tr",
+    ownerEmail: "billing@riverside-mach.com",
     plan: "BASIC",
     status: "PAST_DUE",
     stationsUsed: 5,
@@ -134,7 +153,7 @@ export const tenants: Tenant[] = [
     id: "t-007",
     company: "Aegean Metalworks",
     country: "TR",
-    ownerEmail: "ege@egemetal.com.tr",
+    ownerEmail: "ops@aegeanmetalworks.com",
     plan: "BASIC",
     status: "TRIALING",
     stationsUsed: 2,
@@ -168,7 +187,7 @@ export const tenants: Tenant[] = [
     id: "t-010",
     company: "Summit Tooling Co.",
     country: "TR",
-    ownerEmail: "bilgi@anadolukalip.com.tr",
+    ownerEmail: "info@summittooling.com",
     plan: "AIPRO",
     status: "ACTIVE",
     stationsUsed: 4,
@@ -231,17 +250,17 @@ export function heartbeatState(station: Station): HeartbeatState {
 }
 
 const stationNames = [
-  "Lazer Kesim 1",
-  "Lazer Kesim 2",
-  "Abkant Pres 1",
-  "Abkant Pres 2",
-  "Punch Pres",
+  "Laser Cutter 1",
+  "Laser Cutter 2",
+  "Press Brake 1",
+  "Press Brake 2",
+  "Punch Press",
   "Welding Station 1",
   "Welding Station 2",
   "Assembly Line",
-  "Kalite Kontrol",
-  "Paketleme",
-  "Plazma Kesim",
+  "Quality Control",
+  "Packaging",
+  "Plasma Cutter",
   "Bending Line",
 ];
 
@@ -293,7 +312,7 @@ export function usersFor(tenant: Tenant): TenantUser[] {
   return [
     {
       id: `${tenant.id}-u1`,
-      name: "Murat Demir",
+      name: "Mark Turner",
       email: tenant.ownerEmail,
       role: "CUSTOMER_OWNER",
       lastLoginAt: minutesAgo(60 * 5),
@@ -301,14 +320,14 @@ export function usersFor(tenant: Tenant): TenantUser[] {
     {
       id: `${tenant.id}-u2`,
       name: "Anna Brooks",
-      email: `ayse@${domain}`,
+      email: `ops@${domain}`,
       role: "CUSTOMER_USER",
       lastLoginAt: minutesAgo(60 * 26),
     },
     {
       id: `${tenant.id}-u3`,
       name: "James Miller",
-      email: `hasan@${domain}`,
+      email: `tech@${domain}`,
       role: "CUSTOMER_USER",
       invited: true,
     },
@@ -352,7 +371,7 @@ export function auditFor(tenant: Tenant): AuditEntry[] {
     base.unshift({
       id: `${tenant.id}-a5`,
       at: "2026-05-14T13:22:00Z",
-      actor: "selin@kioskmes.com",
+      actor: "sarah@prodgence.com",
       action: "Plan changed BASIC → AI Pro (prorated)",
       reason: "Customer requested upgrade during onboarding call",
     });

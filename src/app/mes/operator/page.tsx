@@ -47,7 +47,7 @@ export default function OperatorKioskPage() {
   const locale = useLocale();
   const { snap, dispatch } = useDemo();
 
-  const [stationId, setStationId] = useState("st-lazer-1");
+  const [stationId, setStationId] = useState("st-laser-1");
   const [showDowntime, setShowDowntime] = useState(false);
   const [showAndon, setShowAndon] = useState(false);
   const [showScan, setShowScan] = useState(false);

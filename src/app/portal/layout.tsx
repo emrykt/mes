@@ -1,5 +1,6 @@
 import PortalShell from "@/components/portal/PortalShell";
 import { PortalStateProvider } from "@/components/portal/PortalState";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 
 export default function PortalLayout({
   children,
@@ -7,8 +8,10 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <PortalStateProvider>
-      <PortalShell>{children}</PortalShell>
-    </PortalStateProvider>
+    <RequireAuth kind="tenant">
+      <PortalStateProvider>
+        <PortalShell>{children}</PortalShell>
+      </PortalStateProvider>
+    </RequireAuth>
   );
 }

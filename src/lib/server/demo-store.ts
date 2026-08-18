@@ -24,7 +24,8 @@ import {
   PLAN_ENTITLEMENTS,
   PLAN_RETENTION_MONTHS,
 } from "../data";
-import type { Lead, PricingConfig, SiteContent, SiteNav } from "../demo-types";
+import type { AuthState, AuthUser, Lead, PricingConfig, SiteContent, SiteNav, TenantRole } from "../demo-types";
+import { defaultModules } from "../auth";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -258,6 +259,69 @@ function cloneSiteContent(): SiteContent {
   return structuredClone(DEFAULT_SITE_CONTENT);
 }
 
+/** Email slug for a company id, e.g. "baylor-sheet" -> "baylorsheet.com". */
+function companyDomain(id: string): string {
+  return `${id.replace(/-/g, "")}.com`;
+}
+
+/**
+ * Seed the demo auth store: platform staff (owner/admin/sales), one account
+ * owner per company, plus a few sample members on the first company so the
+ * roles/invites are visible out of the box. DEMO passwords are plain text.
+ */
+function seedAuth(now: Date): AuthState {
+  const iso = now.toISOString();
+  const users: AuthUser[] = [
+    { id: "pu-owner", kind: "platform", name: "Platform Owner", username: "owner", password: "prodgence", status: "active", createdAt: iso, platformRole: "owner" },
+    { id: "pu-admin", kind: "platform", name: "Alex Admin", username: "admin", password: "prodgence", status: "active", createdAt: iso, platformRole: "admin" },
+    { id: "pu-sales", kind: "platform", name: "Sam Sales", username: "sales", password: "prodgence", status: "active", createdAt: iso, platformRole: "sales" },
+  ];
+
+  for (const p of COMPANY_PROFILES) {
+    const dom = companyDomain(p.id);
+    users.push({
+      id: `tu-${p.id}-owner`,
+      kind: "tenant",
+      name: `${p.name} Owner`,
+      email: `owner@${dom}`,
+      password: "demo1234",
+      status: "active",
+      createdAt: iso,
+      tenantId: p.id,
+      tenantRole: "owner",
+      modules: defaultModules("owner"),
+    });
+  }
+
+  // sample team on the first company so invites/roles are visible in the demo
+  const first = COMPANY_PROFILES[0];
+  if (first) {
+    const dom = companyDomain(first.id);
+    const member = (role: TenantRole, name: string, local: string, status: "active" | "invited"): AuthUser => ({
+      id: `tu-${first.id}-${role}`,
+      kind: "tenant",
+      name,
+      email: `${local}@${dom}`,
+      password: status === "active" ? "demo1234" : undefined,
+      status,
+      createdAt: iso,
+      tenantId: first.id,
+      tenantRole: role,
+      modules: defaultModules(role),
+      invitedByName: status === "invited" ? `${first.name} Owner` : undefined,
+      inviteToken: status === "invited" ? `invite-${first.id}-${role}` : undefined,
+      invitedAt: status === "invited" ? iso : undefined,
+    });
+    users.push(
+      member("production", "Elena Vargas", "elena", "active"),
+      member("operator", "Marco Reyes", "marco", "active"),
+      member("sales", "Nina Patel", "nina", "invited"),
+    );
+  }
+
+  return { users };
+}
+
 /** Seed the whole multi-tenant store: one independent plant per company. */
 function seedMulti(now: Date): MultiStore {
   const companies: Record<string, DemoStore> = {};
@@ -273,6 +337,7 @@ function seedMulti(now: Date): MultiStore {
     siteContent: cloneSiteContent(),
     siteVersion: CURRENT_SITE_VERSION,
     leads: [],
+    auth: seedAuth(now),
   };
 }
 
@@ -680,6 +745,7 @@ function reviveMulti(raw: string, now: Date): MultiStore {
     multi.siteContent ??= cloneSiteContent();
   }
   multi.leads ??= [];
+  multi.auth ??= seedAuth(now);
   return multi as MultiStore;
 }
 
@@ -761,6 +827,7 @@ export function applyActionMulti(
     multi.siteContent = fresh.siteContent;
     multi.siteVersion = fresh.siteVersion;
     multi.leads = fresh.leads;
+    multi.auth = fresh.auth;
     return;
   }
   if (action.type === "savePricing") {

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import UserMenu from "@/components/auth/UserMenu";
 import {
   Factory,
   LayoutDashboard,
   LayoutTemplate,
   ReceiptText,
   Settings,
+  Shield,
   SlidersHorizontal,
   Users,
 } from "lucide-react";
@@ -18,6 +20,7 @@ const NAV = [
   { href: "/admin", key: "dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/customers", key: "customers", icon: Users, exact: false },
   { href: "/admin/invoices", key: "invoices", icon: ReceiptText, exact: false },
+  { href: "/admin/team", key: "team", icon: Shield, exact: false },
   { href: "/admin/site", key: "site", icon: LayoutTemplate, exact: false },
   { href: "/admin/mes", key: "mesSettings", icon: SlidersHorizontal, exact: false },
   { href: "/admin/settings", key: "settings", icon: Settings, exact: false },
@@ -62,10 +65,7 @@ export default function AdminSidebar() {
 
       <div className="space-y-3 border-t border-white/10 px-5 py-4">
         <LanguageSwitcher dark />
-        <div>
-          <p className="text-sm font-medium text-white">{t("userName")}</p>
-          <p className="text-[11px] text-chrome-ink/70">{t("userRole")}</p>
-        </div>
+        <UserMenu dark />
       </div>
     </aside>
   );

@@ -141,7 +141,8 @@
     "internal": "Internes Team",
     "userName": "Sarah Cohen",
     "userRole": "Plattform-Admin",
-    "site": "Website-Inhalt"
+    "site": "Website-Inhalt",
+    "team": "Team & Zugriff"
   },
   "adminDashboard": {
     "title": "Übersicht",

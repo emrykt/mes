@@ -2,16 +2,31 @@
 
 import { Building2 } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { COMPANY_LIST } from "@/lib/companies";
 
 /**
- * Global company (tenant) switcher. Changing it makes every /mes screen show
- * the selected company's live plant; the choice is remembered (cookie) via
- * DemoProvider. Options come from the static company list so it renders before
- * the first snapshot arrives.
+ * Company (tenant) switcher — only platform staff may move between customers
+ * (impersonation). A tenant user is locked to their own company: the switcher
+ * renders as a static label instead. Options come from the static company list
+ * so it renders before the first snapshot arrives.
  */
 export default function CompanySwitcher({ dark = false }: { dark?: boolean }) {
   const { company, setCompany } = useDemo();
+  const { user } = useAuth();
+
+  // tenant users can't switch companies — show a static label
+  if (user && user.kind === "tenant") {
+    const name = COMPANY_LIST.find((c) => c.id === company)?.name ?? "";
+    if (!name) return null;
+    return (
+      <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${dark ? "text-chrome-ink" : "text-ink-2"}`}>
+        <Building2 className="size-4 shrink-0" />
+        {name}
+      </span>
+    );
+  }
+
   return (
     <label
       className={`inline-flex items-center gap-1.5 ${dark ? "text-chrome-ink" : "text-ink-2"}`}

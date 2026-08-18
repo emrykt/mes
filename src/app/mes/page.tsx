@@ -15,28 +15,33 @@ import {
 } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { canManageTenant, hasModule } from "@/lib/auth";
+import type { AppModule } from "@/lib/demo-types";
 
 const FACES = [
-  { href: "/mes/operator", key: "operator", desc: "operatorDesc", icon: MonitorSmartphone },
-  { href: "/mes/sales", key: "sales", desc: "salesDesc", icon: ShoppingCart },
-  { href: "/mes/manager", key: "manager", desc: "managerDesc", icon: Gauge },
-  { href: "/mes/maintenance", key: "maintenance", desc: "maintenanceDesc", icon: Wrench, dept: true },
-  { href: "/mes/stock", key: "stock", desc: "stockDesc", icon: Boxes, feature: "stock" },
-  { href: "/mes/executive", key: "executive", desc: "executiveDesc", icon: Briefcase },
-  { href: "/mes/tv", key: "tv", desc: "tvDesc", icon: Tv },
+  { href: "/mes/operator", key: "operator", desc: "operatorDesc", icon: MonitorSmartphone, module: "operator" as AppModule },
+  { href: "/mes/sales", key: "sales", desc: "salesDesc", icon: ShoppingCart, module: "sales" as AppModule },
+  { href: "/mes/manager", key: "manager", desc: "managerDesc", icon: Gauge, module: "production" as AppModule },
+  { href: "/mes/maintenance", key: "maintenance", desc: "maintenanceDesc", icon: Wrench, module: "maintenance" as AppModule, dept: true },
+  { href: "/mes/stock", key: "stock", desc: "stockDesc", icon: Boxes, module: "production" as AppModule, feature: "stock" },
+  { href: "/mes/executive", key: "executive", desc: "executiveDesc", icon: Briefcase, module: "executive" as AppModule },
+  { href: "/mes/tv", key: "tv", desc: "tvDesc", icon: Tv, module: "tv" as AppModule },
 ] as const;
 
 export default function MesChooserPage() {
   const t = useTranslations("mes.chooser");
   const tc = useTranslations("common");
   const { snap } = useDemo();
+  const { user } = useAuth();
   const ownDept = snap?.settings.maintenanceOwnDepartment ?? true;
   const stockOn = snap?.settings.features.stock ?? true;
 
   const faces = FACES.filter(
     (f) =>
       (!("dept" in f) || ownDept) &&
-      (!("feature" in f) || stockOn),
+      (!("feature" in f) || stockOn) &&
+      hasModule(user, f.module),
   );
 
   return (
@@ -74,7 +79,19 @@ export default function MesChooserPage() {
         ))}
       </div>
 
-      <p className="mt-8 text-center text-xs text-muted">{tc("demoData")}</p>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs">
+        {user?.kind === "tenant" && canManageTenant(user) && (
+          <Link href="/portal" className="font-medium text-accent-strong hover:underline">
+            Account, billing & team
+          </Link>
+        )}
+        {user?.kind === "platform" && (
+          <Link href="/admin" className="font-medium text-accent-strong hover:underline">
+            ← Back to platform admin
+          </Link>
+        )}
+        <span className="text-muted">{tc("demoData")}</span>
+      </div>
     </main>
   );
 }

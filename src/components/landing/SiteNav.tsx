@@ -137,13 +137,13 @@ export default function SiteNav() {
             <LanguageSwitcher dark={!lit} />
           </div>
           <Link
-            href="/portal"
+            href="/login"
             className={`hidden rounded-lg px-3 py-2 text-sm font-medium sm:block ${link}`}
           >
             {t("signIn")}
           </Link>
           <Link
-            href="/portal"
+            href="/login"
             className="btn-sheen rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-strong"
           >
             {t("ctaTrial")}
@@ -229,7 +229,7 @@ export default function SiteNav() {
             <div className="flex items-center gap-3 border-t border-line/70 pt-4">
               <LanguageSwitcher />
               <Link
-                href="/portal"
+                href="/login"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm font-medium text-ink-2"
               >

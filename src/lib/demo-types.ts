@@ -365,6 +365,71 @@ export interface Lead {
   message?: string;
 }
 
+/* ---------------- Auth / membership (demo-mode) ---------------- */
+
+/** Platform-staff roles (internal team). */
+export type PlatformRole = "owner" | "admin" | "sales";
+
+/** Tenant (customer) roles. owner pays & manages; admin manages; the rest are
+ *  screen roles. */
+export type TenantRole =
+  | "owner"
+  | "admin"
+  | "production"
+  | "operator"
+  | "sales"
+  | "maintenance"
+  | "executive";
+
+/** Grantable app modules (map to /mes screens). */
+export type AppModule =
+  | "operator"
+  | "production"
+  | "sales"
+  | "maintenance"
+  | "executive"
+  | "tv";
+
+export type UserKind = "platform" | "tenant";
+export type UserStatus = "active" | "invited";
+
+/**
+ * A login identity. DEMO ONLY: the password is stored in plain text in the demo
+ * store — never do this with a real backend. Kept here so the login/invite/role
+ * flow is fully functional without a database.
+ */
+export interface AuthUser {
+  id: string;
+  kind: UserKind;
+  name: string;
+  /** login identity: email for tenants, username (or email) for platform staff */
+  email?: string;
+  username?: string;
+  /** DEMO plain password; unset while a member is still "invited". */
+  password?: string;
+  status: UserStatus;
+  createdAt: string;
+  lastLoginAt?: string;
+  /* platform */
+  platformRole?: PlatformRole;
+  /* tenant */
+  tenantId?: string;
+  tenantRole?: TenantRole;
+  modules?: AppModule[];
+  /* invite */
+  inviteToken?: string;
+  invitedByName?: string;
+  invitedAt?: string;
+}
+
+/** Global auth state (shared across the platform). */
+export interface AuthState {
+  users: AuthUser[];
+}
+
+/** The signed-in user as returned to the client (never includes the password). */
+export type SessionUser = Omit<AuthUser, "password" | "inviteToken">;
+
 /** Global, admin-editable pricing (not per-company). */
 export interface PricingConfig {
   /** Base monthly plan prices, by plan id. */
@@ -467,6 +532,8 @@ export interface MultiStore {
    * the next deliberate bump. Does NOT touch plant/company state.
    */
   siteVersion?: number;
+  /** Global auth/membership state (demo-mode). */
+  auth?: AuthState;
 }
 
 /** A company entry for the switcher. */

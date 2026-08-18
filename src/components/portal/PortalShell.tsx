@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import PortalBrand from "@/components/portal/PortalBrand";
-import { getTenant, portalTenantId } from "@/lib/data";
+import UserMenu from "@/components/auth/UserMenu";
 import { daysUntil, formatDate } from "@/lib/format";
 import type { LicenseStatus } from "@/lib/types";
 import { DEMO_DATES, usePortalState } from "./PortalState";
@@ -40,7 +40,6 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const ts = useTranslations("status");
   const { status, setStatus } = usePortalState();
 
-  const tenant = getTenant(portalTenantId)!;
   const suspended = status === "SUSPENDED";
   const billingPage = pathname.startsWith("/portal/billing");
   const locked = suspended && !billingPage;
@@ -95,12 +94,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               ))}
             </select>
           </label>
-          <div>
-            <p className="text-sm font-medium">{tenant.company}</p>
-            <p className="text-[11px] text-muted">
-              {tenant.ownerEmail} · {t("ownerRole")}
-            </p>
-          </div>
+          <UserMenu />
         </div>
       </aside>
 

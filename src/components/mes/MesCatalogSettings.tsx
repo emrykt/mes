@@ -17,8 +17,6 @@ import type {
 /** Rest-day toggles shown Monday-first (JS getUTCDay numbering). */
 const WEEK_DAYS = [1, 2, 3, 4, 5, 6, 0] as const;
 import { SIM_STATIONS } from "@/lib/sim";
-import { PLANS, PLAN_ENTITLEMENTS, PLAN_ORDER } from "@/lib/data";
-import type { PlanId } from "@/lib/types";
 
 /**
  * Operation catalog + downtime reason management, shared by the admin panel
@@ -32,7 +30,6 @@ export default function MesCatalogSettings({
 }) {
   const t = useTranslations("mes.settings");
   const tc = useTranslations("common");
-  const tp = useTranslations("plans");
   const locale = useLocale();
   const { snap, dispatch } = useDemo();
 
@@ -389,59 +386,6 @@ export default function MesCatalogSettings({
 
       {withCosts && (
         <>
-          <Card title={t("planTitle")} subtitle={t("planHint")}>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {PLAN_ORDER.map((id) => {
-                const active = snap.settings.plan === id;
-                const ent = PLAN_ENTITLEMENTS[id];
-                const perks = [
-                  { on: ent.aiAssistant, label: t("perkAssistant") },
-                  { on: ent.advancedAnalytics, label: t("perkAnalytics") },
-                  { on: ent.sectorBenchmark, label: t("perkBenchmark") },
-                ];
-                return (
-                  <button
-                    key={id}
-                    onClick={() => dispatch({ type: "setPlan", plan: id as PlanId })}
-                    className={`rounded-xl border p-4 text-left transition-colors ${
-                      active
-                        ? "border-accent bg-accent-wash"
-                        : "border-line hover:bg-neutral-soft/50"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold">{tp(id)}</span>
-                      {active && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-white">
-                          <Check className="size-3" />
-                          {t("planActive")}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-xs text-muted">
-                      {PLANS[id].contact ? tc("contactPrice") : `$${PLANS[id].monthlyPrice}`}
-                    </p>
-                    <ul className="mt-3 space-y-1">
-                      {perks.map((p) => (
-                        <li
-                          key={p.label}
-                          className={`flex items-center gap-1.5 text-xs ${
-                            p.on ? "text-ink-2" : "text-muted line-through"
-                          }`}
-                        >
-                          <Check
-                            className={`size-3 ${p.on ? "text-good-text" : "text-muted"}`}
-                          />
-                          {p.label}
-                        </li>
-                      ))}
-                    </ul>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
           <Card title={t("deptTitle")} subtitle={t("deptHint")}>
             <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line p-4 hover:bg-neutral-soft/50">
               <input

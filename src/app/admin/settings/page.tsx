@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Card, Table, Td, Th } from "@/components/ui";
+import AdminPlanSelector from "@/components/admin/AdminPlanSelector";
 import { PLANS, PLAN_ENTITLEMENTS, PLAN_ORDER } from "@/lib/data";
 import { formatMoney } from "@/lib/format";
 
@@ -29,6 +30,9 @@ export default function SettingsPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="mt-1 text-sm text-ink-2">{t("subtitle")}</p>
       </div>
+
+      {/* subscription plan (moved here from MES definitions) */}
+      <AdminPlanSelector />
 
       <Card title={t("planMappingTitle")} padded={false}>
         <Table>

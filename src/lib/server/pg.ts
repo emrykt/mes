@@ -12,8 +12,13 @@ import { Pool } from "pg";
 
 const CONN = process.env.DATABASE_URL || "";
 
-/** True when a Postgres database is configured — the production persistence path. */
-export const usePg = Boolean(CONN);
+/**
+ * True when a Postgres database is configured — the production persistence path.
+ * Accepts either a single `DATABASE_URL` (Neon-style) or the standard PG* env
+ * vars (PGHOST/PGUSER/PGPASSWORD/PGDATABASE), which is how the AWS App Runner
+ * stack injects the RDS endpoint + Secrets-Manager password.
+ */
+export const usePg = Boolean(CONN || process.env.PGHOST);
 
 const KEY = "demo-store";
 
@@ -22,10 +27,12 @@ let ready: Promise<void> | null = null;
 
 function getPool(): Pool {
   if (!pool) {
+    const sslOff = CONN.includes("sslmode=disable") || process.env.PGSSLMODE === "disable";
     pool = new Pool({
-      connectionString: CONN,
+      // with no connectionString, node-postgres reads PGHOST/PGUSER/… env vars
+      connectionString: CONN || undefined,
       // Managed Postgres (RDS/Neon) requires TLS; accept the provider chain.
-      ssl: CONN.includes("sslmode=disable") ? false : { rejectUnauthorized: false },
+      ssl: sslOff ? false : { rejectUnauthorized: false },
       max: 5,
       idleTimeoutMillis: 30_000,
     });

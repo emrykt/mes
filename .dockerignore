@@ -3,8 +3,8 @@ node_modules
 .git
 .github
 data
-infra/cdk.out
-infra/node_modules
+infra
+docs
 npm-debug.log*
 *.log
 .env*

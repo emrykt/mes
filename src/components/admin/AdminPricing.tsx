@@ -63,13 +63,13 @@ function PricingEditor() {
 
       <Card
         title="Data-retention add-ons"
-        subtitle="Extra retention & analysis time customers can purchase from their portal (one-off, USD)."
+        subtitle="Recurring monthly surcharge (USD) a customer pays on top of their plan to extend total data retention. Add-on sets the total window."
       >
         <div className="grid gap-3 sm:grid-cols-4">
           {pricing.addonTiers.map((tier, i) => (
             <div key={tier.years} className="rounded-xl border border-line p-4">
               <p className="text-sm font-semibold">
-                +{tier.years} {tier.years === 1 ? "year" : "years"}
+                {tier.years} {tier.years === 1 ? "year" : "years"} total
               </p>
               <p className="mt-0.5 text-xs text-muted">{tier.years * 12} months of retention</p>
               <label className="mt-3 flex items-center gap-1.5">
@@ -78,8 +78,9 @@ function PricingEditor() {
                   type="number"
                   value={addonVal(i)}
                   onChange={(e) => setAddonDraft((p) => ({ ...p, [i]: e.target.value }))}
-                  className="w-24 rounded-lg border border-line bg-page px-2 py-1.5 text-sm tabular-nums focus:border-accent focus:outline-none"
+                  className="w-20 rounded-lg border border-line bg-page px-2 py-1.5 text-sm tabular-nums focus:border-accent focus:outline-none"
                 />
+                <span className="text-xs text-muted">/mo</span>
               </label>
             </div>
           ))}

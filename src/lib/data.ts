@@ -21,9 +21,9 @@ export const NOW = new Date("2026-07-07T09:00:00Z");
  * AI Ultimate is "contact us" (multi-plant + API — marketing only this phase).
  */
 export const PLANS: Record<PlanId, PlanDef> = {
-  BASIC: { id: "BASIC", monthlyPrice: 199, contact: false, stripePriceId: "price_basic_monthly_usd" },
-  AIPRO: { id: "AIPRO", monthlyPrice: 299, contact: false, stripePriceId: "price_aipro_monthly_usd" },
-  AIULTIMATE: { id: "AIULTIMATE", monthlyPrice: 499, contact: true, stripePriceId: "price_ultimate_monthly_usd" },
+  BASIC: { id: "BASIC", monthlyPrice: 499, contact: false, stripePriceId: "price_basic_monthly_usd" },
+  AIPRO: { id: "AIPRO", monthlyPrice: 999, contact: false, stripePriceId: "price_aipro_monthly_usd" },
+  AIULTIMATE: { id: "AIULTIMATE", monthlyPrice: 1999, contact: true, stripePriceId: "price_ultimate_monthly_usd" },
 };
 
 export const PLAN_ORDER: PlanId[] = ["BASIC", "AIPRO", "AIULTIMATE"];
@@ -68,14 +68,20 @@ export const PLAN_RETENTION_MONTHS: Record<PlanId, number> = {
   AIULTIMATE: 12,
 };
 
-/** Default global pricing (admin-editable at runtime; this is the seed). */
+/**
+ * Default global pricing (admin-editable at runtime; this is the seed).
+ * Add-on `price` is a recurring MONTHLY surcharge (USD) added on top of the
+ * base plan price; `years` is the total retention the tier targets.
+ * AIULTIMATE (Enterprise) is contact-priced — its number is a placeholder and
+ * is not shown to customers (portal renders "Contact us").
+ */
 export const DEFAULT_PRICING: PricingConfig = {
-  plans: { BASIC: 199, AIPRO: 299, AIULTIMATE: 499 },
+  plans: { BASIC: 499, AIPRO: 999, AIULTIMATE: 1999 },
   addonTiers: [
-    { years: 1, price: 99 },
-    { years: 2, price: 149 },
-    { years: 3, price: 199 },
-    { years: 5, price: 299 },
+    { years: 1, price: 9 },
+    { years: 2, price: 19 },
+    { years: 3, price: 29 },
+    { years: 5, price: 39 },
   ],
 };
 

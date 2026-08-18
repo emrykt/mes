@@ -1,20 +1,46 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CreditCard, Download, ExternalLink } from "lucide-react";
+import { CreditCard, Download, ExternalLink, Loader2 } from "lucide-react";
 import { Card, InvoiceBadge, Table, Td, Th } from "@/components/ui";
+import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 import { usePortalState } from "@/components/portal/PortalState";
 import { PLANS, getTenant, invoicesFor, portalCard, portalTenantId } from "@/lib/data";
 import { formatDate, formatMoney } from "@/lib/format";
 
 export default function PortalBillingPage() {
+  return (
+    <DemoProvider>
+      <BillingBody />
+    </DemoProvider>
+  );
+}
+
+function BillingBody() {
   const t = useTranslations("portalBilling");
+  const tc = useTranslations("common");
+  const tp = useTranslations("plans");
   const { status } = usePortalState();
+  const { snap } = useDemo();
 
   const tenant = getTenant(portalTenantId)!;
-  const plan = PLANS[tenant.plan];
   const invoices = invoicesFor(tenant.id);
   const owes = status === "PAST_DUE" || status === "SUSPENDED";
+
+  if (!snap) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        <Loader2 className="size-7 animate-spin" />
+      </div>
+    );
+  }
+
+  // Live subscription total: admin-edited base plan price + selected add-on fee.
+  const plan = snap.settings.plan;
+  const planContact = PLANS[plan].contact;
+  const basePrice = snap.pricing.plans[plan];
+  const addonMonthly = snap.retention.addonMonthlyPrice;
+  const totalMonthly = basePrice + addonMonthly;
 
   return (
     <div className="space-y-6">
@@ -30,7 +56,7 @@ export default function PortalBillingPage() {
           </p>
           <div className="mt-1.5 flex flex-wrap items-center justify-between gap-3">
             <p className="text-2xl font-semibold">
-              {formatMoney(plan.monthlyPrice)}
+              {planContact ? t("title") : formatMoney(totalMonthly)}
             </p>
             <button className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-strong">
               {t("payNow")}
@@ -38,6 +64,38 @@ export default function PortalBillingPage() {
           </div>
         </Card>
       )}
+
+      {/* current subscription — reflects live plan price + retention add-on */}
+      <Card title={t("currentSubTitle")}>
+        <dl className="divide-y divide-line/70 text-sm">
+          <div className="flex items-center justify-between py-2">
+            <dt className="text-ink-2">{t("basePlanLabel", { plan: tp(plan) })}</dt>
+            <dd className="font-medium tabular-nums">
+              {planContact ? t("title") : `${formatMoney(basePrice)}${tc("perMonth")}`}
+            </dd>
+          </div>
+          {addonMonthly > 0 && (
+            <div className="flex items-center justify-between py-2">
+              <dt className="text-ink-2">
+                {t("retentionAddonLabel", { months: snap.retention.totalMonths })}
+              </dt>
+              <dd className="font-medium tabular-nums">
+                {formatMoney(addonMonthly)}
+                {tc("perMonth")}
+              </dd>
+            </div>
+          )}
+          {!planContact && (
+            <div className="flex items-center justify-between py-2">
+              <dt className="font-semibold">{t("totalMonthlyLabel")}</dt>
+              <dd className="text-lg font-semibold tabular-nums">
+                {formatMoney(totalMonthly)}
+                <span className="text-xs font-normal text-muted">{tc("perMonth")}</span>
+              </dd>
+            </div>
+          )}
+        </dl>
+      </Card>
 
       <Card title={t("paymentMethod")}>
         <div className="flex flex-wrap items-center justify-between gap-4">

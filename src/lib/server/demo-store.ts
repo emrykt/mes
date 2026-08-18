@@ -176,7 +176,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
       scrapReasons: [...DEFAULT_SCRAP_REASONS],
       escalationRules: DEFAULT_ESCALATION_RULES.map((r) => ({ ...r })),
       kpiTargets: defaultKpiTargets(profile),
-      retentionAddonMonths: 0,
+      retentionAddonYears: 0,
     },
     alerts: [],
     quotes: seedQuotes(now),
@@ -495,7 +495,15 @@ function migrate(store: DemoStore, now: Date): void {
   store.settings.maintenanceOwnDepartment ??= true;
   store.settings.workingCalendar ??= { shifts: 3, restDays: [] };
   store.settings.kpiTargets ??= defaultKpiTargets(companyProfile(store.id));
-  store.settings.retentionAddonMonths ??= 0;
+  store.settings.retentionAddonYears ??= 0;
+  // migrate old cumulative-months add-on → nearest year tier (best effort)
+  {
+    const legacy = (store.settings as { retentionAddonMonths?: number }).retentionAddonMonths;
+    if (typeof legacy === "number" && legacy > 0 && !store.settings.retentionAddonYears) {
+      store.settings.retentionAddonYears = Math.round(legacy / 12);
+    }
+    delete (store.settings as { retentionAddonMonths?: number }).retentionAddonMonths;
+  }
   store.alerts ??= [];
   store.quotes ??= seedQuotes(now);
   store.stock ??= seedStock();
@@ -1268,9 +1276,9 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
     case "saveKpiTargets":
       store.settings.kpiTargets = { ...store.settings.kpiTargets, ...action.targets };
       break;
-    case "buyRetentionAddon":
-      store.settings.retentionAddonMonths =
-        (store.settings.retentionAddonMonths ?? 0) + Math.max(0, action.months);
+    case "setRetentionAddon":
+      // Select a single add-on tier (0 = none). Not cumulative.
+      store.settings.retentionAddonYears = Math.max(0, action.years);
       break;
     case "setMaintenanceDept":
       store.settings.maintenanceOwnDepartment = action.own;
@@ -1355,7 +1363,11 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
 export function snapshot(store: DemoStore, now: Date, pricing: PricingConfig): DemoSnapshot {
   const profile = companyProfile(store.id);
   const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
-  const addonMonths = store.settings.retentionAddonMonths ?? 0;
+  const addonYears = store.settings.retentionAddonYears ?? 0;
+  // Add-on defines the TOTAL retention target (never below the plan's window).
+  const totalMonths = addonYears > 0 ? Math.max(planMonths, addonYears * 12) : planMonths;
+  const addonTier = pricing.addonTiers.find((t) => t.years === addonYears);
+  const addonMonthlyPrice = addonTier ? addonTier.price : 0;
   // Gate modules by plan: quoting/maintenance/stock are AI Pro+ only. Return a
   // copy so the stored flags are never mutated (admin still edits the raw ones).
   const ent = PLAN_ENTITLEMENTS[store.settings.plan];
@@ -1387,7 +1399,7 @@ export function snapshot(store: DemoStore, now: Date, pricing: PricingConfig): D
     scrapEvents: [...store.scrapEvents].slice(0, 200),
     settings: gatedSettings,
     pricing,
-    retention: { planMonths, addonMonths, totalMonths: planMonths + addonMonths },
+    retention: { planMonths, addonYears, totalMonths, addonMonthlyPrice },
     today: (() => {
       const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);
       const actualMin = store.stations.reduce((s, st) => s + (st.todayActualMin ?? 0), 0);

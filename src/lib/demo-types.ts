@@ -211,13 +211,19 @@ export interface DemoSettings {
   escalationRules: EscalationRule[];
   /** Editable KPI targets, keyed by KpiId (see lib/kpi.ts). */
   kpiTargets: Record<string, number>;
-  /** Extra data-retention months this tenant has purchased (add-on). */
-  retentionAddonMonths: number;
+  /**
+   * Selected data-retention add-on, in years (0 = none). The add-on defines the
+   * TOTAL retention target (max with the plan's included window), and adds a
+   * recurring monthly fee on top of the base plan price.
+   */
+  retentionAddonYears: number;
 }
 
-/** One purchasable data-retention add-on tier. */
+/** One purchasable data-retention add-on tier. `price` is the monthly fee (USD). */
 export interface AddonTier {
+  /** Total retention this tier targets, in years. */
   years: number;
+  /** Recurring monthly surcharge (USD) added on top of the base plan price. */
   price: number;
 }
 
@@ -229,11 +235,16 @@ export interface PricingConfig {
   addonTiers: AddonTier[];
 }
 
-/** Effective data retention for a tenant (plan window + purchased add-on). */
+/** Effective data retention for a tenant (plan window vs selected add-on). */
 export interface RetentionInfo {
+  /** Months included with the plan. */
   planMonths: number;
-  addonMonths: number;
+  /** Selected add-on, in years (0 = none). */
+  addonYears: number;
+  /** Effective total retention months = max(planMonths, addonYears × 12). */
   totalMonths: number;
+  /** Recurring monthly surcharge for the selected add-on (USD; 0 if none). */
+  addonMonthlyPrice: number;
 }
 
 /** One recurring planned-maintenance task bound to a station. */
@@ -384,7 +395,7 @@ export type DemoAction =
   | { type: "saveEscalationRules"; rules: EscalationRule[] }
   | { type: "saveKpiTargets"; targets: Record<string, number> }
   | { type: "savePricing"; pricing: PricingConfig }
-  | { type: "buyRetentionAddon"; months: number }
+  | { type: "setRetentionAddon"; years: number }
   | { type: "setMaintenanceDept"; own: boolean }
   | { type: "setWorkingCalendar"; calendar: WorkingCalendar }
   | { type: "saveQuote"; quote: Omit<SavedQuote, "id" | "at"> }

@@ -336,10 +336,18 @@
     "retentionSubtitle": "Wie lange Ihre Produktionsdaten und Analysen verfügbar bleiben.",
     "monthsUnit": "Monate",
     "retentionBreakdown": "{plan} Mon. im Paket + {addon} Mon. gekauft",
-    "extendTitle": "Aufbewahrung & Analyse erweitern",
-    "extendHint": "Mehr Aufbewahrungszeit hinzufügen — einmaliger Kauf.",
+    "extendTitle": "Gesamtaufbewahrung erweitern",
+    "extendHint": "Wählen Sie ein Add-on, um Ihr Gesamt-Aufbewahrungsfenster zu erhöhen — monatlich zusätzlich zum Paket.",
     "buyConfirm": "Aufbewahrung um {years} Jahr(e) für ${price} verlängern? Dies ist eine Demo — keine echte Abbuchung.",
-    "purchased": "Aufbewahrung erweitert"
+    "purchased": "Aufbewahrung erweitert",
+    "retentionCurrentLabel": "Aktuelle Gesamtaufbewahrung",
+    "planIncludesNote": "Paket enthält {months} Monate",
+    "noAddon": "Kein Add-on",
+    "addonPerMo": "${price}/Mon.",
+    "retentionUpdated": "Aufbewahrung aktualisiert",
+    "currentPlanPriceNote": "{base} Paket + {addon} Aufbewahrungs-Add-on",
+    "billAddNote": "Erhöht Ihr Abo um {addon}",
+    "totalPerMo": "{total}/Mon. gesamt"
   },
   "portalBilling": {
     "title": "Rechnungen & Zahlung",
@@ -356,7 +364,11 @@
     "colDate": "Datum",
     "colAmount": "Betrag",
     "colStatus": "Status",
-    "download": "PDF"
+    "download": "PDF",
+    "currentSubTitle": "Aktuelles Abo",
+    "basePlanLabel": "{plan} Paket",
+    "retentionAddonLabel": "Aufbewahrungs-Add-on ({months} Mon. gesamt)",
+    "totalMonthlyLabel": "Gesamt pro Monat"
   },
   "portalStations": {
     "title": "Stationen",

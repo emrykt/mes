@@ -336,10 +336,18 @@
     "retentionSubtitle": "How long your production data and analytics stay available.",
     "monthsUnit": "months",
     "retentionBreakdown": "{plan} mo included with your plan + {addon} mo purchased",
-    "extendTitle": "Extend retention & analysis",
-    "extendHint": "Add more retention time — one-off purchase.",
+    "extendTitle": "Extend total retention",
+    "extendHint": "Pick an add-on to raise your total data-retention window — billed monthly on top of your plan.",
     "buyConfirm": "Extend retention by {years} year(s) for ${price}? This is a demo — no real charge.",
-    "purchased": "Retention extended"
+    "purchased": "Retention extended",
+    "retentionCurrentLabel": "Current total retention",
+    "planIncludesNote": "Plan includes {months} months",
+    "noAddon": "No add-on",
+    "addonPerMo": "${price}/mo",
+    "retentionUpdated": "Retention updated",
+    "currentPlanPriceNote": "{base} plan + {addon} retention add-on",
+    "billAddNote": "Adds {addon} to your subscription",
+    "totalPerMo": "{total}/mo total"
   },
   "portalBilling": {
     "title": "Billing & invoices",
@@ -356,7 +364,11 @@
     "colDate": "Date",
     "colAmount": "Amount",
     "colStatus": "Status",
-    "download": "PDF"
+    "download": "PDF",
+    "currentSubTitle": "Current subscription",
+    "basePlanLabel": "{plan} plan",
+    "retentionAddonLabel": "Retention add-on ({months} mo total)",
+    "totalMonthlyLabel": "Total per month"
   },
   "portalStations": {
     "title": "Stations",

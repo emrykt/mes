@@ -49,15 +49,15 @@ const ALL_FEATURES: FeatureFlags = { maintenance: true, barcode: true, quoting: 
 export const COMPANY_PROFILES: CompanyProfile[] = [
   {
     id: "baykal-sac",
-    name: "Baykal Sac & Metal",
-    sector: "Sac metal fabrikasyonu",
+    name: "Baylor Sheet Metal",
+    sector: "Sheet metal fabrication",
     stationIds: [
       "st-lazer-1", "st-lazer-2", "st-plazma-1", "st-punch-1",
       "st-abkant-1", "st-abkant-2", "st-kaynak-1", "st-montaj-1",
       "st-kalite-1", "st-paket-1",
     ],
     partKinds: ["sheet"],
-    currency: "TRY",
+    currency: "GBP",
     plan: "AIPRO",
     features: ALL_FEATURES,
     workingCalendar: { shifts: 3, restDays: [] },
@@ -67,8 +67,8 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   },
   {
     id: "ege-talasli",
-    name: "Ege Talaşlı İşleme",
-    sector: "Metal iş atölyesi · talaşlı ağırlıklı",
+    name: "Aegean Precision Machining",
+    sector: "Metal job shop · machining-led",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-torna-2", "st-freze-1",
       "st-freze-2", "st-matkap-1", "st-kalite-1", "st-paket-1",
@@ -84,8 +84,8 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   },
   {
     id: "kuzey-fabrika",
-    name: "Kuzey Fabrika",
-    sector: "Sac & metal fabrikasyon atölyesi",
+    name: "Northgate Works",
+    sector: "Sheet & metal fabrication shop",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-torna-2", "st-freze-1", "st-freze-2",
       "st-matkap-1", "st-lazer-1", "st-lazer-2", "st-plazma-1", "st-punch-1",
@@ -103,14 +103,14 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
   },
   {
     id: "demir-atolye",
-    name: "Demir Atölye",
-    sector: "Küçük metal fabrikasyon atölyesi",
+    name: "Ironside Shop",
+    sector: "Small metal fabrication shop",
     stationIds: [
       "st-testere-1", "st-torna-1", "st-freze-1", "st-lazer-1",
       "st-abkant-1", "st-kaynak-1", "st-kalite-1", "st-paket-1",
     ],
     partKinds: ["sheet", "machined"],
-    currency: "TRY",
+    currency: "USD",
     plan: "BASIC",
     features: { maintenance: true, barcode: false, quoting: true, stock: true },
     workingCalendar: { shifts: 1, restDays: [0, 6] },

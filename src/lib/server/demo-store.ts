@@ -237,13 +237,13 @@ function seedOpenIncident(store: DemoStore, now: Date): void {
 function seedQuotes(now: Date): SavedQuote[] {
   const rates = { ...DEFAULT_BILLING_RATES };
   const specs: { customer: string; part: string; qty: number; lines: { op: string; h: number }[]; material: number; margin: number; days: number }[] = [
-    { customer: CUSTOMER_POOL[0], part: "Şasi bağlantı sacı", qty: 120, lines: [{ op: "op-lazer", h: 6 }, { op: "op-abkant", h: 4 }, { op: "op-kaynak", h: 5 }], material: 4200, margin: 22, days: 3 },
-    { customer: CUSTOMER_POOL[1], part: "Pano gövdesi PG-12", qty: 40, lines: [{ op: "op-lazer", h: 3 }, { op: "op-abkant", h: 2.5 }, { op: "op-boya", h: 2 }], material: 1800, margin: 25, days: 8 },
-    { customer: CUSTOMER_POOL[2], part: "Konveyör yan profili", qty: 60, lines: [{ op: "op-plazma", h: 5 }, { op: "op-kaynak", h: 6 }], material: 3100, margin: 18, days: 12 },
-    { customer: CUSTOMER_POOL[3], part: "Menfez çerçevesi MF-30", qty: 200, lines: [{ op: "op-punch", h: 4 }, { op: "op-abkant", h: 5 }, { op: "op-paket", h: 2 }], material: 2600, margin: 20, days: 17 },
+    { customer: CUSTOMER_POOL[0], part: "Chassis mounting plate", qty: 120, lines: [{ op: "op-lazer", h: 6 }, { op: "op-abkant", h: 4 }, { op: "op-kaynak", h: 5 }], material: 4200, margin: 22, days: 3 },
+    { customer: CUSTOMER_POOL[1], part: "Panel body PG-12", qty: 40, lines: [{ op: "op-lazer", h: 3 }, { op: "op-abkant", h: 2.5 }, { op: "op-boya", h: 2 }], material: 1800, margin: 25, days: 8 },
+    { customer: CUSTOMER_POOL[2], part: "Conveyor side profile", qty: 60, lines: [{ op: "op-plazma", h: 5 }, { op: "op-kaynak", h: 6 }], material: 3100, margin: 18, days: 12 },
+    { customer: CUSTOMER_POOL[3], part: "Vent frame MF-30", qty: 200, lines: [{ op: "op-punch", h: 4 }, { op: "op-abkant", h: 5 }, { op: "op-paket", h: 2 }], material: 2600, margin: 20, days: 17 },
     { customer: CUSTOMER_POOL[0], part: "Kabin arka paneli", qty: 80, lines: [{ op: "op-lazer", h: 4 }, { op: "op-abkant", h: 3 }], material: 2200, margin: 24, days: 23 },
-    { customer: CUSTOMER_POOL[4], part: "Filtre kasası FK-8", qty: 150, lines: [{ op: "op-lazer", h: 7 }, { op: "op-kaynak", h: 8 }, { op: "op-montaj", h: 4 }], material: 5400, margin: 19, days: 31 },
-    { customer: CUSTOMER_POOL[2], part: "Davlumbaz gövdesi DV-450", qty: 55, lines: [{ op: "op-lazer", h: 3.5 }, { op: "op-abkant", h: 4 }, { op: "op-boya", h: 2.5 }], material: 2900, margin: 21, days: 40 },
+    { customer: CUSTOMER_POOL[4], part: "Filter housing FK-8", qty: 150, lines: [{ op: "op-lazer", h: 7 }, { op: "op-kaynak", h: 8 }, { op: "op-montaj", h: 4 }], material: 5400, margin: 19, days: 31 },
+    { customer: CUSTOMER_POOL[2], part: "Hood body DV-450", qty: 55, lines: [{ op: "op-lazer", h: 3.5 }, { op: "op-abkant", h: 4 }, { op: "op-boya", h: 2.5 }], material: 2900, margin: 21, days: 40 },
   ];
   return specs.map((s, i) => {
     const lines = s.lines.map((l) => ({ operationId: l.op, hours: l.h }));
@@ -279,17 +279,17 @@ const MACHINING_OPS = new Set(["op-testere", "op-torna", "op-freze", "op-matkap"
 function seedStock(): StockItem[] {
   return [
     // bars & block — kg
-    { id: "stk-bar-st37-40", materialType: "St37", form: "bar", unit: "kg", dimension: "Ø40", onHand: 1450, reorder: 400, costPerKg: 0.9 },
-    { id: "stk-bar-st37-25", materialType: "St37", form: "bar", unit: "kg", dimension: "Ø25", onHand: 300, reorder: 350, costPerKg: 0.95 },
-    { id: "stk-bar-304-30", materialType: "Paslanmaz 304", form: "bar", unit: "kg", dimension: "Ø30", onHand: 680, reorder: 250, costPerKg: 3.2 },
-    { id: "stk-bar-al-50", materialType: "Alüminyum 6061", form: "bar", unit: "kg", dimension: "Ø50", onHand: 410, reorder: 200, costPerKg: 2.8 },
-    { id: "stk-tube-st37-60", materialType: "St37", form: "tube", unit: "kg", dimension: "60×60 kutu", onHand: 540, reorder: 200, costPerKg: 1.05 },
-    { id: "stk-block-al", materialType: "Alüminyum 6061", form: "block", unit: "kg", dimension: "blok", onHand: 260, reorder: 120, costPerKg: 3.0 },
+    { id: "stk-bar-st37-40", materialType: "Mild steel S235", form: "bar", unit: "kg", dimension: "Ø40", onHand: 1450, reorder: 400, costPerKg: 0.9 },
+    { id: "stk-bar-st37-25", materialType: "Mild steel S235", form: "bar", unit: "kg", dimension: "Ø25", onHand: 300, reorder: 350, costPerKg: 0.95 },
+    { id: "stk-bar-304-30", materialType: "Stainless 304", form: "bar", unit: "kg", dimension: "Ø30", onHand: 680, reorder: 250, costPerKg: 3.2 },
+    { id: "stk-bar-al-50", materialType: "Aluminum 6061", form: "bar", unit: "kg", dimension: "Ø50", onHand: 410, reorder: 200, costPerKg: 2.8 },
+    { id: "stk-tube-st37-60", materialType: "Mild steel S235", form: "tube", unit: "kg", dimension: "60×60 tube", onHand: 540, reorder: 200, costPerKg: 1.05 },
+    { id: "stk-block-al", materialType: "Aluminum 6061", form: "block", unit: "kg", dimension: "block", onHand: 260, reorder: 120, costPerKg: 3.0 },
     // sheet metal — pieces (adet), size × thickness, weight per sheet
-    { id: "stk-plate-dkp-2", materialType: "DKP", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 2, weightKgPerPiece: 49, onHand: 45, reorder: 15, costPerKg: 0.85 },
-    { id: "stk-plate-dkp-4", materialType: "DKP", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 4, weightKgPerPiece: 98, onHand: 8, reorder: 12, costPerKg: 0.85 },
-    { id: "stk-plate-304-15", materialType: "Paslanmaz 304", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 1.5, weightKgPerPiece: 38, onHand: 24, reorder: 10, costPerKg: 3.1 },
-    { id: "stk-plate-st37-6", materialType: "St37", form: "plate", unit: "piece", dimension: "1500 × 3000", thicknessMm: 6, weightKgPerPiece: 212, onHand: 16, reorder: 6, costPerKg: 0.88 },
+    { id: "stk-plate-dkp-2", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 2, weightKgPerPiece: 49, onHand: 45, reorder: 15, costPerKg: 0.85 },
+    { id: "stk-plate-dkp-4", materialType: "Cold-rolled steel", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 4, weightKgPerPiece: 98, onHand: 8, reorder: 12, costPerKg: 0.85 },
+    { id: "stk-plate-304-15", materialType: "Stainless 304", form: "plate", unit: "piece", dimension: "1250 × 2500", thicknessMm: 1.5, weightKgPerPiece: 38, onHand: 24, reorder: 10, costPerKg: 3.1 },
+    { id: "stk-plate-st37-6", materialType: "Mild steel S235", form: "plate", unit: "piece", dimension: "1500 × 3000", thicknessMm: 6, weightKgPerPiece: 212, onHand: 16, reorder: 6, costPerKg: 0.88 },
   ];
 }
 
@@ -360,7 +360,7 @@ function issueMaterial(store: DemoStore, order: MesOrder, now: Date): void {
       const remId = `${item.id}-rem`;
       let remItem = store.stock.find((s) => s.id === remId);
       if (!remItem) {
-        remItem = { id: remId, materialType: item.materialType, form: item.form, unit: "kg", dimension: `${item.dimension} artık`, onHand: 0, reorder: 0, costPerKg: item.costPerKg, isRemnant: true };
+        remItem = { id: remId, materialType: item.materialType, form: item.form, unit: "kg", dimension: `${item.dimension} offcut`, onHand: 0, reorder: 0, costPerKg: item.costPerKg, isRemnant: true };
         store.stock.push(remItem);
       }
       remItem.onHand = r1(remItem.onHand + offcut);
@@ -443,23 +443,23 @@ function seedRecentEvents(store: DemoStore, now: Date): void {
 function seedMaintenance(now: Date, stationIds: string[]) {
   const have = new Set(stationIds);
   const allDefs: [string, string, number][] = [
-    ["st-lazer-1", "Lens temizliği", 7],
-    ["st-lazer-2", "Lens temizliği", 7],
-    ["st-lazer-1", "Nozül kontrolü", 30],
-    ["st-plazma-1", "Elektrot / nozül değişimi", 14],
-    ["st-punch-1", "Zımba bileme", 30],
-    ["st-abkant-1", "Hidrolik yağ kontrolü", 90],
-    ["st-abkant-2", "Arka dayama kalibrasyonu", 180],
-    ["st-kaynak-1", "Torç bakımı", 30],
-    ["st-montaj-1", "Havalı alet bakımı", 60],
-    ["st-paket-1", "Çemberleme makinesi bakımı", 90],
-    ["st-testere-1", "Şerit değişimi", 14],
-    ["st-torna-1", "Ayna / punta kontrolü", 30],
-    ["st-torna-2", "Kızak yağlama", 30],
-    ["st-freze-1", "Mil rulman kontrolü", 60],
-    ["st-freze-2", "Soğutma sıvısı değişimi", 45],
-    ["st-matkap-1", "Mandren bakımı", 90],
-    ["st-kalite-1", "Ölçü cihazı kalibrasyonu", 90],
+    ["st-lazer-1", "Lens cleaning", 7],
+    ["st-lazer-2", "Lens cleaning", 7],
+    ["st-lazer-1", "Nozzle check", 30],
+    ["st-plazma-1", "Electrode / nozzle change", 14],
+    ["st-punch-1", "Punch sharpening", 30],
+    ["st-abkant-1", "Hydraulic oil check", 90],
+    ["st-abkant-2", "Backgauge calibration", 180],
+    ["st-kaynak-1", "Torch maintenance", 30],
+    ["st-montaj-1", "Air tool maintenance", 60],
+    ["st-paket-1", "Strapping machine service", 90],
+    ["st-testere-1", "Blade change", 14],
+    ["st-torna-1", "Chuck / tailstock check", 30],
+    ["st-torna-2", "Slideway lubrication", 30],
+    ["st-freze-1", "Spindle bearing check", 60],
+    ["st-freze-2", "Coolant change", 45],
+    ["st-matkap-1", "Chuck maintenance", 90],
+    ["st-kalite-1", "Gauge calibration", 90],
   ];
   const defs = allDefs.filter(([stationId]) => have.has(stationId));
   return defs.map(([stationId, title, intervalDays], i) => {

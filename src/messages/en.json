@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "KioskMES",
+    "appName": "Prodgence",
     "search": "Search",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -41,9 +41,9 @@
     "lastSeen": "{time}"
   },
   "landing": {
-    "badge": "Kiosk-based lightweight MES",
+    "badge": "AI-powered Smart Manufacturing",
     "title": "Production visibility for metal workshops",
-    "subtitle": "Track every station from a tablet on the shop floor. Licensing, subscriptions and billing managed in one place — no heavyweight MES rollout.",
+    "subtitle": "Track every station from a tablet on the shop floor. Licensing, subscriptions and billing managed in one place — no heavyweight rollout.",
     "ctaTrial": "Start 30-day free trial",
     "cardRequired": "Credit card required · charged after 30 days · cancel anytime",
     "pricingTitle": "Pay for capability, not machine count",
@@ -52,10 +52,10 @@
     "choosePlan": "Choose {plan}",
     "contactPrice": "Contact us",
     "contactCta": "Get a quote",
-    "planTaglineBasic": "Full MES on the shop floor",
-    "planTaglineAipro": "MES + Smart Manufacturing AI",
+    "planTaglineBasic": "Core platform on the shop floor",
+    "planTaglineAipro": "Smart Manufacturing + AI",
     "planTaglineUltimate": "All modules + multi-plant & API",
-    "feaMesCore": "Full MES: orders, kiosks, live boards, reports",
+    "feaMesCore": "Full platform: orders, kiosks, live boards, reports",
     "feaUnlimited": "Unlimited stations & users",
     "feaPaperless": "Paperless digital work orders",
     "feaTimeProgress": "Time-based progress & delay tracking",
@@ -80,7 +80,7 @@
     "adminDemoDesc": "Internal team — customers, licensing, MRR",
     "portalDemo": "Customer Portal",
     "portalDemoDesc": "Self-service — subscription, invoices, stations",
-    "mesDemo": "MES screens",
+    "mesDemo": "Shop-floor & management",
     "mesDemoDesc": "Operator kiosk & management dashboards",
     "signIn": "Sign in",
     "navFeatures": "Features",
@@ -102,7 +102,7 @@
     "statScoreL": "Performance score",
     "statAiV": "AI",
     "statAiL": "Assistant & suggestions",
-    "statLangV": "TR·EN·DE",
+    "statLangV": "EN·DE",
     "statLangL": "Multilingual",
     "aiEyebrow": "Smart Manufacturing AI",
     "aiSectionTitle": "AI that works the floor with you",
@@ -121,7 +121,7 @@
     "aiCard6Desc": "Operator of the day, zero delay, lowest scrap — keep the floor engaged.",
     "ctaBandTitle": "Put AI to work in your workshop",
     "ctaBandSubtitle": "Start the live demo in seconds — every screen runs on real, continuously-updated data.",
-    "footerTagline": "Kiosk-based lightweight MES for metal workshops",
+    "footerTagline": "AI-powered production intelligence for metal shops",
     "heroPanelTitle": "Executive · live",
     "heroStat1L": "Utilization",
     "heroStat1V": "72%",
@@ -136,10 +136,10 @@
     "dashboard": "Dashboard",
     "customers": "Customers",
     "invoices": "Invoices",
-    "mesSettings": "MES definitions",
+    "mesSettings": "Definitions",
     "settings": "Settings",
     "internal": "Internal team",
-    "userName": "Selin Acar",
+    "userName": "Sarah Cohen",
     "userRole": "Platform Admin"
   },
   "adminDashboard": {
@@ -256,7 +256,7 @@
     "colPlan": "Plan",
     "colPrice": "Monthly price (USD)",
     "colTier": "Tier",
-    "tierBasic": "MES core",
+    "tierBasic": "Core",
     "tierAipro": "AI Pro (assistant, benchmark, analytics)",
     "tierUltimate": "Enterprise (multi-plant, API)",
     "colLimit": "Station limit",
@@ -320,7 +320,7 @@
     "noLimit": "Unlimited on every plan",
     "contactPrice": "Contact us",
     "contactCta": "Get a quote",
-    "hlMesCore": "Full MES core",
+    "hlMesCore": "Full platform core",
     "hlAssistant": "AI Assistant + alerts",
     "hlBenchmark": "Sector benchmark + advanced analytics",
     "hlMultiplant": "Multi-plant + API",
@@ -367,8 +367,8 @@
   },
   "mes": {
     "chooser": {
-      "title": "MES screens",
-      "subtitle": "Shop-floor and management faces of the kiosk MES product",
+      "title": "Shop-floor & management",
+      "subtitle": "Shop-floor and management faces of the product",
       "operator": "Operator kiosk",
       "operatorDesc": "Tablet at the station — start/stop jobs, report quantity, downtime and andon",
       "sales": "Sales",
@@ -500,7 +500,7 @@
       "planPerfHint": "planned ÷ actual time"
     },
     "settings": {
-      "title": "MES definitions",
+      "title": "Definitions",
       "subtitle": "Operation catalog, downtime reasons and cost rates",
       "managerSubtitle": "Operation catalog and downtime reasons",
       "operationsTitle": "Operation catalog",
@@ -591,13 +591,13 @@
       "addTitle": "New task",
       "fieldTitle": "Task name…",
       "fieldInterval": "Interval (days)",
-      "disabled": "The maintenance module is turned off — enable it under Admin → MES definitions."
+      "disabled": "The maintenance module is turned off — enable it under Admin → Definitions."
     },
     "quote": {
       "navQuote": "Quote",
       "title": "Quote builder",
       "subtitle": "Price a new job from the station billing rates — an optional module",
-      "disabled": "The quoting module is turned off — enable it under Admin → MES definitions.",
+      "disabled": "The quoting module is turned off — enable it under Admin → Definitions.",
       "fieldCustomer": "Customer",
       "fieldPart": "Part / description",
       "fieldQty": "Quantity",
@@ -826,7 +826,7 @@
       "analyticsName": "Advanced analytics",
       "title": "{feature} is available on AI Pro",
       "body": "Upgrade to AI Pro for the Smart Manufacturing Assistant, sector benchmarking and deeper performance analytics — designed to recover far more lost capacity than the plan costs.",
-      "note": "In this demo you can switch the plan from Admin → MES settings to preview it."
+      "note": "In this demo you can switch the plan from Admin → Settings to preview it."
     },
     "insights": {
       "title": "Smart suggestions",
@@ -872,7 +872,7 @@
     "stock": {
       "title": "Warehouse / stock",
       "subtitle": "Raw-material stock, consumption and remnants",
-      "disabled": "The stock module is turned off — enable it under Admin → MES definitions.",
+      "disabled": "The stock module is turned off — enable it under Admin → Definitions.",
       "kpiValue": "Stock value",
       "kpiLow": "Below reorder",
       "kpiLowSub": "items to purchase",
@@ -1008,7 +1008,7 @@
       "lineMachineDown": "• {name} — {reason}, {min} min",
       "maintenance": "{overdue} maintenance task(s) overdue, {soon} due within 7 days. Most urgent: {task} — {station}.\nRecommendation: schedule the overdue ones into the next quiet shift.",
       "maintenanceNone": "Maintenance is on track — nothing overdue or due this week. 👍",
-      "maintenanceOff": "The maintenance module is turned off. Enable it under Admin → MES definitions.",
+      "maintenanceOff": "The maintenance module is turned off. Enable it under Admin → Definitions.",
       "output": "Today's output is {output} against a target of {target} ({pct}%). {rec}",
       "scrap": "Scrap today is {scrap} pcs — a {rate}% scrap rate.",
       "workload": "Queued work is heaviest at {op} ({hours} h). Across {open} open orders there are ~{total} h of work waiting.\n{list}",
@@ -1031,8 +1031,8 @@
       "revenue": "Today so far: revenue {revenue}, cost {cost}, profit {profit} ({margin}% margin).",
       "lostRevenue": "Downtime has cost about {total} in lost billable revenue today. Biggest loss: {station} ({amount}).\nRecommendation: a stoppage on a high-rate station is the most expensive — protect those first.",
       "lostRevenueNone": "No lost revenue today — no billable downtime.",
-      "greetingReply": "Hello! I'm the KioskMES Smart Manufacturing assistant. Ask me where the bottleneck is, what to improve today, how much revenue we're losing, which machines are down, or an order by its number.",
-      "offtopic": "I'm the KioskMES AI assistant — I can only provide information about production and efficiency.",
+      "greetingReply": "Hello! I'm the Prodgence Smart Manufacturing assistant. Ask me where the bottleneck is, what to improve today, how much revenue we're losing, which machines are down, or an order by its number.",
+      "offtopic": "I'm the Prodgence AI assistant — I can only provide information about production and efficiency.",
       "help": "I can help with: the current bottleneck, improvement suggestions, open alerts, efficiency, daily and downtime cost, revenue and lost revenue, machines down, maintenance, output, scrap, backlog, shift and operator comparison, orders at risk, or an order by its number (e.g. SIP-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "No clear bottleneck right now — capacity is balanced across operations.",

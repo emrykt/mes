@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "KioskMES",
+    "appName": "Prodgence",
     "search": "Suchen",
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
@@ -41,9 +41,9 @@
     "lastSeen": "{time}"
   },
   "landing": {
-    "badge": "Kiosk-basiertes leichtgewichtiges MES",
+    "badge": "KI-gestütztes Smart Manufacturing",
     "title": "Produktionstransparenz für Metallbetriebe",
-    "subtitle": "Jede Station per Tablet direkt in der Fertigung verfolgen. Lizenzen, Abos und Abrechnung an einem Ort — ohne schwergewichtige MES-Einführung.",
+    "subtitle": "Jede Station per Tablet direkt in der Fertigung verfolgen. Lizenzen, Abos und Abrechnung an einem Ort — ohne schwergewichtige Einführung.",
     "ctaTrial": "30 Tage kostenlos testen",
     "cardRequired": "Kreditkarte erforderlich · Abbuchung nach 30 Tagen · jederzeit kündbar",
     "pricingTitle": "Zahlen Sie für Leistung, nicht für Maschinenzahl",
@@ -52,10 +52,10 @@
     "choosePlan": "{plan} wählen",
     "contactPrice": "Preis auf Anfrage",
     "contactCta": "Angebot anfordern",
-    "planTaglineBasic": "Volles MES in der Fertigung",
-    "planTaglineAipro": "MES + Smart Manufacturing AI",
+    "planTaglineBasic": "Kernplattform in der Fertigung",
+    "planTaglineAipro": "Smart Manufacturing + KI",
     "planTaglineUltimate": "Alle Module + Mehrwerk & API",
-    "feaMesCore": "Volles MES: Aufträge, Kiosks, Live-Boards, Berichte",
+    "feaMesCore": "Volle Plattform: Aufträge, Kiosks, Live-Boards, Berichte",
     "feaUnlimited": "Unbegrenzte Stationen & Benutzer",
     "feaPaperless": "Papierlose digitale Aufträge",
     "feaTimeProgress": "Zeitbasierter Fortschritt & Verzugsverfolgung",
@@ -80,7 +80,7 @@
     "adminDemoDesc": "Internes Team — Kunden, Lizenzen, MRR",
     "portalDemo": "Kundenportal",
     "portalDemoDesc": "Self-Service — Abo, Rechnungen, Stationen",
-    "mesDemo": "MES-Ansichten",
+    "mesDemo": "Fertigung & Management",
     "mesDemoDesc": "Bediener-Kiosk & Management-Dashboards",
     "signIn": "Anmelden",
     "navFeatures": "Funktionen",
@@ -102,7 +102,7 @@
     "statScoreL": "Performance-Score",
     "statAiV": "KI",
     "statAiL": "Assistent & Vorschläge",
-    "statLangV": "TR·EN·DE",
+    "statLangV": "EN·DE",
     "statLangL": "Mehrsprachig",
     "aiEyebrow": "Smart Manufacturing KI",
     "aiSectionTitle": "KI, die mit Ihnen in der Fertigung arbeitet",
@@ -121,7 +121,7 @@
     "aiCard6Desc": "Bediener des Tages, kein Verzug, geringster Ausschuss — hält die Fertigung engagiert.",
     "ctaBandTitle": "Bringen Sie KI in Ihre Werkstatt",
     "ctaBandSubtitle": "Live-Demo in Sekunden starten — jeder Bildschirm läuft auf echten, laufend aktualisierten Daten.",
-    "footerTagline": "Kiosk-basiertes leichtgewichtiges MES für Metallbetriebe",
+    "footerTagline": "KI-gestützte Produktionsintelligenz für Metallbetriebe",
     "heroPanelTitle": "Management · live",
     "heroStat1L": "Auslastung",
     "heroStat1V": "72%",
@@ -136,10 +136,10 @@
     "dashboard": "Übersicht",
     "customers": "Kunden",
     "invoices": "Rechnungen",
-    "mesSettings": "MES-Stammdaten",
+    "mesSettings": "Stammdaten",
     "settings": "Einstellungen",
     "internal": "Internes Team",
-    "userName": "Selin Acar",
+    "userName": "Sarah Cohen",
     "userRole": "Plattform-Admin"
   },
   "adminDashboard": {
@@ -256,7 +256,7 @@
     "colPlan": "Paket",
     "colPrice": "Monatspreis (USD)",
     "colTier": "Stufe",
-    "tierBasic": "MES-Kern",
+    "tierBasic": "Kern",
     "tierAipro": "AI Pro (Assistent, Vergleich, Analysen)",
     "tierUltimate": "Enterprise (Mehrwerk, API)",
     "colLimit": "Stationslimit",
@@ -320,7 +320,7 @@
     "noLimit": "In jedem Paket unbegrenzt",
     "contactPrice": "Preis auf Anfrage",
     "contactCta": "Angebot anfordern",
-    "hlMesCore": "Voller MES-Kern",
+    "hlMesCore": "Volle Plattform",
     "hlAssistant": "KI-Assistent + Warnungen",
     "hlBenchmark": "Branchenvergleich + erweiterte Analysen",
     "hlMultiplant": "Mehrwerk + API",
@@ -367,8 +367,8 @@
   },
   "mes": {
     "chooser": {
-      "title": "MES-Ansichten",
-      "subtitle": "Fertigungs- und Management-Ansichten des Kiosk-MES-Produkts",
+      "title": "Fertigung & Management",
+      "subtitle": "Fertigungs- und Management-Ansichten des Produkts",
       "operator": "Bediener-Kiosk",
       "operatorDesc": "Tablet an der Station — Aufträge starten/stoppen, Stückzahl, Stillstand und Andon melden",
       "sales": "Vertrieb",
@@ -500,7 +500,7 @@
       "planPerfHint": "geplant ÷ Ist-Zeit"
     },
     "settings": {
-      "title": "MES-Stammdaten",
+      "title": "Stammdaten",
       "subtitle": "Arbeitsgangkatalog, Stillstandsgründe und Kostensätze",
       "managerSubtitle": "Arbeitsgangkatalog und Stillstandsgründe",
       "operationsTitle": "Arbeitsgangkatalog",
@@ -591,13 +591,13 @@
       "addTitle": "Neue Aufgabe",
       "fieldTitle": "Aufgabenname…",
       "fieldInterval": "Intervall (Tage)",
-      "disabled": "Das Instandhaltungsmodul ist ausgeschaltet — unter Admin → MES-Stammdaten aktivieren."
+      "disabled": "Das Instandhaltungsmodul ist ausgeschaltet — unter Admin → Stammdaten aktivieren."
     },
     "quote": {
       "navQuote": "Angebot",
       "title": "Angebots-Kalkulator",
       "subtitle": "Neuen Auftrag aus den Stationssätzen kalkulieren — ein optionales Modul",
-      "disabled": "Das Angebotsmodul ist ausgeschaltet — unter Admin → MES-Stammdaten aktivieren.",
+      "disabled": "Das Angebotsmodul ist ausgeschaltet — unter Admin → Stammdaten aktivieren.",
       "fieldCustomer": "Kunde",
       "fieldPart": "Teil / Beschreibung",
       "fieldQty": "Menge",
@@ -826,7 +826,7 @@
       "analyticsName": "Erweiterte Analysen",
       "title": "{feature} ist im Paket AI Pro enthalten",
       "body": "Wechseln Sie zu AI Pro für den Smart Manufacturing Assistant, Branchen-Benchmarking und tiefere Leistungsanalysen — konzipiert, um weit mehr verlorene Kapazität zurückzugewinnen, als das Paket kostet.",
-      "note": "In dieser Demo können Sie das Paket unter Admin → MES-Einstellungen umschalten, um es anzusehen."
+      "note": "In dieser Demo können Sie das Paket unter Admin → Einstellungen umschalten, um es anzusehen."
     },
     "insights": {
       "title": "Intelligente Vorschläge",
@@ -872,7 +872,7 @@
     "stock": {
       "title": "Lager / Bestand",
       "subtitle": "Rohmaterialbestand, Verbrauch und Reststücke",
-      "disabled": "Das Lagermodul ist deaktiviert — unter Admin → MES-Stammdaten aktivieren.",
+      "disabled": "Das Lagermodul ist deaktiviert — unter Admin → Stammdaten aktivieren.",
       "kpiValue": "Bestandswert",
       "kpiLow": "Unter Meldebestand",
       "kpiLowSub": "zu beschaffen",
@@ -1008,7 +1008,7 @@
       "lineMachineDown": "• {name} — {reason}, {min} Min.",
       "maintenance": "{overdue} Wartungsaufgabe(n) überfällig, {soon} in 7 Tagen fällig. Am dringendsten: {task} — {station}.\nEmpfehlung: die überfälligen in die nächste ruhige Schicht einplanen.",
       "maintenanceNone": "Wartung im Plan — nichts überfällig oder diese Woche fällig. 👍",
-      "maintenanceOff": "Das Wartungsmodul ist ausgeschaltet. Unter Admin → MES-Stammdaten aktivieren.",
+      "maintenanceOff": "Das Wartungsmodul ist ausgeschaltet. Unter Admin → Stammdaten aktivieren.",
       "output": "Der Ausstoß heute beträgt {output} bei einem Ziel von {target} ({pct}%). {rec}",
       "scrap": "Ausschuss heute: {scrap} Stk. — {rate}% Ausschussquote.",
       "workload": "Die meiste wartende Arbeit liegt bei {op} ({hours} Std.). Über {open} offene Aufträge warten ~{total} Std. Arbeit.\n{list}",
@@ -1031,8 +1031,8 @@
       "revenue": "Heute bisher: Umsatz {revenue}, Kosten {cost}, Gewinn {profit} ({margin}% Marge).",
       "lostRevenue": "Stillstände haben heute rund {total} an entgangenem abrechenbarem Umsatz gekostet. Größter Verlust: {station} ({amount}).\nEmpfehlung: Ein Stillstand an einer Station mit hohem Satz ist am teuersten — diese zuerst schützen.",
       "lostRevenueNone": "Heute kein entgangener Umsatz — kein abrechenbarer Stillstand.",
-      "greetingReply": "Hallo! Ich bin der KioskMES Smart-Manufacturing-Assistent. Fragen Sie mich, wo der Engpass ist, was Sie heute verbessern sollten, wie viel Umsatz verloren geht, welche Maschinen stehen oder nach einem Auftrag per Nummer.",
-      "offtopic": "Ich bin der KioskMES-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
+      "greetingReply": "Hallo! Ich bin der Prodgence Smart-Manufacturing-Assistent. Fragen Sie mich, wo der Engpass ist, was Sie heute verbessern sollten, wie viel Umsatz verloren geht, welche Maschinen stehen oder nach einem Auftrag per Nummer.",
+      "offtopic": "Ich bin der Prodgence-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
       "help": "Ich kann helfen bei: aktueller Engpass, Verbesserungsvorschläge, offene Warnungen, Effizienz, Tages- und Stillstandskosten, Umsatz und entgangener Umsatz, stehende Maschinen, Wartung, Ausstoß, Ausschuss, Rückstand, Schicht- und Bedienervergleich, gefährdete Aufträge oder einem Auftrag per Nummer (z. B. SIP-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "Derzeit kein klarer Engpass — die Kapazität ist über die Arbeitsgänge ausgeglichen.",

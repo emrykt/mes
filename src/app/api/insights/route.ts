@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   };
   const lang = LANG[locale ?? "en"] ?? "English";
 
-  const system = `You are the KioskMES Smart Manufacturing analyst for a sheet-metal plant.
+  const system = `You are the Prodgence Smart Manufacturing analyst for a sheet-metal plant.
 From the live plant signals (JSON) produce the 3 most valuable improvement suggestions right now.
 Each item: a one-sentence reading of the situation and a one-sentence concrete recommendation.
 Focus on bottlenecks, dominant losses (downtime/scrap), late-order risk and where idle capacity can be filled.

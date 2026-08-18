@@ -4,9 +4,9 @@ import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "KioskMES — MES Yönetim Platformu",
+  title: "Prodgence — Production Intelligence",
   description:
-    "Kiosk-based lightweight MES: licensing, subscription and customer management platform.",
+    "AI-powered Smart Manufacturing & production intelligence platform.",
 };
 
 export default async function RootLayout({

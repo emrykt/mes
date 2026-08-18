@@ -63,7 +63,7 @@ export const PLAN_ENTITLEMENTS: Record<PlanId, PlanEntitlements> = {
 export const tenants: Tenant[] = [
   {
     id: "t-001",
-    company: "Demir Metal A.Ş.",
+    company: "Ironworks Metal Inc.",
     country: "TR",
     ownerEmail: "murat@demirmetal.com.tr",
     plan: "AIPRO",
@@ -74,7 +74,7 @@ export const tenants: Tenant[] = [
   },
   {
     id: "t-002",
-    company: "Yıldız Sac Ltd.",
+    company: "Stella Sheet Ltd.",
     country: "TR",
     ownerEmail: "info@yildizsac.com",
     plan: "BASIC",
@@ -132,7 +132,7 @@ export const tenants: Tenant[] = [
   },
   {
     id: "t-007",
-    company: "Ege Metal İşleme",
+    company: "Aegean Metalworks",
     country: "TR",
     ownerEmail: "ege@egemetal.com.tr",
     plan: "BASIC",
@@ -155,7 +155,7 @@ export const tenants: Tenant[] = [
   },
   {
     id: "t-009",
-    company: "Baltık Steel OÜ",
+    company: "Baltic Steel OÜ",
     country: "EE",
     ownerEmail: "office@baltiksteel.ee",
     plan: "BASIC",
@@ -166,7 +166,7 @@ export const tenants: Tenant[] = [
   },
   {
     id: "t-010",
-    company: "Anadolu Kalıp San.",
+    company: "Summit Tooling Co.",
     country: "TR",
     ownerEmail: "bilgi@anadolukalip.com.tr",
     plan: "AIPRO",
@@ -236,13 +236,13 @@ const stationNames = [
   "Abkant Pres 1",
   "Abkant Pres 2",
   "Punch Pres",
-  "Kaynak İstasyonu 1",
-  "Kaynak İstasyonu 2",
-  "Montaj Hattı",
+  "Welding Station 1",
+  "Welding Station 2",
+  "Assembly Line",
   "Kalite Kontrol",
   "Paketleme",
   "Plazma Kesim",
-  "Büküm Hattı",
+  "Bending Line",
 ];
 
 function minutesAgo(min: number): string {
@@ -300,14 +300,14 @@ export function usersFor(tenant: Tenant): TenantUser[] {
     },
     {
       id: `${tenant.id}-u2`,
-      name: "Ayşe Korkmaz",
+      name: "Anna Brooks",
       email: `ayse@${domain}`,
       role: "CUSTOMER_USER",
       lastLoginAt: minutesAgo(60 * 26),
     },
     {
       id: `${tenant.id}-u3`,
-      name: "Hasan Yılmaz",
+      name: "James Miller",
       email: `hasan@${domain}`,
       role: "CUSTOMER_USER",
       invited: true,
@@ -366,7 +366,7 @@ export function notesFor(tenant: Tenant): SupportNote[] {
       {
         id: "n1",
         at: "2026-07-06T10:15:00Z",
-        author: "Selin Acar",
+        author: "Sarah Cohen",
         text: "Called owner about failed charge — new card arriving this week, asked us not to suspend before Friday.",
       },
     ];
@@ -376,7 +376,7 @@ export function notesFor(tenant: Tenant): SupportNote[] {
       {
         id: "n2",
         at: "2026-05-14T13:30:00Z",
-        author: "Selin Acar",
+        author: "Sarah Cohen",
         text: "Upgraded to Pro after adding second shift. Interested in Premium if they open the new hall in Q4.",
       },
     ];

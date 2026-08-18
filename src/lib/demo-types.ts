@@ -28,7 +28,7 @@ export interface LiveStation {
   frac: number;
 }
 
-export type CurrencyCode = "USD" | "EUR" | "TRY";
+export type CurrencyCode = "USD" | "EUR" | "GBP";
 
 /** Who an escalation notifies. */
 export type AlertTarget = "supervisor" | "maintenance" | "quality" | "purchasing";

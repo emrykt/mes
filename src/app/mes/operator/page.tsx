@@ -142,7 +142,7 @@ export default function OperatorKioskPage() {
         <Link
           href="/mes"
           className="flex size-9 items-center justify-center rounded-lg bg-accent"
-          aria-label="KioskMES"
+          aria-label="Prodgence"
         >
           <Factory className="size-5" />
         </Link>

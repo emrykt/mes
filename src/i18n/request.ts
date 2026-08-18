@@ -1,7 +1,7 @@
 import { cookies, headers } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 
-export const LOCALES = ["en", "tr", "de"] as const;
+export const LOCALES = ["en", "de"] as const;
 export type AppLocale = (typeof LOCALES)[number];
 
 function isAppLocale(v: string | undefined): v is AppLocale {

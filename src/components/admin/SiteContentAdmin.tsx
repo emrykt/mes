@@ -5,7 +5,20 @@ import { Plus, Save, Trash2, Upload } from "lucide-react";
 import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 import { Card } from "@/components/ui";
 import { NAV_ICON_NAMES } from "@/lib/nav-icons";
+import { DEFAULT_SITE_CONTENT } from "@/lib/data";
 import type { SiteContent } from "@/lib/demo-types";
+
+/** Fill any missing top-level section from the bundled default (older stores). */
+function withDefaults(sc: SiteContent): SiteContent {
+  const d = DEFAULT_SITE_CONTENT;
+  return {
+    trustBar: sc.trustBar ?? d.trustBar,
+    testimonials: sc.testimonials ?? d.testimonials,
+    faq: sc.faq ?? d.faq,
+    contact: sc.contact ?? d.contact,
+    footer: sc.footer ?? d.footer,
+  };
+}
 
 const inp = "w-full rounded-lg border border-line bg-page px-2.5 py-1.5 text-sm focus:border-accent focus:outline-none";
 const MAX = 400 * 1024;
@@ -47,7 +60,7 @@ function Editor() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (c === null && snap?.siteContent) setC(structuredClone(snap.siteContent));
+    if (c === null && snap?.siteContent) setC(withDefaults(structuredClone(snap.siteContent)));
   }, [snap, c]);
 
   if (!snap || c === null) return <p className="text-sm text-muted">Loading…</p>;
@@ -68,7 +81,7 @@ function Editor() {
         <button onClick={save} disabled={busy} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-strong disabled:opacity-60">
           <Save className="size-4" /> Save & publish
         </button>
-        <button onClick={() => setC(structuredClone(snap.siteContent))} className="rounded-lg border border-line px-3.5 py-2 text-sm font-medium hover:bg-neutral-soft">Revert</button>
+        <button onClick={() => setC(withDefaults(structuredClone(snap.siteContent)))} className="rounded-lg border border-line px-3.5 py-2 text-sm font-medium hover:bg-neutral-soft">Revert</button>
         {saved && <span className="text-sm text-good-text">Published — live on the homepage</span>}
       </div>
 
@@ -165,6 +178,20 @@ function Editor() {
           ))}
           <button onClick={() => patch((d) => { d.faq.items.push({ question: "", answer: "" }); })} className="text-sm font-medium text-accent-strong hover:underline">+ Add question</button>
         </div>
+      </Card>
+
+      {/* CONTACT */}
+      <Card title="Contact / demo request" subtitle="Headline, intro and button text for the demo-request form.">
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={c.contact.enabled} onChange={(e) => patch((d) => { d.contact.enabled = e.target.checked; })} />
+          Show contact form
+        </label>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <Field label="Headline" value={c.contact.headline ?? ""} onChange={(v) => patch((d) => { d.contact.headline = v; })} />
+          <Field label="Submit button label" value={c.contact.submitLabel ?? ""} onChange={(v) => patch((d) => { d.contact.submitLabel = v; })} />
+        </div>
+        <div className="mt-2"><Field label="Intro" value={c.contact.intro ?? ""} onChange={(v) => patch((d) => { d.contact.intro = v; })} /></div>
+        <div className="mt-2"><Field label="Success message" value={c.contact.successMessage ?? ""} onChange={(v) => patch((d) => { d.contact.successMessage = v; })} /></div>
       </Card>
 
       {/* FOOTER */}

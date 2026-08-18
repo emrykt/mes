@@ -337,12 +337,32 @@ export interface FooterConfig {
   legal?: string;
 }
 
+/** Contact / demo-request section (mock — submissions are stored, not emailed). */
+export interface ContactSection {
+  enabled: boolean;
+  headline?: string;
+  intro?: string;
+  submitLabel?: string;
+  successMessage?: string;
+}
+
 /** Global, admin-editable landing content beyond the nav. */
 export interface SiteContent {
   trustBar: TrustBar;
   testimonials: TestimonialsSection;
   faq: FaqSection;
+  contact: ContactSection;
   footer: FooterConfig;
+}
+
+/** A submitted demo/contact request (mock lead). */
+export interface Lead {
+  id: string;
+  at: string;
+  name: string;
+  email: string;
+  company?: string;
+  message?: string;
 }
 
 /** Global, admin-editable pricing (not per-company). */
@@ -438,6 +458,8 @@ export interface MultiStore {
   siteNav?: SiteNav;
   /** Global, admin-editable landing content (trust bar, testimonials, FAQ, footer). */
   siteContent?: SiteContent;
+  /** Submitted demo/contact requests (mock leads), newest first. */
+  leads?: Lead[];
   /**
    * Version of the bundled default marketing content (nav + sections). When the
    * product ships new curated defaults we bump this; on load, stores below the
@@ -480,6 +502,8 @@ export interface DemoSnapshot {
   siteNav: SiteNav;
   /** Global, admin-editable landing content sections. */
   siteContent: SiteContent;
+  /** Submitted demo/contact requests (mock leads), newest first. */
+  leads: Lead[];
   today: {
     /** total pieces today (per-station only; not shown as a plant headline) */
     output: number;
@@ -540,6 +564,8 @@ export type DemoAction =
   | { type: "savePricing"; pricing: PricingConfig }
   | { type: "saveSiteNav"; siteNav: SiteNav }
   | { type: "saveSiteContent"; siteContent: SiteContent }
+  | { type: "submitLead"; lead: Omit<Lead, "id" | "at"> }
+  | { type: "deleteLead"; id: string }
   | { type: "setRetentionAddon"; years: number }
   | { type: "setBrandLogo"; logo: string }
   | { type: "setMaintenanceDept"; own: boolean }

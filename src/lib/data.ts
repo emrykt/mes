@@ -85,6 +85,20 @@ export const DEFAULT_PRICING: PricingConfig = {
   ],
 };
 
+/** Compact on-brand SVG promo image (data URL) for a mega-menu panel. */
+function menuImage(a: string, b: string, label: string): string {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240'>` +
+    `<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>` +
+    `<stop offset='0' stop-color='${a}'/><stop offset='1' stop-color='${b}'/></linearGradient></defs>` +
+    `<rect width='320' height='240' rx='16' fill='url(#g)'/>` +
+    `<circle cx='255' cy='55' r='72' fill='rgba(255,255,255,0.13)'/>` +
+    `<circle cx='60' cy='205' r='95' fill='rgba(255,255,255,0.08)'/>` +
+    `<circle cx='170' cy='120' r='42' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='2'/>` +
+    `<text x='24' y='212' font-family='system-ui,Arial,sans-serif' font-size='21' font-weight='700' fill='rgba(255,255,255,0.96)'>${label}</text>` +
+    `</svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 /**
  * Default landing-page mega-menu (admin-editable at runtime). Seeded with rich,
  * trust-building content that mirrors the actual Prodgence product surface.
@@ -94,6 +108,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
     {
       id: "products",
       label: "Products",
+      image: menuImage("#0e8390", "#16a34a", "Products"),
       headline: "One AI platform for the whole shop floor",
       intro: "From the operator kiosk to the executive cockpit — every role on one connected system.",
       ctaLabel: "See the live demo",
@@ -112,6 +127,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
     {
       id: "solutions",
       label: "Solutions",
+      image: menuImage("#16a34a", "#2f74d0", "Solutions"),
       headline: "Built for how metalworking shops actually run",
       intro: "Whether you cut sheet, turn shafts or do both, Prodgence adapts to your operations — no two-year rollout.",
       ctaLabel: "Explore pricing",
@@ -130,6 +146,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
     {
       id: "resources",
       label: "Resources",
+      image: menuImage("#2f74d0", "#0e8390", "Resources"),
       headline: "Everything you need to succeed",
       intro: "Guides, proof and answers — from first evaluation to full rollout.",
       ctaLabel: "Start the demo",
@@ -148,6 +165,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
     {
       id: "company",
       label: "Company",
+      image: menuImage("#0a616b", "#16a34a", "Company"),
       headline: "Building the future of production intelligence",
       intro: "A focused team helping metalworking shops run measurably better.",
       ctaLabel: "Talk to sales",
@@ -252,6 +270,13 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
           "Yes — start a 30-day free trial and explore the live simulated plant across every role, from the operator kiosk to the executive cockpit.",
       },
     ],
+  },
+  contact: {
+    enabled: true,
+    headline: "See Prodgence on your shop floor",
+    intro: "Tell us a little about your operation and we'll set up a tailored walkthrough. No obligation.",
+    submitLabel: "Request a demo",
+    successMessage: "Thanks — we've received your request and will be in touch shortly.",
   },
   footer: {
     tagline: "AI-powered Smart Manufacturing, production and business management for metalworking shops.",

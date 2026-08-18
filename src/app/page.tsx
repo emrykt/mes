@@ -5,6 +5,7 @@ import SiteNav from "@/components/landing/SiteNav";
 import TrustBar from "@/components/landing/TrustBar";
 import Testimonials from "@/components/landing/Testimonials";
 import Faq from "@/components/landing/Faq";
+import ContactForm from "@/components/landing/ContactForm";
 import SiteFooter from "@/components/landing/SiteFooter";
 import {
   ArrowRight,
@@ -281,6 +282,9 @@ export default function LandingPage() {
 
       {/* ---------- FAQ (managed) ---------- */}
       <Faq />
+
+      {/* ---------- CONTACT / DEMO REQUEST (managed) ---------- */}
+      <ContactForm />
 
       {/* ---------- FOOTER (managed) ---------- */}
       <SiteFooter />

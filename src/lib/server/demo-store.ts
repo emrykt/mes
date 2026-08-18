@@ -24,7 +24,7 @@ import {
   PLAN_ENTITLEMENTS,
   PLAN_RETENTION_MONTHS,
 } from "../data";
-import type { PricingConfig, SiteContent, SiteNav } from "../demo-types";
+import type { Lead, PricingConfig, SiteContent, SiteNav } from "../demo-types";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
 import {
@@ -77,8 +77,9 @@ const CURRENT_SCHEMA = 1;
  * Bump when shipping new curated defaults so existing stores refresh to them on
  * load (admin edits persist until the next bump). See MultiStore.siteVersion.
  *   1 — mega-menu + trust bar / testimonials / FAQ / footer + item icons
+ *   2 — default menu panel images + contact / demo-request section
  */
-const CURRENT_SITE_VERSION = 1;
+const CURRENT_SITE_VERSION = 2;
 
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -271,6 +272,7 @@ function seedMulti(now: Date): MultiStore {
     siteNav: cloneSiteNav(),
     siteContent: cloneSiteContent(),
     siteVersion: CURRENT_SITE_VERSION,
+    leads: [],
   };
 }
 
@@ -677,6 +679,7 @@ function reviveMulti(raw: string, now: Date): MultiStore {
     multi.siteNav ??= cloneSiteNav();
     multi.siteContent ??= cloneSiteContent();
   }
+  multi.leads ??= [];
   return multi as MultiStore;
 }
 
@@ -738,6 +741,7 @@ export function snapshotFor(multi: MultiStore, companyId: string, now: Date): De
     multi.pricing ?? clonePricing(),
     multi.siteNav ?? cloneSiteNav(),
     multi.siteContent ?? cloneSiteContent(),
+    multi.leads ?? [],
   );
 }
 
@@ -756,6 +760,7 @@ export function applyActionMulti(
     multi.siteNav = fresh.siteNav;
     multi.siteContent = fresh.siteContent;
     multi.siteVersion = fresh.siteVersion;
+    multi.leads = fresh.leads;
     return;
   }
   if (action.type === "savePricing") {
@@ -768,6 +773,27 @@ export function applyActionMulti(
   }
   if (action.type === "saveSiteContent") {
     multi.siteContent = action.siteContent;
+    return;
+  }
+  if (action.type === "submitLead") {
+    multi.leads ??= [];
+    const l = action.lead;
+    // ignore empty/garbage submissions; keep the newest 200
+    if (l && l.name?.trim() && l.email?.trim()) {
+      multi.leads.unshift({
+        id: `lead-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        at: now.toISOString(),
+        name: l.name.trim().slice(0, 120),
+        email: l.email.trim().slice(0, 160),
+        company: l.company?.trim().slice(0, 160) || undefined,
+        message: l.message?.trim().slice(0, 1000) || undefined,
+      });
+      multi.leads = multi.leads.slice(0, 200);
+    }
+    return;
+  }
+  if (action.type === "deleteLead") {
+    multi.leads = (multi.leads ?? []).filter((x) => x.id !== action.id);
     return;
   }
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
@@ -1466,6 +1492,7 @@ export function snapshot(
   pricing: PricingConfig,
   siteNav: SiteNav,
   siteContent: SiteContent,
+  leads: Lead[],
 ): DemoSnapshot {
   const profile = companyProfile(store.id);
   const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
@@ -1507,6 +1534,7 @@ export function snapshot(
     pricing,
     siteNav,
     siteContent,
+    leads,
     retention: { planMonths, addonYears, totalMonths, addonMonthlyPrice },
     today: (() => {
       const plannedMin = store.stations.reduce((s, st) => s + (st.todayPlannedMin ?? 0), 0);

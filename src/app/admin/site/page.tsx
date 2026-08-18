@@ -1,5 +1,6 @@
 import SiteNavAdmin from "@/components/admin/SiteNavAdmin";
 import SiteContentAdmin from "@/components/admin/SiteContentAdmin";
+import LeadsPanel from "@/components/admin/LeadsPanel";
 
 export default function AdminSitePage() {
   return (
@@ -19,8 +20,13 @@ export default function AdminSitePage() {
 
       <section className="space-y-4">
         <h2 className="text-lg font-semibold tracking-tight">Content sections</h2>
-        <p className="text-sm text-ink-2">Trust bar, testimonials, FAQ and footer.</p>
+        <p className="text-sm text-ink-2">Trust bar, testimonials, FAQ, contact form and footer.</p>
         <SiteContentAdmin />
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold tracking-tight">Demo requests</h2>
+        <LeadsPanel />
       </section>
     </div>
   );

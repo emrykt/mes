@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+data
+infra/cdk.out
+infra/node_modules
+npm-debug.log*
+*.log
+.env*
+.vercel
+.claude
+README*.md
+docs

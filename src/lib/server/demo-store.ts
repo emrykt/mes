@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { kvRead, kvWrite, useRedis } from "./kv";
+import { pgRead, pgWrite, usePg } from "./pg";
 import type {
   DemoAction,
   DemoSnapshot,
@@ -768,8 +769,16 @@ function reviveMulti(raw: string, now: Date): MultiStore {
 }
 
 export async function loadStore(now: Date): Promise<MultiStore> {
-  // Cloud: the Redis blob is the single source of truth. Read fresh every
-  // request (no global cache) so instances never serve stale state.
+  // Production: PostgreSQL is the source of truth (AWS RDS / any Postgres).
+  // Read fresh every request so instances never serve stale state.
+  if (usePg) {
+    const raw = await pgRead();
+    if (raw) return reviveMulti(raw, now);
+    const seeded = seedMulti(now);
+    await pgWrite(JSON.stringify(seeded));
+    return seeded;
+  }
+  // Legacy cloud: the Redis blob (used on Vercel until the AWS cutover).
   if (useRedis) {
     const raw = await kvRead();
     if (raw) return reviveMulti(raw, now);
@@ -793,6 +802,10 @@ export async function loadStore(now: Date): Promise<MultiStore> {
 }
 
 export async function persist(multi: MultiStore, force = false): Promise<void> {
+  if (usePg) {
+    await pgWrite(JSON.stringify(multi));
+    return;
+  }
   if (useRedis) {
     await kvWrite(JSON.stringify(multi));
     return;

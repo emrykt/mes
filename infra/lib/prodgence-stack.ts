@@ -84,7 +84,7 @@ export class ProdgenceStack extends Stack {
     db.secret!.grantRead(instanceRole);
 
     const connectorSg = new ec2.SecurityGroup(this, "ConnectorSg", { vpc });
-    db.connections.allowDefaultPortFrom(connectorSg, "App Runner → RDS");
+    db.connections.allowDefaultPortFrom(connectorSg, "App Runner to RDS");
 
     const vpcConnector = new apprunner.CfnVpcConnector(this, "VpcConnector", {
       subnets: vpc.selectSubnets({

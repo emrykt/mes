@@ -10,7 +10,12 @@ import * as rds from "aws-cdk-lib/aws-rds";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as apprunner from "aws-cdk-lib/aws-apprunner";
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
+
+// Anthropic API key secret (created out-of-band; value set in the console).
+const ANTHROPIC_SECRET_ARN =
+  "arn:aws:secretsmanager:eu-central-1:385542056888:secret:prodgence/anthropic-yWsYCn";
 
 /**
  * Prodgence production infrastructure — everything in eu-central-1 (Frankfurt).
@@ -43,14 +48,12 @@ export class ProdgenceStack extends Stack {
         ec2.InstanceSize.MICRO,
       ),
       allocatedStorage: 20,
+      maxAllocatedStorage: 200, // storage autoscales as data grows
       credentials: rds.Credentials.fromGeneratedSecret("prodgence"),
       databaseName: "prodgence",
       multiAz: false, // flip to true for HA when commercial
       storageEncrypted: true,
-      // Free-plan accounts cannot use multi-day backups; keep 0 during the
-      // trial phase, raise to 7 (and enable maxAllocatedStorage/multiAz) after
-      // upgrading the AWS account plan — before real customer data.
-      backupRetention: Duration.days(0),
+      backupRetention: Duration.days(7), // 7-day point-in-time recovery
       deletionProtection: true,
       removalPolicy: RemovalPolicy.SNAPSHOT,
     });
@@ -82,6 +85,13 @@ export class ProdgenceStack extends Stack {
       assumedBy: new iam.ServicePrincipal("tasks.apprunner.amazonaws.com"),
     });
     db.secret!.grantRead(instanceRole);
+
+    const anthropicSecret = secretsmanager.Secret.fromSecretCompleteArn(
+      this,
+      "AnthropicKey",
+      ANTHROPIC_SECRET_ARN,
+    );
+    anthropicSecret.grantRead(instanceRole);
 
     const connectorSg = new ec2.SecurityGroup(this, "ConnectorSg", { vpc });
     db.connections.allowDefaultPortFrom(connectorSg, "App Runner to RDS");
@@ -118,7 +128,8 @@ export class ProdgenceStack extends Stack {
             runtimeEnvironmentSecrets: [
               // RDS password injected from Secrets Manager (never in plaintext)
               { name: "PGPASSWORD", value: `${db.secret!.secretArn}:password::` },
-              // Add ANTHROPIC_API_KEY / SES creds here once stored as secrets.
+              // Live AI assistant key (set the value in the console)
+              { name: "ANTHROPIC_API_KEY", value: `${anthropicSecret.secretArn}:ANTHROPIC_API_KEY::` },
             ],
           },
         },

@@ -1,0 +1,21 @@
+version: 0.2
+
+# Builds the Next.js Docker image in AWS CodeBuild and pushes it to ECR.
+# ECR_REPO_URI is passed as an environment variable by the CodeBuild project,
+# e.g. 385542056888.dkr.ecr.eu-central-1.amazonaws.com/prodgence
+
+phases:
+  pre_build:
+    commands:
+      - REGISTRY="${ECR_REPO_URI%%/*}"
+      - echo "Logging in to ECR registry $REGISTRY in $AWS_DEFAULT_REGION"
+      - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
+  build:
+    commands:
+      - echo "Building image $ECR_REPO_URI:latest"
+      - docker build -t "$ECR_REPO_URI:latest" .
+  post_build:
+    commands:
+      - echo "Pushing $ECR_REPO_URI:latest"
+      - docker push "$ECR_REPO_URI:latest"
+      - echo "Image pushed."

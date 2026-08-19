@@ -43,12 +43,14 @@ export class ProdgenceStack extends Stack {
         ec2.InstanceSize.MICRO,
       ),
       allocatedStorage: 20,
-      maxAllocatedStorage: 200, // autoscale storage as data grows
       credentials: rds.Credentials.fromGeneratedSecret("prodgence"),
       databaseName: "prodgence",
       multiAz: false, // flip to true for HA when commercial
       storageEncrypted: true,
-      backupRetention: Duration.days(7),
+      // Free-plan accounts cannot use multi-day backups; keep 0 during the
+      // trial phase, raise to 7 (and enable maxAllocatedStorage/multiAz) after
+      // upgrading the AWS account plan — before real customer data.
+      backupRetention: Duration.days(0),
       deletionProtection: true,
       removalPolicy: RemovalPolicy.SNAPSHOT,
     });
@@ -58,6 +60,10 @@ export class ProdgenceStack extends Stack {
       repositoryName: "prodgence",
       imageScanOnPush: true,
       lifecycleRules: [{ maxImageCount: 10 }],
+      // CDK's ECR default is RETAIN; use DESTROY so a failed/rolled-back stack
+      // cleans the repo up instead of orphaning it (images are re-pushable).
+      removalPolicy: RemovalPolicy.DESTROY,
+      emptyOnDelete: true,
     });
 
     new CfnOutput(this, "EcrRepoUri", { value: repo.repositoryUri });

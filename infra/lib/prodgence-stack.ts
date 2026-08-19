@@ -105,6 +105,10 @@ export class ProdgenceStack extends Stack {
             port: "3000",
             runtimeEnvironmentVariables: [
               { name: "NODE_ENV", value: "production" },
+              // Force Next.js to bind 0.0.0.0 — the container runtime otherwise
+              // overrides HOSTNAME with the instance hostname, so the health
+              // check can't reach the port.
+              { name: "HOSTNAME", value: "0.0.0.0" },
               { name: "PGHOST", value: db.dbInstanceEndpointAddress },
               { name: "PGPORT", value: db.dbInstanceEndpointPort },
               { name: "PGDATABASE", value: "prodgence" },

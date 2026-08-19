@@ -5,7 +5,9 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+# npm install (not ci) reconciles package.json ↔ lockfile across npm versions;
+# this is the same install Vercel uses and is proven to work for this app.
+RUN npm install --no-audit --no-fund
 
 # 2) build: compile the Next.js standalone output
 FROM node:22-alpine AS builder

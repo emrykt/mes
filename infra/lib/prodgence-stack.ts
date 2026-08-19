@@ -131,8 +131,10 @@ export class ProdgenceStack extends Stack {
         },
       },
       healthCheckConfiguration: {
-        protocol: "HTTP",
-        path: "/api/auth/me",
+        // TCP: just checks the port is listening (the Next.js server is up in
+        // ~200ms). Avoids coupling health to the DB / first-request seeding,
+        // which was timing out the HTTP check.
+        protocol: "TCP",
         interval: 10,
         timeout: 5,
         healthyThreshold: 1,

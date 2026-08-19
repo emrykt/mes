@@ -93,6 +93,14 @@ export class ProdgenceStack extends Stack {
     );
     anthropicSecret.grantRead(instanceRole);
 
+    // allow the app to send transactional email (team invites) via SES
+    instanceRole.addToPrincipalPolicy(
+      new iam.PolicyStatement({
+        actions: ["ses:SendEmail", "ses:SendRawEmail"],
+        resources: ["*"],
+      }),
+    );
+
     const connectorSg = new ec2.SecurityGroup(this, "ConnectorSg", { vpc });
     db.connections.allowDefaultPortFrom(connectorSg, "App Runner to RDS");
 

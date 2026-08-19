@@ -3,6 +3,8 @@ import { loadStore, persist } from "@/lib/server/demo-store";
 import { getSessionUser } from "@/lib/server/session";
 import { canManagePlatform, canManageTenant, defaultModules, sanitizeUser } from "@/lib/auth";
 import { hashPassword } from "@/lib/server/password";
+import { sendInviteEmail } from "@/lib/server/mailer";
+import { companyProfile } from "@/lib/companies";
 import type { AppModule, AuthUser, PlatformRole, TenantRole } from "@/lib/demo-types";
 
 export const dynamic = "force-dynamic";
@@ -107,5 +109,18 @@ export async function POST(req: Request) {
   };
   users.push(user);
   await persist(multi, true);
-  return NextResponse.json({ user: sanitizeUser(user), inviteToken: token });
+
+  // email the invite link when SES is configured (falls back to the UI link)
+  const origin =
+    process.env.APP_URL || req.headers.get("origin") || new URL(req.url).origin;
+  const joinUrl = `${origin}/join?token=${token}`;
+  const emailed = await sendInviteEmail({
+    to: email,
+    name,
+    inviterName: me.name,
+    companyName: companyProfile(tenantId)?.name,
+    joinUrl,
+  });
+
+  return NextResponse.json({ user: sanitizeUser(user), inviteToken: token, emailed });
 }

@@ -1,0 +1,615 @@
+{
+  "/ProdgenceStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/EcrRepoUri": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "EcrRepoUri"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:72:5)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/DbEndpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbEndpoint"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:73:5)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/DbSecretArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecretArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:74:5)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/VpcConnector": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcConnector"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:99:26)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Service": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Service"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:106:21)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/ServiceUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ServiceUrl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:160:5)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Vpc8378EB38"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/IGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcIGWD7BA715C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/VPCGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcVPCGWBF912B6E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Db5D02A0A9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:40:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Repo/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Repo02AC86CF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Repository2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:62:18)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/AppRunnerAccessRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppRunnerAccessRoleC89E5843"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:79:24)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/AppRunnerInstanceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppRunnerInstanceRole96A5A063"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:84:26)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/ConnectorSg/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ConnectorSgC689ACEA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SecurityGroup2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:96:25)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1Subnet5C2D37C4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1RouteTable6C95E38E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1RouteTableAssociation97140677"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1DefaultRoute3DA9E72A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:208 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/EIP": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1EIPD7E02669"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet1/NATGateway": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet1NATGateway4D7517AA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet2Subnet691E08A3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet2RouteTable94F7E489"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet2RouteTableAssociationDD5762D8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:268 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PublicSubnet2/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPublicSubnet2DefaultRoute97F91067"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:208 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet1Subnet536B997A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet1RouteTableB2C5B500"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet1RouteTableAssociation70C59FA6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet1/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet1DefaultRouteBE02A9ED"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet2Subnet3788AAA1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet2RouteTableA678073B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet2RouteTableAssociationA89CAD56"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:270 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Vpc/PrivateSubnet2/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcPrivateSubnet2DefaultRoute060D2087"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:37:17)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/SubnetGroup/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSubnetGroup6F6C177A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:40:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/SecurityGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecurityGroupC34ABFAB"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:40:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/SecurityGroup/from ProdgenceStackConnectorSg4CB79AE0:{IndirectPort}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecurityGroupfromProdgenceStackConnectorSg4CB79AE0IndirectPortACDEDAC2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...Connections.allowDefaultPortFrom in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:97:20)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/Secret/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ProdgenceStackDbSecretA2CAA9E03fdaad7efa858a3daf9490cf0a702aeb"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:40:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/AppRunnerAccessRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppRunnerAccessRoleDefaultPolicy4FF2CFAF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantPull in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:82:10)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/AppRunnerInstanceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppRunnerInstanceRoleDefaultPolicy35195718"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantRead in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:87:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)"
+      ]
+    }
+  ],
+  "/ProdgenceStack/Db/Secret/Attachment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecretAttachment7AED447C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in aws-cdk-lib...",
+        "new ProdgenceStack (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\lib\\prodgence-stack.ts:40:16)",
+        "<anonymous> (C:\\Users\\emrey.BAYKAL\\MES Websitesi\\infra\\bin\\app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ]
+}

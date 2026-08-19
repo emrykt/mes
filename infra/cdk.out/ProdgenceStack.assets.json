@@ -1,0 +1,21 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "0b65b8d216f9d485115754c00fe7eb7a7478a53f1bb86905a6aa30eda412b191": {
+      "displayName": "ProdgenceStack Template",
+      "source": {
+        "path": "ProdgenceStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "385542056888-eu-central-1-3f14c9ab": {
+          "bucketName": "cdk-hnb659fds-assets-385542056888-eu-central-1",
+          "objectKey": "0b65b8d216f9d485115754c00fe7eb7a7478a53f1bb86905a6aa30eda412b191.json",
+          "region": "eu-central-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::385542056888:role/cdk-hnb659fds-file-publishing-role-385542056888-eu-central-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

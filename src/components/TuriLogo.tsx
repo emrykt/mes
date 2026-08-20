@@ -41,7 +41,28 @@ export default function TuriLogo({
         <rect x="3" y="4" width="40" height="12.6" rx="6.3" fill={`url(#${gid})`} />
       </svg>
       {wordmark && (
-        <span className={`text-xl font-bold lowercase tracking-tight ${wordClass}`}>turi</span>
+        <span
+          className={`text-2xl font-semibold lowercase leading-none ${wordClass}`}
+          style={{ fontFamily: '"Turi", system-ui, sans-serif' }}
+        >
+          tur
+          {/* the "i" keeps the font's stem; its dot is recoloured green to match the brand */}
+          <span className="relative">
+            i
+            <span
+              aria-hidden
+              className="absolute rounded-full"
+              style={{
+                width: "0.235em",
+                height: "0.235em",
+                left: "50%",
+                top: "0.02em",
+                transform: "translateX(-50%)",
+                background: "linear-gradient(150deg, #8ee24d 10%, #57c01f 90%)",
+              }}
+            />
+          </span>
+        </span>
       )}
     </span>
   );

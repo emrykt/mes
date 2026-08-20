@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* TURI wordmark face — rounded geometric sans matching the brand logo. */
+@font-face {
+  font-family: "Turi";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/fredoka-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Turi";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/fredoka-700.woff2") format("woff2");
+}
+
 @theme {
   --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
 

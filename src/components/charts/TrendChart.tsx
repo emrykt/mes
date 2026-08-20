@@ -97,7 +97,7 @@ export default function TrendChart({
                 x={PAD.l - 7}
                 y={y(tk) + 3.5}
                 textAnchor="end"
-                fontSize={10}
+                fontSize={13}
                 fill="var(--color-muted)"
                 style={{ fontVariantNumeric: "tabular-nums" }}
               >
@@ -114,7 +114,7 @@ export default function TrendChart({
                   x={x(i)}
                   y={H - 6}
                   textAnchor="middle"
-                  fontSize={10}
+                  fontSize={13}
                   fill="var(--color-muted)"
                 >
                   {lb}
@@ -176,7 +176,7 @@ export default function TrendChart({
           <text
             x={x(n - 1) + 9}
             y={y(primary.values[n - 1]) + 4}
-            fontSize={11}
+            fontSize={14}
             fontWeight={600}
             fill="var(--color-ink-2)"
           >

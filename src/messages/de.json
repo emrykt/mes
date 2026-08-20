@@ -797,7 +797,8 @@
       "create": "Auftrag anlegen",
       "created": "Auftrag {id} mit {steps} Arbeitsplan-Schritten angelegt (nur Vorschau).",
       "allCustomers": "Alle Kunden",
-      "allStatuses": "Alle Status"
+      "allStatuses": "Alle Status",
+      "capacityAiPick": "{count} Maschinen — KI weist {station} zu (geringste Auslastung)"
     },
     "executive": {
       "title": "Werkspuls",

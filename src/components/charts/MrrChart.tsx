@@ -81,7 +81,7 @@ export default function MrrChart({ data }: { data: Point[] }) {
               x={PAD.l - 8}
               y={y(tk) + 3.5}
               textAnchor="end"
-              fontSize={10}
+              fontSize={13}
               fill="var(--color-muted)"
               style={{ fontVariantNumeric: "tabular-nums" }}
             >
@@ -98,7 +98,7 @@ export default function MrrChart({ data }: { data: Point[] }) {
                 x={x(i)}
                 y={H - 8}
                 textAnchor="middle"
-                fontSize={10}
+                fontSize={13}
                 fill="var(--color-muted)"
               >
                 {monthLabel(d.month)}
@@ -151,7 +151,7 @@ export default function MrrChart({ data }: { data: Point[] }) {
         <text
           x={x(data.length - 1) + 10}
           y={y(last.value) + 4}
-          fontSize={11}
+          fontSize={14}
           fontWeight={600}
           fill="var(--color-ink-2)"
         >

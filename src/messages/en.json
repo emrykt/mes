@@ -797,7 +797,8 @@
       "create": "Create order",
       "created": "Order {id} created with {steps} routing steps (preview only).",
       "allCustomers": "All customers",
-      "allStatuses": "All statuses"
+      "allStatuses": "All statuses",
+      "capacityAiPick": "{count} machines — AI assigns to {station} (least loaded)"
     },
     "executive": {
       "title": "Plant pulse",

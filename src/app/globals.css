@@ -44,7 +44,7 @@
 
 /* Slightly larger base type across every screen (Tailwind rem sizes scale). */
 html {
-  font-size: 106.25%; /* 17px base */
+  font-size: 112.5%; /* 18px base — larger, more legible type everywhere */
   -webkit-text-size-adjust: 100%; /* iOS: don't auto-inflate text */
 }
 

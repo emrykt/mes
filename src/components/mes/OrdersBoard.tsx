@@ -12,6 +12,7 @@ import {
   Pencil,
   Plus,
   Search,
+  Sparkles,
   X,
 } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
@@ -19,7 +20,7 @@ import { ProgressBar, StepChip } from "@/components/mes/mes-ui";
 import { Card, Table, Td, Th } from "@/components/ui";
 import { currentStep, orderDone, orderProgress } from "@/lib/mes-calc";
 import { rootCauseFor, type RootCauseKind } from "@/lib/insights";
-import { CUSTOMER_POOL, buildMaterial, estimateMinutes } from "@/lib/sim";
+import { CUSTOMER_POOL, SIM_STATIONS, buildMaterial, estimateMinutes } from "@/lib/sim";
 import type { MaterialSpec, MesOrder, OperationDef } from "@/lib/mes-types";
 import { formatShortDate } from "@/lib/format";
 
@@ -70,6 +71,26 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
     () => [...new Set(orders.map((o) => o.customer))].sort((a, b) => a.localeCompare(b)),
     [orders],
   );
+
+  // Capacity per operation across same-type stations, for the routing builder.
+  // The AI auto-picks the least-loaded station; only shown when >1 station.
+  const capacityByOp = useMemo(() => {
+    const byOp = new Map<string, { name: string; load: number }[]>();
+    for (const ls of snap?.stations ?? []) {
+      const def = SIM_STATIONS.find((d) => d.id === ls.id);
+      if (!def) continue;
+      const arr = byOp.get(def.operationId) ?? [];
+      arr.push({ name: def.name, load: ls.currentOrderIds.length });
+      byOp.set(def.operationId, arr);
+    }
+    const map: Record<string, { count: number; recommended: string; stations: { name: string; load: number }[] }> = {};
+    for (const [opId, sts] of byOp) {
+      if (sts.length < 2) continue;
+      const recommended = [...sts].sort((a, b) => a.load - b.load)[0];
+      map[opId] = { count: sts.length, recommended: recommended.name, stations: sts };
+    }
+    return map;
+  }, [snap?.stations]);
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const nowMs = snap ? new Date(snap.now).getTime() : Date.now();
@@ -293,6 +314,7 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
       {showNew && (
         <OrderModal
           operations={snap.settings.operations}
+          capacity={capacityByOp}
           onClose={() => setShowNew(false)}
           onSubmit={async (payload) => {
             await dispatch({ type: "createOrder", ...payload });
@@ -305,6 +327,7 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
       {editTarget && (
         <OrderModal
           operations={snap.settings.operations}
+          capacity={capacityByOp}
           initial={editTarget}
           onClose={() => setEditTarget(null)}
           onSubmit={async (payload) => {
@@ -326,11 +349,13 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
 
 function OrderModal({
   operations,
+  capacity,
   initial,
   onClose,
   onSubmit,
 }: {
   operations: OperationDef[];
+  capacity: Record<string, { count: number; recommended: string; stations: { name: string; load: number }[] }>;
   initial?: MesOrder;
   onClose: () => void;
   onSubmit: (payload: {
@@ -546,7 +571,7 @@ function OrderModal({
               const canUp = i > 0 && !st.locked && !steps[i - 1].locked;
               const canDown = i < steps.length - 1 && !st.locked && !steps[i + 1].locked;
               return (
-                <li key={st.id} className="flex items-center gap-2">
+                <li key={st.id} className="flex flex-wrap items-center gap-2">
                   <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-soft text-xs font-semibold text-ink-2">
                     {i + 1}
                   </span>
@@ -597,6 +622,22 @@ function OrderModal({
                       >
                         <X className="size-4" />
                       </button>
+                      {capacity[st.operationId] && (
+                        <p className="flex w-full flex-wrap items-center gap-x-2 gap-y-0.5 pl-8 text-xs">
+                          <span className="inline-flex items-center gap-1 font-medium text-accent-strong">
+                            <Sparkles className="size-3.5" />
+                            {t("capacityAiPick", {
+                              count: capacity[st.operationId].count,
+                              station: capacity[st.operationId].recommended,
+                            })}
+                          </span>
+                          <span className="text-muted">
+                            {capacity[st.operationId].stations
+                              .map((s) => `${s.name}: ${s.load}`)
+                              .join(" · ")}
+                          </span>
+                        </p>
+                      )}
                     </>
                   )}
                 </li>

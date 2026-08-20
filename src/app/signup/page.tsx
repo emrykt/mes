@@ -2,7 +2,7 @@
 
 import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Copy, CreditCard, Gift, Loader2, Lock, Sparkles } from "lucide-react";
 import TuriLogo from "@/components/TuriLogo";
@@ -25,7 +25,6 @@ function SignupInner() {
   const t = useTranslations("signup");
   const tp = useTranslations("plans");
   const params = useSearchParams();
-  const router = useRouter();
 
   const initialPlan = (params.get("plan") ?? "AIPRO").toUpperCase();
   const [plan, setPlan] = useState<PlanId>(
@@ -407,7 +406,10 @@ function SignupInner() {
             </div>
 
             <button
-              onClick={() => router.push("/mes")}
+              onClick={() => {
+                // full navigation so the auth provider re-reads the new session cookie
+                window.location.href = "/mes";
+              }}
               className="btn-sheen mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-3 text-sm font-medium text-white hover:bg-accent-strong"
             >
               {t("openWorkspace")}

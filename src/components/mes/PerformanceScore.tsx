@@ -100,22 +100,24 @@ export default function PerformanceScore() {
           </div>
           <p className="mt-0.5 text-xs text-muted">{t("subtitle")}</p>
 
-          <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2.5 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
             {FACTOR_KEYS.map((key) => {
               const f = score.factors.find((x) => x.key === key)!;
               const fc = BAND_COLOR[bandOf(f.value * 1000)];
               return (
-                <div key={key} className="flex items-center gap-2">
-                  <span className="w-32 shrink-0 truncate text-xs text-ink-2">{t(`factor.${key}`)}</span>
-                  <div className="h-2 grow overflow-hidden rounded-full bg-neutral-soft">
+                <div key={key} className="min-w-0">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="truncate text-xs text-ink-2">{t(`factor.${key}`)}</span>
+                    <span className="shrink-0 text-xs font-semibold tabular-nums" style={{ color: fc }}>
+                      {f.points}
+                    </span>
+                  </div>
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-neutral-soft">
                     <div
                       className="h-full rounded-full"
                       style={{ width: `${f.value * 100}%`, backgroundColor: fc }}
                     />
                   </div>
-                  <span className="w-9 shrink-0 text-right text-xs font-medium tabular-nums text-ink-2">
-                    {f.points}
-                  </span>
                 </div>
               );
             })}

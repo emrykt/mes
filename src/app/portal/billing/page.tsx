@@ -5,6 +5,7 @@ import { CreditCard, Download, ExternalLink, Loader2 } from "lucide-react";
 import { Card, InvoiceBadge, Table, Td, Th } from "@/components/ui";
 import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 import { usePortalState } from "@/components/portal/PortalState";
+import PortalSubscription from "@/components/portal/PortalSubscription";
 import { PLANS, getTenant, invoicesFor, portalCard, portalTenantId } from "@/lib/data";
 import { formatDate, formatMoney } from "@/lib/format";
 
@@ -64,6 +65,9 @@ function BillingBody() {
           </div>
         </Card>
       )}
+
+      {/* live subscription lifecycle: status, renewal, cancel/resume, referral */}
+      <PortalSubscription />
 
       {/* current subscription — reflects live plan price + retention add-on */}
       <Card title={t("currentSubTitle")}>

@@ -91,7 +91,7 @@ export default function LandingPage() {
             <p className="mt-5 max-w-xl text-lg text-white/70 text-pretty">{t("heroSubtitle")}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href="/login"
+                href="/signup?plan=AIPRO"
                 className="btn-sheen inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-base font-medium text-white shadow-lg shadow-accent/30 hover:bg-accent-strong"
               >
                 {t("ctaTrial")}
@@ -178,7 +178,7 @@ export default function LandingPage() {
                 features: features[id],
                 popular: id === "AIPRO",
                 cta: plan.contact ? t("contactCta") : t("choosePlan", { plan: tp(id) }),
-                href: "/portal",
+                href: plan.contact ? "/#contact" : `/signup?plan=${id}`,
               };
             })}
             labels={{
@@ -208,7 +208,7 @@ export default function LandingPage() {
             <p className="mt-2 max-w-xl text-white/85">{t("ctaBandSubtitle")}</p>
           </div>
           <Link
-            href="/login"
+            href="/signup?plan=AIPRO"
             className="btn-sheen inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-accent-strong shadow-lg hover:bg-white/90"
           >
             {t("ctaTrial")}

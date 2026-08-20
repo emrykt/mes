@@ -237,6 +237,50 @@ export interface DemoSettings {
    * header. Empty/undefined = use the product wordmark.
    */
   brandLogo?: string;
+  /** Billing subscription lifecycle (cadence, renewal/cancel, referral). */
+  subscription: Subscription;
+}
+
+/** Monthly vs annual billing cadence for a subscription. */
+export type BillingPeriod = "monthly" | "annual";
+
+/**
+ * Subscription lifecycle state.
+ * - trialing: inside a free trial (referred signups get 30 days); becomes
+ *   `active` at the first charge unless cancelled.
+ * - active: paid and renewing.
+ * - canceled: cancellation requested — stays usable until `currentPeriodEnd`
+ *   (the payment day), then the term ends and it becomes `expired`.
+ * - expired: term ended, no access.
+ */
+export type SubStatus = "trialing" | "active" | "canceled" | "expired";
+
+/**
+ * A tenant's subscription (demo-mode; no real Stripe). The active plan itself
+ * stays in `DemoSettings.plan`; this tracks billing cadence, renewal/cancel
+ * lifecycle, and referral credit.
+ */
+export interface Subscription {
+  period: BillingPeriod;
+  status: SubStatus;
+  /** ISO — when the current paid/trial term started. */
+  startedAt: string;
+  /** ISO — renewal/charge date (monthly +30d, annual +365d) or trial end. */
+  currentPeriodEnd: string;
+  /** Once true the customer has cancelled: usable until `currentPeriodEnd`, then expires. */
+  cancelAtPeriodEnd: boolean;
+  /** ISO — when cancellation was requested. */
+  canceledAt?: string;
+  /** This tenant's own code others can sign up with to earn it referral credit. */
+  referralCode: string;
+  /** Referral code this tenant signed up with (if any). */
+  referredByCode?: string;
+  /** Cumulative free months earned from referrals (each referral = 2 months, applied to the term end). */
+  bonusMonthsEarned: number;
+  /** How many paying tenants signed up with this tenant's referral code. */
+  referralCount: number;
+  /** True when the tenant self-served through the public signup flow. */
+  selfServe?: boolean;
 }
 
 /** One purchasable data-retention add-on tier. `price` is the monthly fee (USD). */
@@ -510,6 +554,12 @@ export interface DemoStore {
   schemaVersion?: number;
   /** Company (tenant) id this plant state belongs to — see lib/companies.ts. */
   id: string;
+  /** Display name — overrides the static profile (set for self-serve signups). */
+  companyName?: string;
+  /** Sector label — overrides the static profile (set for self-serve signups). */
+  sector?: string;
+  /** True when the tenant was created through the public self-serve signup flow. */
+  selfServe?: boolean;
   createdAt: string;
   lastTickAt: string;
   /** ISO day the today-counters belong to (daily reset). */
@@ -647,6 +697,10 @@ export type DemoAction =
   | { type: "saveBillingRates"; billingRates: Record<string, number> }
   | { type: "setCurrency"; currency: CurrencyCode }
   | { type: "setPlan"; plan: PlanId }
+  | { type: "setBillingPeriod"; period: BillingPeriod }
+  | { type: "cancelSubscription" }
+  | { type: "resumeSubscription" }
+  | { type: "startPaidPlan"; plan: PlanId; period: BillingPeriod }
   | { type: "ackAlert"; id: string }
   | { type: "saveEscalationRules"; rules: EscalationRule[] }
   | { type: "saveKpiTargets"; targets: Record<string, number> }

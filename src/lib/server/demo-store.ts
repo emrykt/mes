@@ -3,6 +3,8 @@ import path from "node:path";
 import { kvRead, kvWrite, useRedis } from "./kv";
 import { pgRead, pgWrite, usePg } from "./pg";
 import type {
+  CompanyRef,
+  CurrencyCode,
   DemoAction,
   DemoSnapshot,
   DemoStore,
@@ -11,6 +13,7 @@ import type {
   SavedQuote,
   StockItem,
 } from "../demo-types";
+import type { PlanId } from "../types";
 import {
   COMPANY_LIST,
   COMPANY_PROFILES,
@@ -25,8 +28,20 @@ import {
   PLAN_ENTITLEMENTS,
   PLAN_RETENTION_MONTHS,
 } from "../data";
-import type { AuthState, AuthUser, Lead, PricingConfig, SiteContent, SiteNav, TenantRole } from "../demo-types";
+import type { AuthState, AuthUser, BillingPeriod, Lead, PricingConfig, SiteContent, SiteNav, Subscription, TenantRole } from "../demo-types";
 import { defaultModules } from "../auth";
+import {
+  addDays,
+  advanceSubscription,
+  creditReferral,
+  defaultSubscription,
+  makeReferralCode,
+  DAY_MS,
+  MONTH_DAYS,
+  REFERRAL_BONUS_MONTHS,
+  TRIAL_DAYS,
+  YEAR_DAYS,
+} from "../subscription";
 import { hashPassword } from "./password";
 import { KPI_DEFS, defaultKpiTargets, kpiStatus } from "../kpi";
 import type { MesOrder, RoutingStep } from "../mes-types";
@@ -73,7 +88,7 @@ declare global {
  * structural change must reach EXISTING live stores without a reseed.
  *   1 — order-number prefix SIP- → WO-
  */
-const CURRENT_SCHEMA = 1;
+const CURRENT_SCHEMA = 2;
 
 /**
  * Version of the bundled default marketing content (nav + landing sections).
@@ -178,6 +193,61 @@ function seedActiveOrders(store: DemoStore, now: Date): void {
   }
 }
 
+/**
+ * Varied per-company subscription seed so the admin + portal views have
+ * something real to show: a long-running annual account, a cancel-scheduled
+ * annual account, a monthly account near renewal, and a referred trial.
+ */
+function seedSubscription(profile: CompanyProfile, now: Date): Subscription {
+  const code = makeReferralCode(profile.id);
+  switch (profile.id) {
+    case "baylor-sheet": {
+      // established annual account that referred one paying customer (+2 mo)
+      const sub = defaultSubscription(profile.id, now, {
+        period: "annual",
+        startedDaysAgo: 200,
+        referralCode: code,
+      });
+      sub.referralCount = 1;
+      sub.bonusMonthsEarned = REFERRAL_BONUS_MONTHS;
+      sub.currentPeriodEnd = addDays(sub.currentPeriodEnd, REFERRAL_BONUS_MONTHS * MONTH_DAYS);
+      return sub;
+    }
+    case "aegean-precision": {
+      // annual account that has requested cancellation — runs until period end
+      const sub = defaultSubscription(profile.id, now, {
+        period: "annual",
+        startedDaysAgo: YEAR_DAYS - 38,
+        referralCode: code,
+      });
+      sub.cancelAtPeriodEnd = true;
+      sub.canceledAt = new Date(now.getTime() - 3 * DAY_MS).toISOString();
+      return sub;
+    }
+    case "northgate-works":
+      // monthly account, renews in ~12 days
+      return defaultSubscription(profile.id, now, {
+        period: "monthly",
+        startedDaysAgo: MONTH_DAYS - 12,
+        referralCode: code,
+      });
+    case "ironside-shop": {
+      // referred customer still inside the 30-day free trial
+      const sub = defaultSubscription(profile.id, now, {
+        period: "monthly",
+        trial: true,
+        referredByCode: makeReferralCode("baylor-sheet"),
+        referralCode: code,
+      });
+      sub.startedAt = new Date(now.getTime() - 21 * DAY_MS).toISOString();
+      sub.currentPeriodEnd = addDays(sub.startedAt, TRIAL_DAYS);
+      return sub;
+    }
+    default:
+      return defaultSubscription(profile.id, now, { period: "monthly", referralCode: code });
+  }
+}
+
 function seedStore(now: Date, profile: CompanyProfile): DemoStore {
   const stationDefs = profile.stationIds
     .map((id) => SIM_STATIONS.find((d) => d.id === id))
@@ -186,6 +256,8 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
     version: 1,
     schemaVersion: CURRENT_SCHEMA,
     id: profile.id,
+    companyName: profile.name,
+    sector: profile.sector,
     createdAt: now.toISOString(),
     lastTickAt: now.toISOString(),
     currentDay: isoDay(now),
@@ -222,6 +294,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
       escalationRules: DEFAULT_ESCALATION_RULES.map((r) => ({ ...r })),
       kpiTargets: defaultKpiTargets(profile),
       retentionAddonYears: 0,
+      subscription: seedSubscription(profile, now),
     },
     alerts: [],
     quotes: seedQuotes(now),
@@ -359,6 +432,133 @@ function seedMulti(now: Date): MultiStore {
     siteVersion: CURRENT_SITE_VERSION,
     leads: [],
     auth: seedAuth(now),
+  };
+}
+
+/* --------------------------- self-serve signup --------------------------- */
+
+/** Cap on self-serve tenants kept in the shared demo (oldest pruned). */
+const MAX_SELF_SERVE = 12;
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 24) || "shop";
+}
+
+/** Find the tenant that owns a referral code (case-insensitive), if any. */
+function findByReferral(multi: MultiStore, code: string): DemoStore | undefined {
+  const c = code.trim().toUpperCase();
+  if (!c) return undefined;
+  return Object.values(multi.companies).find(
+    (s) => s.settings.subscription?.referralCode?.toUpperCase() === c,
+  );
+}
+
+export interface SignupInput {
+  company: string;
+  sector?: string;
+  currency?: CurrencyCode;
+  plan: PlanId;
+  period: BillingPeriod;
+  ownerName: string;
+  email: string;
+  password: string;
+  referralCode?: string;
+}
+
+export interface SignupResult {
+  ok: boolean;
+  error?: string;
+  tenantId?: string;
+  userId?: string;
+  trial?: boolean;
+  referralApplied?: boolean;
+  /** The new tenant's own referral code (to share). */
+  referralCode?: string;
+}
+
+/**
+ * Create a brand-new self-serve tenant: a working plant seeded from the base
+ * profile but carrying the customer's own name / plan / currency, plus an owner
+ * login and a fresh subscription. A valid referral code puts the new tenant on
+ * a 30-day free trial and credits the referrer with 2 free months.
+ */
+export function createTenant(multi: MultiStore, input: SignupInput, now: Date): SignupResult {
+  const email = input.email.trim().toLowerCase();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, error: "invalidEmail" };
+  if ((input.password ?? "").length < 6) return { ok: false, error: "weakPassword" };
+  if (!input.company.trim()) return { ok: false, error: "missingCompany" };
+
+  multi.auth ??= seedAuth(now);
+  if (multi.auth.users.some((u) => u.email?.toLowerCase() === email)) {
+    return { ok: false, error: "emailTaken" };
+  }
+
+  // unique tenant id
+  const base = slugify(input.company);
+  let id = base;
+  let n = 1;
+  while (multi.companies[id]) id = `${base}-${++n}`;
+
+  // seed a working plant from the base profile, then re-badge it
+  const store = seedStore(now, companyProfile(DEFAULT_COMPANY_ID));
+  store.id = id;
+  store.companyName = input.company.trim();
+  store.sector = input.sector?.trim() || companyProfile(DEFAULT_COMPANY_ID).sector;
+  store.selfServe = true;
+  store.settings.plan = input.plan;
+  if (input.currency) store.settings.currency = input.currency;
+
+  // referral: new tenant trials 30 days, referrer earns 2 free months
+  const referrer = input.referralCode ? findByReferral(multi, input.referralCode) : undefined;
+  const referralApplied = Boolean(referrer);
+  store.settings.subscription = defaultSubscription(id, now, {
+    period: input.period,
+    trial: referralApplied,
+    referredByCode: referralApplied ? referrer!.settings.subscription.referralCode : undefined,
+    selfServe: true,
+  });
+  if (referrer) creditReferral(referrer.settings.subscription);
+
+  multi.companies[id] = store;
+
+  // owner login
+  const userId = `tu-${id}-owner`;
+  multi.auth.users.push({
+    id: userId,
+    kind: "tenant",
+    name: input.ownerName.trim() || `${input.company.trim()} Owner`,
+    email,
+    password: hashPassword(input.password),
+    status: "active",
+    createdAt: now.toISOString(),
+    tenantId: id,
+    tenantRole: "owner",
+    modules: defaultModules("owner"),
+  });
+
+  // prune oldest self-serve tenants beyond the cap (keeps the demo tidy)
+  const selfServe = Object.values(multi.companies)
+    .filter((s) => s.selfServe)
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  while (selfServe.length > MAX_SELF_SERVE) {
+    const victim = selfServe.shift()!;
+    if (victim.id === id) break;
+    delete multi.companies[victim.id];
+    multi.auth.users = multi.auth.users.filter((u) => u.tenantId !== victim.id);
+  }
+
+  return {
+    ok: true,
+    tenantId: id,
+    userId,
+    trial: referralApplied,
+    referralApplied,
+    referralCode: store.settings.subscription.referralCode,
   };
 }
 
@@ -637,6 +837,8 @@ function seedMaintenance(now: Date, stationIds: string[]) {
 /** Bring an older persisted store up to the current shape. */
 function migrate(store: DemoStore, now: Date): void {
   store.id ??= DEFAULT_COMPANY_ID;
+  store.companyName ??= companyProfile(store.id).name;
+  store.sector ??= companyProfile(store.id).sector;
   const s = store as DemoStore & { settings: { rates?: unknown } };
   delete s.settings.rates; // FX conversion removed — currency is display-only
   store.settings.plan ??= "AIPRO";
@@ -645,6 +847,7 @@ function migrate(store: DemoStore, now: Date): void {
   store.settings.workingCalendar ??= { shifts: 3, restDays: [] };
   store.settings.kpiTargets ??= defaultKpiTargets(companyProfile(store.id));
   store.settings.retentionAddonYears ??= 0;
+  store.settings.subscription ??= seedSubscription(companyProfile(store.id), now);
   // migrate old cumulative-months add-on → nearest year tier (best effort)
   {
     const legacy = (store.settings as { retentionAddonMonths?: number }).retentionAddonMonths;
@@ -707,6 +910,7 @@ function migrate(store: DemoStore, now: Date): void {
   if (store.schemaVersion < 1) {
     renameOrderPrefix(store, "SIP-", "WO-");
   }
+  // schema 2: subscription lifecycle — already backfilled by the ??= above.
   store.schemaVersion = CURRENT_SCHEMA;
 }
 
@@ -835,6 +1039,11 @@ export function advanceMulti(multi: MultiStore, now: Date): boolean {
 /** Snapshot one company by id (defaults to the first configured company). */
 export function snapshotFor(multi: MultiStore, companyId: string, now: Date): DemoSnapshot {
   const store = multi.companies[companyId] ?? multi.companies[DEFAULT_COMPANY_ID];
+  // Switcher list built from the live stores so self-serve tenants show up too.
+  const companies: CompanyRef[] = Object.values(multi.companies).map((s) => {
+    const p = companyProfile(s.id);
+    return { id: s.id, name: s.companyName ?? p.name, sector: s.sector ?? p.sector };
+  });
   return snapshot(
     store,
     now,
@@ -842,6 +1051,7 @@ export function snapshotFor(multi: MultiStore, companyId: string, now: Date): De
     multi.siteNav ?? cloneSiteNav(),
     multi.siteContent ?? cloneSiteContent(),
     multi.leads ?? [],
+    companies,
   );
 }
 
@@ -904,10 +1114,16 @@ export function applyActionMulti(
 /* ------------------------------ ticking ---------------------------- */
 
 export function advance(store: DemoStore, now: Date): boolean {
+  // subscription lifecycle (renew / trial-end / cancel-expire) — day-grained,
+  // evaluated every load even when no plant minutes elapsed
+  const subChanged = store.settings.subscription
+    ? advanceSubscription(store.settings.subscription, now)
+    : false;
+
   let t = new Date(store.lastTickAt).getTime();
   const target = now.getTime();
   let elapsedMin = Math.floor((target - t) / 60000);
-  if (elapsedMin <= 0) return false;
+  if (elapsedMin <= 0) return subChanged;
   if (elapsedMin > MAX_CATCHUP_MIN) {
     t = target - MAX_CATCHUP_MIN * 60000;
     elapsedMin = MAX_CATCHUP_MIN;
@@ -1482,6 +1698,42 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
     case "setPlan":
       store.settings.plan = action.plan;
       break;
+    case "setBillingPeriod": {
+      // Switch cadence; the change takes effect from the next renewal, so we
+      // just re-base the running term to the new period length.
+      const sub = store.settings.subscription;
+      if (sub && sub.period !== action.period) {
+        sub.period = action.period;
+      }
+      break;
+    }
+    case "cancelSubscription": {
+      const sub = store.settings.subscription;
+      if (sub && (sub.status === "active" || sub.status === "trialing")) {
+        sub.cancelAtPeriodEnd = true;
+        sub.canceledAt = now.toISOString();
+      }
+      break;
+    }
+    case "resumeSubscription": {
+      const sub = store.settings.subscription;
+      if (sub && sub.cancelAtPeriodEnd && (sub.status === "active" || sub.status === "trialing")) {
+        sub.cancelAtPeriodEnd = false;
+        sub.canceledAt = undefined;
+      }
+      break;
+    }
+    case "startPaidPlan": {
+      // Convert a trial / re-activate an expired account into a paid plan.
+      store.settings.plan = action.plan;
+      store.settings.subscription = defaultSubscription(store.id, now, {
+        period: action.period,
+        referralCode: store.settings.subscription?.referralCode,
+        referredByCode: store.settings.subscription?.referredByCode,
+        selfServe: store.settings.subscription?.selfServe,
+      });
+      break;
+    }
     case "setFeature":
       store.settings.features[action.feature] = action.enabled;
       break;
@@ -1622,8 +1874,11 @@ export function snapshot(
   siteNav: SiteNav,
   siteContent: SiteContent,
   leads: Lead[],
+  companies?: CompanyRef[],
 ): DemoSnapshot {
   const profile = companyProfile(store.id);
+  const companyName = store.companyName ?? profile.name;
+  const sector = store.sector ?? profile.sector;
   const planMonths = PLAN_RETENTION_MONTHS[store.settings.plan];
   const addonYears = store.settings.retentionAddonYears ?? 0;
   // Add-on defines the TOTAL retention target (never below the plan's window).
@@ -1645,10 +1900,10 @@ export function snapshot(
   };
   return {
     now: now.toISOString(),
-    companyId: profile.id,
-    companyName: profile.name,
-    sector: profile.sector,
-    companies: COMPANY_LIST,
+    companyId: store.id,
+    companyName,
+    sector,
+    companies: companies ?? COMPANY_LIST,
     stations: store.stations,
     orders: store.orders,
     andon: [...store.andon].sort((a, b) => b.at.localeCompare(a.at)).slice(0, 30),

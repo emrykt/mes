@@ -950,7 +950,20 @@
       "aiBelowReorder": "{name} ist auf/unter Meldebestand — jetzt nachbestellen.",
       "aiRunsOut": "{name} reicht bei aktuellem Verbrauch noch ~{days} Tage — bald nachbestellen.",
       "aiWatch": "{name} wird knapp — im Auge behalten.",
-      "aiUsage": "Ø Verbrauch: {rate} {unit}/Tag"
+      "aiUsage": "Ø Verbrauch: {rate} {unit}/Tag",
+      "aiBelowSafety": "{name} ist auf/unter Sicherheitsbestand — sofort auffüllen.",
+      "addTitle": "Bestand hinzufügen",
+      "addHint": "Neues Rohmaterial mit Sicherheitsbestand anlegen.",
+      "fMaterial": "Material",
+      "fForm": "Form",
+      "fUnit": "Einheit",
+      "fDimension": "Abmessung",
+      "fOnHand": "Bestand",
+      "fReorder": "Meldebestand",
+      "fSafety": "Sicherheitsbestand",
+      "fSafetyHint": "Sicherheitsbestand speist die KI-Warnungen — Sie werden vorher gewarnt.",
+      "fCost": "Kosten / kg",
+      "addSave": "Hinzufügen"
     },
     "scrap": {
       "title": "Ausschuss / Abfall",
@@ -1153,7 +1166,22 @@
       "title": "Potenziell entgangener Umsatz (heute)",
       "subtitle": "Nicht abrechenbare Kapazität + Ausschuss — was die Plattform zurückholt.",
       "downtime": "Ungenutzte Kapazität (Stillstand)",
-      "scrap": "Ausschuss"
+      "scrap": "Ausschuss",
+      "breaksExcluded": "Pausen (ausgenommen)",
+      "minutes": "{min}′"
+    },
+    "customers": {
+      "title": "Kunden",
+      "subtitle": "{count} Kundenkarten",
+      "add": "Kunde hinzufügen",
+      "fName": "Firmenname",
+      "fContact": "Ansprechpartner",
+      "fEmail": "E-Mail",
+      "fPhone": "Telefon",
+      "fNotes": "Notizen",
+      "save": "Kunde speichern",
+      "added": "Kunde hinzugefügt",
+      "none": "Noch keine Kunden — legen Sie den ersten an."
     }
   },
   "portalUsers": {

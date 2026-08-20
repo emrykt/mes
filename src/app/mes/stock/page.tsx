@@ -8,6 +8,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card, StatCard, Table, Td, Th } from "@/components/ui";
 import StockAiAlerts from "@/components/mes/StockAiAlerts";
+import StockAddForm from "@/components/mes/StockAddForm";
 import { formatCost } from "@/lib/currency";
 import type { MaterialForm, StockItem, StockMoveType } from "@/lib/demo-types";
 
@@ -101,6 +102,10 @@ export default function StockScreen() {
 
       <div className="mt-5">
         <StockAiAlerts />
+      </div>
+
+      <div className="mt-5">
+        <StockAddForm />
       </div>
 
       <Card title={t("itemsTitle")} subtitle={t("itemsHint")} className="mt-5" padded={false}>

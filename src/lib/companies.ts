@@ -61,9 +61,10 @@ export const COMPANY_PROFILES: CompanyProfile[] = [
     plan: "AIPRO",
     features: ALL_FEATURES,
     workingCalendar: { shifts: 3, restDays: [] },
-    scenario: { breakdownRate: 0.0030, scrapRate: 0.012, seedWip: 34, seedBacklog: 22, refillTarget: 46 },
-    utilFactor: 1.06,
-    histFactor: 1.0,
+    // flagship demo account — packed shop, minute-by-minute flow, every station busy
+    scenario: { breakdownRate: 0.0012, scrapRate: 0.011, seedWip: 60, seedBacklog: 34, refillTarget: 68 },
+    utilFactor: 1.16,
+    histFactor: 1.05,
   },
   {
     id: "aegean-precision",

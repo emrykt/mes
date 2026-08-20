@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Loader2, Plus, Printer, Save, Search, Trash2, X } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
 import BrandLogoUpload from "@/components/BrandLogoUpload";
+import CustomerCard from "@/components/mes/CustomerCard";
 import { Card, Table, Td, Th } from "@/components/ui";
 import { formatCost } from "@/lib/currency";
 import { formatShortDate } from "@/lib/format";
@@ -215,7 +216,7 @@ th,td{border-bottom:1px solid #ddd;padding:8px 6px;font-size:13px}th{text-align:
                   className={`${inputClass} mt-1 w-full`}
                 />
                 <datalist id="quote-customers">
-                  {CUSTOMER_POOL.map((c) => (
+                  {[...new Set([...(snap.customers ?? []).map((c) => c.name), ...CUSTOMER_POOL])].map((c) => (
                     <option key={c} value={c} />
                   ))}
                 </datalist>
@@ -531,6 +532,9 @@ th,td{border-bottom:1px solid #ddd;padding:8px 6px;font-size:13px}th{text-align:
           </Table>
         )}
       </Card>
+
+      {/* customer cards — add & browse customers */}
+      <CustomerCard />
     </div>
   );
 }

@@ -657,6 +657,7 @@ function migrate(store: DemoStore, now: Date): void {
   store.stock ??= seedStock();
   store.stockMoves ??= [];
   store.scrapEvents ??= [];
+  store.customers ??= [];
   store.settings.scrapReasons ??= [...DEFAULT_SCRAP_REASONS];
   for (const o of store.orders) assignOrderMaterial(store, o);
   store.settings.features ??= { maintenance: true, barcode: true, quoting: true, stock: true };
@@ -1537,6 +1538,34 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
       });
       break;
     }
+    case "addStockItem": {
+      const a = action.item;
+      if (!a.materialType?.trim()) return;
+      const id = `stk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      store.stock.push({ ...a, id, onHand: Math.max(0, a.onHand || 0) });
+      if ((a.onHand ?? 0) > 0)
+        store.stockMoves.unshift({
+          id: `mv-${Date.now()}-${id}-receipt`,
+          at: now.toISOString(),
+          stockItemId: id,
+          type: "receipt",
+          qty: r1(a.onHand),
+        });
+      break;
+    }
+    case "addCustomer": {
+      const c = action.customer;
+      if (!c.name?.trim()) return;
+      store.customers ??= [];
+      if (store.customers.some((x) => x.name.toLowerCase() === c.name.trim().toLowerCase())) return;
+      store.customers.unshift({
+        ...c,
+        name: c.name.trim(),
+        id: `cus-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        createdAt: now.toISOString(),
+      });
+      break;
+    }
     case "adjustStock": {
       const item = store.stock.find((s) => s.id === action.stockItemId);
       if (!item) return;
@@ -1629,6 +1658,7 @@ export function snapshot(
     stock: store.stock,
     stockMoves: [...store.stockMoves].slice(0, 40),
     scrapEvents: [...store.scrapEvents].slice(0, 200),
+    customers: store.customers ?? [],
     settings: gatedSettings,
     pricing,
     siteNav,

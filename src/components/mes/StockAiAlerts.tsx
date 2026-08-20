@@ -35,11 +35,13 @@ export default function StockAiAlerts() {
             const crit = f.severity === "critical";
             const days = Number.isFinite(f.daysLeft) ? Math.max(0, Math.round(f.daysLeft)) : null;
             const msg =
-              f.reason === "belowReorder"
-                ? t("aiBelowReorder", { name: f.item.materialType })
-                : days !== null
-                  ? t("aiRunsOut", { name: f.item.materialType, days })
-                  : t("aiWatch", { name: f.item.materialType });
+              f.reason === "belowSafety"
+                ? t("aiBelowSafety", { name: f.item.materialType })
+                : f.reason === "belowReorder"
+                  ? t("aiBelowReorder", { name: f.item.materialType })
+                  : days !== null
+                    ? t("aiRunsOut", { name: f.item.materialType, days })
+                    : t("aiWatch", { name: f.item.materialType });
             return (
               <li
                 key={f.item.id}

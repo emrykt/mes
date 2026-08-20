@@ -950,7 +950,20 @@
       "aiBelowReorder": "{name} is at/below the reorder level — reorder now.",
       "aiRunsOut": "{name} runs out in ~{days} days at current usage — reorder soon.",
       "aiWatch": "{name} is trending low — keep an eye on it.",
-      "aiUsage": "Avg use: {rate} {unit}/day"
+      "aiUsage": "Avg use: {rate} {unit}/day",
+      "aiBelowSafety": "{name} is at/below safety stock — replenish immediately.",
+      "addTitle": "Add stock item",
+      "addHint": "Register a new raw material with its safety-stock buffer.",
+      "fMaterial": "Material",
+      "fForm": "Form",
+      "fUnit": "Unit",
+      "fDimension": "Dimension",
+      "fOnHand": "On hand",
+      "fReorder": "Reorder at",
+      "fSafety": "Safety stock",
+      "fSafetyHint": "Safety stock feeds the AI alerts — you're warned before you dip into it.",
+      "fCost": "Cost / kg",
+      "addSave": "Add item"
     },
     "scrap": {
       "title": "Scrap / waste",
@@ -1153,7 +1166,22 @@
       "title": "Potential lost revenue (today)",
       "subtitle": "Capacity you couldn't bill + scrap — what the platform helps you recover.",
       "downtime": "Idle capacity (downtime)",
-      "scrap": "Scrap"
+      "scrap": "Scrap",
+      "breaksExcluded": "Breaks (excluded)",
+      "minutes": "{min}′"
+    },
+    "customers": {
+      "title": "Customers",
+      "subtitle": "{count} customer cards",
+      "add": "Add customer",
+      "fName": "Company name",
+      "fContact": "Contact person",
+      "fEmail": "Email",
+      "fPhone": "Phone",
+      "fNotes": "Notes",
+      "save": "Save customer",
+      "added": "Customer added",
+      "none": "No customers yet — add your first."
     }
   },
   "portalUsers": {

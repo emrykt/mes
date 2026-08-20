@@ -97,9 +97,23 @@ export interface StockItem {
   onHand: number;
   /** reorder level in `unit`. */
   reorder: number;
+  /** safety-stock buffer in `unit` — the minimum to always keep on hand; the AI
+   *  alerts warn before stock dips into it. */
+  safetyStock?: number;
   costPerKg: number;
   /** reusable offcut returned from a job, used before ordering more. */
   isRemnant?: boolean;
+}
+
+/** A customer record (customer card) managed from Sales. */
+export interface Customer {
+  id: string;
+  name: string;
+  contact?: string;
+  email?: string;
+  phone?: string;
+  notes?: string;
+  createdAt: string;
 }
 
 export type StockMoveType = "issue" | "receipt" | "remnant" | "adjust";
@@ -511,6 +525,8 @@ export interface DemoStore {
   stock: StockItem[];
   stockMoves: StockMove[];
   scrapEvents: ScrapEvent[];
+  /** Sales-managed customer cards (in addition to the seeded pool). */
+  customers?: Customer[];
   settings: DemoSettings;
 }
 
@@ -563,6 +579,8 @@ export interface DemoSnapshot {
   stock: StockItem[];
   stockMoves: StockMove[];
   scrapEvents: ScrapEvent[];
+  /** Sales-managed customer cards. */
+  customers: Customer[];
   settings: DemoSettings;
   /** Global pricing (admin-editable) + this tenant's effective retention. */
   pricing: PricingConfig;
@@ -643,6 +661,8 @@ export type DemoAction =
   | { type: "deleteQuote"; id: string }
   | { type: "restockItem"; stockItemId: string; qty: number }
   | { type: "adjustStock"; stockItemId: string; onHand: number }
+  | { type: "addStockItem"; item: Omit<StockItem, "id"> }
+  | { type: "addCustomer"; customer: Omit<Customer, "id" | "createdAt"> }
   | { type: "setFeature"; feature: keyof FeatureFlags; enabled: boolean }
   | { type: "maintenanceDone"; id: string }
   | { type: "addMaintenance"; stationId: string; title: string; intervalDays: number }

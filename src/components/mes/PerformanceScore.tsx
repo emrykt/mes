@@ -52,43 +52,40 @@ export default function PerformanceScore() {
       }}
     >
       <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:gap-10">
-        {/* gauge — number drawn inside the SVG to avoid overlap */}
+        {/* gauge — number is an HTML overlay (no SVG-text rendering quirks) */}
         <div className="flex shrink-0 flex-col items-center">
-          <svg viewBox="0 0 280 156" className="w-60">
-            <path
-              d="M 26 144 A 118 118 0 0 1 254 144"
-              fill="none"
-              stroke="var(--color-neutral-soft)"
-              strokeWidth={18}
-              strokeLinecap="round"
-            />
-            <path
-              d="M 26 144 A 118 118 0 0 1 254 144"
-              fill="none"
-              stroke={color}
-              strokeWidth={18}
-              strokeLinecap="round"
-              pathLength={1000}
-              strokeDasharray={`${score.total} 1000`}
-              style={{ transition: "stroke-dasharray 0.8s ease, stroke 0.4s ease" }}
-            />
-            <text
-              x={140}
-              y={116}
-              textAnchor="middle"
-              fontSize={52}
-              fontWeight={600}
-              fill={color}
-              style={{ fontVariantNumeric: "tabular-nums" }}
-            >
-              {score.total}
-            </text>
-            <text x={140} y={140} textAnchor="middle" fontSize={13} fill="var(--color-muted)">
-              {t("outOf")}
-            </text>
-          </svg>
+          <div className="relative w-56">
+            <svg viewBox="0 0 280 156" className="w-full">
+              <path
+                d="M 26 144 A 118 118 0 0 1 254 144"
+                fill="none"
+                stroke="var(--color-neutral-soft)"
+                strokeWidth={18}
+                strokeLinecap="round"
+              />
+              <path
+                d="M 26 144 A 118 118 0 0 1 254 144"
+                fill="none"
+                stroke={color}
+                strokeWidth={18}
+                strokeLinecap="round"
+                pathLength={1000}
+                strokeDasharray={`${score.total} 1000`}
+                style={{ transition: "stroke-dasharray 0.8s ease, stroke 0.4s ease" }}
+              />
+            </svg>
+            <div className="pointer-events-none absolute inset-x-0 bottom-1 flex flex-col items-center">
+              <span
+                className="text-5xl font-semibold leading-none tabular-nums"
+                style={{ color }}
+              >
+                {score.total}
+              </span>
+              <span className="mt-1 text-xs text-muted">{t("outOf")}</span>
+            </div>
+          </div>
           <span
-            className="-mt-1 rounded-full px-3 py-0.5 text-xs font-semibold"
+            className="mt-2 rounded-full px-3 py-0.5 text-xs font-semibold"
             style={{ backgroundColor: `${color}22`, color }}
           >
             {t(`band.${score.band}`)}

@@ -7,7 +7,7 @@ export interface StockForecast {
   /** projected days of stock left at the current pace (Infinity = no usage) */
   daysLeft: number;
   severity: "critical" | "warn";
-  reason: "belowReorder" | "runningOut" | "watch";
+  reason: "belowSafety" | "belowReorder" | "runningOut" | "watch";
 }
 
 /**
@@ -35,7 +35,10 @@ export function stockForecasts(
     const dailyUse = (used.get(s.id) ?? 0) / windowDays;
     const daysLeft = dailyUse > 0 ? s.onHand / dailyUse : Infinity;
 
-    if (s.onHand <= s.reorder) {
+    const safety = s.safetyStock ?? 0;
+    if (safety > 0 && s.onHand <= safety) {
+      out.push({ item: s, dailyUse, daysLeft, severity: "critical", reason: "belowSafety" });
+    } else if (s.onHand <= s.reorder) {
       out.push({ item: s, dailyUse, daysLeft, severity: "critical", reason: "belowReorder" });
     } else if (daysLeft <= 6) {
       out.push({ item: s, dailyUse, daysLeft, severity: "critical", reason: "runningOut" });

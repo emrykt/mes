@@ -19,8 +19,6 @@ export default function PortalBillingPage() {
 
 function BillingBody() {
   const t = useTranslations("portalBilling");
-  const tc = useTranslations("common");
-  const tp = useTranslations("plans");
   const { status } = usePortalState();
   const { snap } = useDemo();
 
@@ -68,38 +66,6 @@ function BillingBody() {
 
       {/* live subscription lifecycle: status, renewal, cancel/resume, referral */}
       <PortalSubscription />
-
-      {/* current subscription — reflects live plan price + retention add-on */}
-      <Card title={t("currentSubTitle")}>
-        <dl className="divide-y divide-line/70 text-sm">
-          <div className="flex items-center justify-between py-2">
-            <dt className="text-ink-2">{t("basePlanLabel", { plan: tp(plan) })}</dt>
-            <dd className="font-medium tabular-nums">
-              {planContact ? t("title") : `${formatMoney(basePrice)}${tc("perMonth")}`}
-            </dd>
-          </div>
-          {addonMonthly > 0 && (
-            <div className="flex items-center justify-between py-2">
-              <dt className="text-ink-2">
-                {t("retentionAddonLabel", { months: snap.retention.totalMonths })}
-              </dt>
-              <dd className="font-medium tabular-nums">
-                {formatMoney(addonMonthly)}
-                {tc("perMonth")}
-              </dd>
-            </div>
-          )}
-          {!planContact && (
-            <div className="flex items-center justify-between py-2">
-              <dt className="font-semibold">{t("totalMonthlyLabel")}</dt>
-              <dd className="text-lg font-semibold tabular-nums">
-                {formatMoney(totalMonthly)}
-                <span className="text-xs font-normal text-muted">{tc("perMonth")}</span>
-              </dd>
-            </div>
-          )}
-        </dl>
-      </Card>
 
       <Card title={t("paymentMethod")}>
         <div className="flex flex-wrap items-center justify-between gap-4">

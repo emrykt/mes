@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Prodgence",
+    "appName": "TURI",
     "search": "Search",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -24,9 +24,9 @@
     "CANCELED": "Canceled"
   },
   "plans": {
-    "BASIC": "Standard",
+    "BASIC": "Basic",
     "AIPRO": "AI Pro",
-    "AIULTIMATE": "Enterprise"
+    "AIULTIMATE": "Flexible"
   },
   "invoiceStatus": {
     "paid": "Paid",
@@ -89,7 +89,7 @@
     "heroBadge": "AI-powered Smart Manufacturing",
     "heroTitle": "Turn production data into",
     "heroHighlight": "measurable profit",
-    "heroSubtitle": "Prodgence gives metal shops real-time visibility and an AI that cuts cost, improves process, and turns recovered capacity into profit — set up in minutes, easy for the whole floor, with your data kept secure.",
+    "heroSubtitle": "TURI gives metal shops real-time visibility and an AI that cuts cost, improves process, and turns recovered capacity into profit — set up in minutes, easy for the whole floor, with your data kept secure.",
     "heroLoop": "Data + AI + Workflow + Efficiency",
     "nodeProduction": "Production",
     "nodeQuality": "Quality",
@@ -129,7 +129,12 @@
     "heroStat2V": "98%",
     "heroStat3L": "Quality",
     "heroStat3V": "99%",
-    "heroTrendTitle": "Output — last 7 days"
+    "heroTrendTitle": "Output — last 7 days",
+    "billMonthly": "Monthly",
+    "billAnnual": "Annual",
+    "billAnnualBadge": "Save",
+    "billedMonthlyNote": "billed monthly, cancel anytime",
+    "billedAnnuallyNote": "billed once a year"
   },
   "adminNav": {
     "title": "Admin Panel",
@@ -1088,8 +1093,8 @@
       "revenue": "Today so far: revenue {revenue}, cost {cost}, profit {profit} ({margin}% margin).",
       "lostRevenue": "Downtime has cost about {total} in lost billable revenue today. Biggest loss: {station} ({amount}).\nRecommendation: a stoppage on a high-rate station is the most expensive — protect those first.",
       "lostRevenueNone": "No lost revenue today — no billable downtime.",
-      "greetingReply": "Hello! I'm the Prodgence Smart Manufacturing assistant. Ask me where the bottleneck is, what to improve today, how much revenue we're losing, which machines are down, or an order by its number.",
-      "offtopic": "I'm the Prodgence AI assistant — I can only provide information about production and efficiency.",
+      "greetingReply": "Hello! I'm the TURI Smart Manufacturing assistant. Ask me where the bottleneck is, what to improve today, how much revenue we're losing, which machines are down, or an order by its number.",
+      "offtopic": "I'm the TURI AI assistant — I can only provide information about production and efficiency.",
       "help": "I can help with: the current bottleneck, improvement suggestions, open alerts, efficiency, daily and downtime cost, revenue and lost revenue, machines down, maintenance, output, scrap, backlog, shift and operator comparison, orders at risk, or an order by its number (e.g. WO-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "No clear bottleneck right now — capacity is balanced across operations.",
@@ -1183,6 +1188,13 @@
       "save": "Save customer",
       "added": "Customer added",
       "none": "No customers yet — add your first."
+    },
+    "unusedCap": {
+      "title": "Unused capacity value",
+      "subtitle": "Billable value of the machines idle right now, per working day",
+      "idleMachines": "{n} idle {n, plural, one {machine} other {machines}}",
+      "perDay": "per working day",
+      "restDay": "Today is a rest day — no billable capacity"
     }
   },
   "portalUsers": {

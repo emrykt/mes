@@ -7,10 +7,10 @@ import Testimonials from "@/components/landing/Testimonials";
 import Faq from "@/components/landing/Faq";
 import ContactForm from "@/components/landing/ContactForm";
 import SiteFooter from "@/components/landing/SiteFooter";
+import PricingCards from "@/components/landing/PricingCards";
 import {
   ArrowRight,
   Bot,
-  Check,
   Gauge,
   Rocket,
   ShieldCheck,
@@ -19,7 +19,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { PLANS, PLAN_ORDER } from "@/lib/data";
-import { formatMoney } from "@/lib/format";
 
 type T = ReturnType<typeof useTranslations>;
 
@@ -166,61 +165,33 @@ export default function LandingPage() {
             <h2 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">{t("pricingTitle")}</h2>
             <p className="mt-2 text-center text-sm text-ink-2">{t("pricingSubtitle")}</p>
           </Reveal>
-          <div className="mt-12 grid items-start gap-5 md:grid-cols-3">
-            {PLAN_ORDER.map((id, i) => {
+          <PricingCards
+            plans={PLAN_ORDER.map((id) => {
               const plan = PLANS[id];
-              const popular = id === "AIPRO";
-              return (
-                <Reveal
-                  key={id}
-                  delay={i * 80}
-                  className={`relative rounded-2xl border bg-page p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                    popular ? "border-accent shadow-lg ring-1 ring-accent" : "border-line"
-                  }`}
-                >
-                  {popular && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-3 py-0.5 text-xs font-medium text-white">
-                      {t("mostPopular")}
-                    </span>
-                  )}
-                  <h3 className="text-base font-semibold">{tp(id)}</h3>
-                  <p className="mt-0.5 text-xs text-muted">{tagline[id]}</p>
-                  <p className="mt-3 flex items-baseline gap-1">
-                    {plan.contact ? (
-                      <span className="text-2xl font-semibold tracking-tight">{t("contactPrice")}</span>
-                    ) : (
-                      <>
-                        <span className="text-4xl font-semibold tracking-tight">{formatMoney(plan.monthlyPrice)}</span>
-                        <span className="text-sm text-muted">{tc("perMonth")}</span>
-                      </>
-                    )}
-                  </p>
-                  <ul className="mt-5 space-y-2.5">
-                    {features[id].map((f, k) => {
-                      const heading = f.endsWith(":");
-                      return (
-                        <li
-                          key={k}
-                          className={heading ? "pt-1 text-xs font-semibold text-ink" : "flex items-start gap-2 text-sm text-ink-2"}
-                        >
-                          {!heading && <Check className="mt-0.5 size-4 shrink-0 text-good" />}
-                          {f}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <Link
-                    href="/portal"
-                    className={`btn-sheen mt-6 block rounded-lg px-4 py-2.5 text-center text-sm font-medium ${
-                      popular ? "bg-accent text-white hover:bg-accent-strong" : "border border-line text-ink hover:bg-neutral-soft"
-                    }`}
-                  >
-                    {plan.contact ? t("contactCta") : t("choosePlan", { plan: tp(id) })}
-                  </Link>
-                </Reveal>
-              );
+              return {
+                id,
+                name: tp(id),
+                tagline: tagline[id],
+                contact: plan.contact,
+                monthlyPrice: plan.monthlyPrice,
+                annualPrice: plan.annualPrice,
+                features: features[id],
+                popular: id === "AIPRO",
+                cta: plan.contact ? t("contactCta") : t("choosePlan", { plan: tp(id) }),
+                href: "/portal",
+              };
             })}
-          </div>
+            labels={{
+              monthly: t("billMonthly"),
+              annual: t("billAnnual"),
+              annualBadge: t("billAnnualBadge"),
+              perMonth: tc("perMonth"),
+              billedMonthly: t("billedMonthlyNote"),
+              billedAnnually: t("billedAnnuallyNote"),
+              contactPrice: t("contactPrice"),
+              mostPopular: t("mostPopular"),
+            }}
+          />
           <p className="mt-6 text-center text-xs text-muted">💡 {t("roiNote")}</p>
         </div>
       </section>

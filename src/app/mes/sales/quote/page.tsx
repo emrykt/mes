@@ -123,7 +123,7 @@ export default function SalesQuotePage() {
   const opName = (id: string) =>
     snap.settings.operations.find((o) => o.id === id)?.name ?? id;
 
-  const appName = "Prodgence";
+  const appName = "TURI";
   function openPrint(d: {
     customer: string;
     part?: string;

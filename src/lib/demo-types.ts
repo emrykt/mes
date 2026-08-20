@@ -446,11 +446,13 @@ export interface AuthState {
 /** The signed-in user as returned to the client (never includes the password). */
 export type SessionUser = Omit<AuthUser, "password" | "inviteToken">;
 
-/** Global, admin-editable pricing (not per-company). */
+/** Global, admin-editable pricing (not per-company). All EUR. */
 export interface PricingConfig {
-  /** Base monthly plan prices, by plan id. */
+  /** Monthly-billing price per plan (EUR/month). */
   plans: Record<PlanId, number>;
-  /** Data-retention extension add-ons sold from the customer portal. */
+  /** Annual-billing price per plan (EUR/month, billed yearly — the discounted rate). */
+  plansAnnual?: Record<PlanId, number>;
+  /** Data-retention extension add-ons (removed — kept for back-compat, empty). */
   addonTiers: AddonTier[];
 }
 

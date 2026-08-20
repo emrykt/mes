@@ -21,9 +21,9 @@ export const NOW = new Date("2026-07-07T09:00:00Z");
  * AI Ultimate is "contact us" (multi-plant + API — marketing only this phase).
  */
 export const PLANS: Record<PlanId, PlanDef> = {
-  BASIC: { id: "BASIC", monthlyPrice: 499, contact: false, stripePriceId: "price_basic_monthly_usd" },
-  AIPRO: { id: "AIPRO", monthlyPrice: 999, contact: false, stripePriceId: "price_aipro_monthly_usd" },
-  AIULTIMATE: { id: "AIULTIMATE", monthlyPrice: 1999, contact: true, stripePriceId: "price_ultimate_monthly_usd" },
+  BASIC: { id: "BASIC", monthlyPrice: 749, annualPrice: 499, contact: false, stripePriceId: "price_basic" },
+  AIPRO: { id: "AIPRO", monthlyPrice: 999, annualPrice: 749, contact: false, stripePriceId: "price_aipro" },
+  AIULTIMATE: { id: "AIULTIMATE", monthlyPrice: 1999, annualPrice: 1499, contact: true, stripePriceId: "price_flexible" },
 };
 
 export const PLAN_ORDER: PlanId[] = ["BASIC", "AIPRO", "AIULTIMATE"];
@@ -76,7 +76,10 @@ export const PLAN_RETENTION_MONTHS: Record<PlanId, number> = {
  * is not shown to customers (portal renders "Contact us").
  */
 export const DEFAULT_PRICING: PricingConfig = {
-  plans: { BASIC: 499, AIPRO: 999, AIULTIMATE: 1999 },
+  // monthly-billing price (EUR/mo)
+  plans: { BASIC: 749, AIPRO: 999, AIULTIMATE: 1999 },
+  // annual-billing price (EUR/mo, billed yearly — the discounted headline rate)
+  plansAnnual: { BASIC: 499, AIPRO: 749, AIULTIMATE: 1499 },
   addonTiers: [],
 };
 
@@ -96,7 +99,7 @@ function menuImage(a: string, b: string, label: string): string {
 
 /**
  * Default landing-page mega-menu (admin-editable at runtime). Seeded with rich,
- * trust-building content that mirrors the actual Prodgence product surface.
+ * trust-building content that mirrors the actual TURI product surface.
  */
 export const DEFAULT_SITE_NAV: SiteNav = {
   menus: [
@@ -124,7 +127,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
       label: "Solutions",
       image: menuImage("#16a34a", "#2f74d0", "Solutions"),
       headline: "Built for how metalworking shops actually run",
-      intro: "Whether you cut sheet, turn shafts or do both, Prodgence adapts to your operations — no two-year rollout.",
+      intro: "Whether you cut sheet, turn shafts or do both, TURI adapts to your operations — no two-year rollout.",
       ctaLabel: "Explore pricing",
       ctaHref: "#pricing",
       items: [
@@ -166,11 +169,11 @@ export const DEFAULT_SITE_NAV: SiteNav = {
       ctaLabel: "Talk to sales",
       ctaHref: "/portal",
       items: [
-        { title: "About Prodgence", description: "Our mission: turn shop-floor data into profit.", href: "#", icon: "building" },
+        { title: "About TURI", description: "Our mission: turn shop-floor data into profit.", href: "#", icon: "building" },
         { title: "Trust & compliance", description: "The measures we take to keep your data secure and available.", href: "#", icon: "shield" },
         { title: "Careers", description: "Join us building the platform for modern manufacturing.", href: "#", icon: "users" },
         { title: "Newsroom", description: "Announcements, milestones and press.", href: "#", icon: "newspaper" },
-        { title: "Partners", description: "Integrators and resellers extending Prodgence.", href: "#", icon: "handshake" },
+        { title: "Partners", description: "Integrators and resellers extending TURI.", href: "#", icon: "handshake" },
         { title: "Contact sales", description: "Get a tailored walkthrough for your shop.", href: "/portal", icon: "phone" },
       ],
     },
@@ -204,7 +207,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   testimonials: {
     enabled: true,
     headline: "What shop floors say",
-    intro: "Teams from cutting to the front office run their day on Prodgence.",
+    intro: "Teams from cutting to the front office run their day on TURI.",
     items: [
       {
         quote:
@@ -232,7 +235,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   faq: {
     enabled: true,
     headline: "Frequently asked questions",
-    intro: "Everything you need to evaluate Prodgence with confidence.",
+    intro: "Everything you need to evaluate TURI with confidence.",
     items: [
       {
         question: "How long does it take to go live?",
@@ -268,7 +271,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
   contact: {
     enabled: true,
-    headline: "See Prodgence on your shop floor",
+    headline: "See TURI on your shop floor",
     intro: "Tell us a little about your operation and we'll set up a tailored walkthrough. No obligation.",
     submitLabel: "Request a demo",
     successMessage: "Thanks — we've received your request and will be in touch shortly.",
@@ -320,7 +323,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { icon: "youtube", label: "YouTube", href: "#" },
       { icon: "github", label: "GitHub", href: "#" },
     ],
-    legal: "© 2026 Prodgence. All rights reserved.",
+    legal: "© 2026 TURI. All rights reserved.",
   },
 };
 

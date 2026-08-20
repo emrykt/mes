@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ChevronDown, Factory, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { NavIcon } from "@/lib/nav-icons";
 import { useSiteConfig } from "@/lib/useSiteConfig";
@@ -51,7 +52,6 @@ function PanelLink({ item, onClick }: { item: NavLinkT; onClick: () => void }) {
  */
 export default function SiteNav() {
   const t = useTranslations("landing");
-  const tc = useTranslations("common");
   const [solid, setSolid] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,13 +99,8 @@ export default function SiteNav() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
         {/* brand */}
-        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpenId(null)}>
-          <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white shadow-sm">
-            <Factory className="size-4.5" />
-          </span>
-          <span className={`text-lg font-semibold tracking-tight ${lit ? "text-ink" : "text-white"}`}>
-            {tc("appName")}
-          </span>
+        <Link href="/" className="flex items-center" onClick={() => setOpenId(null)}>
+          <TuriLogo className="h-8 w-8" wordClass={lit ? "text-ink" : "text-white"} />
         </Link>
 
         {/* desktop menus */}

@@ -53,7 +53,7 @@ function PlanControl() {
                 )}
               </div>
               <p className="mt-1 text-xs text-muted">
-                {PLANS[id].contact ? tc("contactPrice") : `$${PLANS[id].monthlyPrice}`}
+                {PLANS[id].contact ? tc("contactPrice") : `€${PLANS[id].monthlyPrice}`}
               </p>
               <ul className="mt-3 space-y-1">
                 {perks.map((p) => (

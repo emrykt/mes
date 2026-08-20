@@ -245,6 +245,7 @@ function seedStore(now: Date, profile: CompanyProfile): DemoStore {
 function clonePricing(): PricingConfig {
   return {
     plans: { ...DEFAULT_PRICING.plans },
+    plansAnnual: DEFAULT_PRICING.plansAnnual ? { ...DEFAULT_PRICING.plansAnnual } : undefined,
     addonTiers: DEFAULT_PRICING.addonTiers.map((a) => ({ ...a })),
   };
 }

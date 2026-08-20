@@ -76,7 +76,7 @@ function JoinInner() {
           <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-white shadow-sm">
             <Factory className="size-5" />
           </span>
-          <span className="text-xl font-semibold tracking-tight">Prodgence</span>
+          <span className="text-xl font-semibold tracking-tight">TURI</span>
         </Link>
 
         <div className="rounded-2xl border border-line bg-surface p-7 shadow-sm">

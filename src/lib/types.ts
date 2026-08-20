@@ -9,9 +9,11 @@ export type PlanId = "BASIC" | "AIPRO" | "AIULTIMATE";
 
 export interface PlanDef {
   id: PlanId;
-  /** Reference monthly price (USD). Used for MRR even when `contact` hides it. */
+  /** Monthly-billing price (EUR/mo). Used for MRR even when `contact` hides it. */
   monthlyPrice: number;
-  /** Ultimate is "contact us" — the number is hidden on the pricing page. */
+  /** Annual-billing price (EUR/mo, billed yearly — the discounted rate). */
+  annualPrice: number;
+  /** Flexible (top) is "contact us" — the number is hidden on the pricing page. */
   contact: boolean;
   stripePriceId: string;
 }

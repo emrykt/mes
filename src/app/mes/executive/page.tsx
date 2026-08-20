@@ -21,6 +21,7 @@ import InsightsPanel from "@/components/mes/InsightsPanel";
 import BadgesStrip from "@/components/mes/BadgesStrip";
 import PerformanceScore from "@/components/mes/PerformanceScore";
 import LostRevenueCard from "@/components/mes/LostRevenueCard";
+import UnusedCapacityCard from "@/components/mes/UnusedCapacityCard";
 import { Card } from "@/components/ui";
 import {
   adherenceRate,
@@ -151,6 +152,11 @@ export default function ExecutivePage() {
       {/* potential lost revenue — prominent so the customer sees the value */}
       <div className="mt-4">
         <LostRevenueCard />
+      </div>
+
+      {/* unused capacity value — billable value of idle machines per working day */}
+      <div className="mt-4">
+        <UnusedCapacityCard />
       </div>
 
       {/* hero: utilization + output + plan performance */}

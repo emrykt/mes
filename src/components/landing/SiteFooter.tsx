@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { Factory } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import { NavIcon } from "@/lib/nav-icons";
 import { useSiteConfig } from "@/lib/useSiteConfig";
 import type { FooterLink } from "@/lib/demo-types";
@@ -23,7 +22,6 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 
 /** Admin-managed multi-column footer with socials and legal line. */
 export default function SiteFooter() {
-  const tc = useTranslations("common");
   const f = useSiteConfig().content.footer;
 
   return (
@@ -31,11 +29,8 @@ export default function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_2fr]">
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
-                <Factory className="size-4.5" />
-              </span>
-              <span className="text-lg font-semibold text-white">{tc("appName")}</span>
+            <div className="flex items-center">
+              <TuriLogo className="h-8 w-8" wordClass="text-white" />
             </div>
             {f.tagline && <p className="mt-3 max-w-xs text-sm leading-relaxed text-chrome-ink/80">{f.tagline}</p>}
             {f.socials.length > 0 && (

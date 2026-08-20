@@ -1,5 +1,6 @@
 import type { DemoSnapshot } from "./demo-types";
 import { downtimeTodayByStation } from "./mes-calc";
+import { HOURS_PER_SHIFT } from "./insights";
 import { SIM_STATIONS, stationToday } from "./sim";
 
 /**
@@ -31,6 +32,40 @@ export interface PlantEconomics {
     lost: number;
     downMin: number;
   }[];
+}
+
+export interface UnusedCapacity {
+  /** Billable value of one full working day of the currently idle machines. */
+  value: number;
+  /** How many machines are idle right now. */
+  idleCount: number;
+  /** Working hours available per machine today (0 on a rest day). */
+  hoursPerDay: number;
+  /** True when today is a rest day for this customer's calendar. */
+  restDay: boolean;
+}
+
+/**
+ * Value of the plant's currently unused capacity: for every idle machine,
+ * its hourly billing rate × the working hours available today, summed.
+ * Only working days count — on a rest day the value is 0. This is the
+ * billable opportunity sitting idle right now, per working day.
+ */
+export function unusedCapacityValue(snap: DemoSnapshot, now: Date): UnusedCapacity {
+  const rates = snap.settings.billingRates;
+  const wc = snap.settings.workingCalendar ?? { shifts: 3, restDays: [] };
+  const restDay = wc.restDays.includes(now.getUTCDay());
+  const hoursPerDay = restDay ? 0 : wc.shifts * HOURS_PER_SHIFT;
+
+  let value = 0;
+  let idleCount = 0;
+  for (const st of snap.stations) {
+    if (st.state !== "idle") continue;
+    idleCount++;
+    const rate = rates[st.id] ?? 40;
+    value += rate * hoursPerDay;
+  }
+  return { value, idleCount, hoursPerDay, restDay };
 }
 
 export function plantEconomics(snap: DemoSnapshot, now: Date): PlantEconomics {

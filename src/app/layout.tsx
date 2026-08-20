@@ -5,7 +5,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Prodgence — Production Intelligence",
+  title: "TURI — Production Intelligence",
   description:
     "AI-powered Smart Manufacturing & production intelligence platform.",
 };

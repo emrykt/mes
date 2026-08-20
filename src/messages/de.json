@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Prodgence",
+    "appName": "TURI",
     "search": "Suchen",
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
@@ -24,9 +24,9 @@
     "CANCELED": "Gekündigt"
   },
   "plans": {
-    "BASIC": "Standard",
+    "BASIC": "Basic",
     "AIPRO": "AI Pro",
-    "AIULTIMATE": "Enterprise"
+    "AIULTIMATE": "Flexible"
   },
   "invoiceStatus": {
     "paid": "Bezahlt",
@@ -89,7 +89,7 @@
     "heroBadge": "KI-gestütztes Smart Manufacturing",
     "heroTitle": "Machen Sie aus Produktionsdaten",
     "heroHighlight": "messbaren Gewinn",
-    "heroSubtitle": "Prodgence gibt Metallbetrieben Echtzeit-Transparenz und eine KI, die Kosten senkt, Prozesse verbessert und zurückgewonnene Kapazität in Gewinn verwandelt — in Minuten eingerichtet, einfach für die ganze Fertigung, mit sicher verwahrten Daten.",
+    "heroSubtitle": "TURI gibt Metallbetrieben Echtzeit-Transparenz und eine KI, die Kosten senkt, Prozesse verbessert und zurückgewonnene Kapazität in Gewinn verwandelt — in Minuten eingerichtet, einfach für die ganze Fertigung, mit sicher verwahrten Daten.",
     "heroLoop": "Daten + KI + Workflow + Effizienz",
     "nodeProduction": "Produktion",
     "nodeQuality": "Qualität",
@@ -129,7 +129,12 @@
     "heroStat2V": "98%",
     "heroStat3L": "Qualität",
     "heroStat3V": "99%",
-    "heroTrendTitle": "Ausstoß — letzte 7 Tage"
+    "heroTrendTitle": "Ausstoß — letzte 7 Tage",
+    "billMonthly": "Monatlich",
+    "billAnnual": "Jährlich",
+    "billAnnualBadge": "Sparen",
+    "billedMonthlyNote": "monatliche Abrechnung, jederzeit kündbar",
+    "billedAnnuallyNote": "jährliche Abrechnung"
   },
   "adminNav": {
     "title": "Admin-Panel",
@@ -1088,8 +1093,8 @@
       "revenue": "Heute bisher: Umsatz {revenue}, Kosten {cost}, Gewinn {profit} ({margin}% Marge).",
       "lostRevenue": "Stillstände haben heute rund {total} an entgangenem abrechenbarem Umsatz gekostet. Größter Verlust: {station} ({amount}).\nEmpfehlung: Ein Stillstand an einer Station mit hohem Satz ist am teuersten — diese zuerst schützen.",
       "lostRevenueNone": "Heute kein entgangener Umsatz — kein abrechenbarer Stillstand.",
-      "greetingReply": "Hallo! Ich bin der Prodgence Smart-Manufacturing-Assistent. Fragen Sie mich, wo der Engpass ist, was Sie heute verbessern sollten, wie viel Umsatz verloren geht, welche Maschinen stehen oder nach einem Auftrag per Nummer.",
-      "offtopic": "Ich bin der Prodgence-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
+      "greetingReply": "Hallo! Ich bin der TURI Smart-Manufacturing-Assistent. Fragen Sie mich, wo der Engpass ist, was Sie heute verbessern sollten, wie viel Umsatz verloren geht, welche Maschinen stehen oder nach einem Auftrag per Nummer.",
+      "offtopic": "Ich bin der TURI-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
       "help": "Ich kann helfen bei: aktueller Engpass, Verbesserungsvorschläge, offene Warnungen, Effizienz, Tages- und Stillstandskosten, Umsatz und entgangener Umsatz, stehende Maschinen, Wartung, Ausstoß, Ausschuss, Rückstand, Schicht- und Bedienervergleich, gefährdete Aufträge oder einem Auftrag per Nummer (z. B. WO-2026-07-084).",
       "bottleneck": "{msg} {rec}",
       "bottleneckNone": "Derzeit kein klarer Engpass — die Kapazität ist über die Arbeitsgänge ausgeglichen.",
@@ -1183,6 +1188,13 @@
       "save": "Kunde speichern",
       "added": "Kunde hinzugefügt",
       "none": "Noch keine Kunden — legen Sie den ersten an."
+    },
+    "unusedCap": {
+      "title": "Wert ungenutzter Kapazität",
+      "subtitle": "Abrechenbarer Wert der aktuell stillstehenden Maschinen, pro Arbeitstag",
+      "idleMachines": "{n} stillstehende {n, plural, one {Maschine} other {Maschinen}}",
+      "perDay": "pro Arbeitstag",
+      "restDay": "Heute ist ein Ruhetag — keine abrechenbare Kapazität"
     }
   },
   "portalUsers": {

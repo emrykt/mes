@@ -67,7 +67,7 @@ export default function TvBoardPage() {
           <Link
             href="/mes"
             className="flex size-10 items-center justify-center rounded-xl bg-accent md:size-11"
-            aria-label="Prodgence"
+            aria-label="TURI"
           >
             <Factory className="size-5 md:size-6" />
           </Link>

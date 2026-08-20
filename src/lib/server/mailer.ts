@@ -27,7 +27,7 @@ export interface InviteMail {
 export async function sendInviteEmail(m: InviteMail): Promise<boolean> {
   if (!mailEnabled) return false;
   const who = m.inviterName ? `${m.inviterName} invited you` : "You've been invited";
-  const org = m.companyName ? ` to join ${m.companyName} on Prodgence` : " to Prodgence";
+  const org = m.companyName ? ` to join ${m.companyName} on TURI` : " to TURI";
   const subject = `${who}${org}`;
   const text =
     `Hi ${m.name},\n\n${who}${org}.\n\n` +
@@ -35,7 +35,7 @@ export async function sendInviteEmail(m: InviteMail): Promise<boolean> {
     `If you weren't expecting this, you can ignore this email.`;
   const html =
     `<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:auto">` +
-    `<h2 style="color:#0a616b">Prodgence</h2>` +
+    `<h2 style="color:#0a616b">TURI</h2>` +
     `<p>Hi ${escapeHtml(m.name)},</p>` +
     `<p>${escapeHtml(who)}${escapeHtml(org)}.</p>` +
     `<p><a href="${m.joinUrl}" style="display:inline-block;background:#0e8390;color:#fff;` +

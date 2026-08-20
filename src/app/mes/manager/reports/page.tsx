@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import TrendChart from "@/components/charts/TrendChart";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card, Table, Td, Th } from "@/components/ui";
@@ -79,7 +79,6 @@ export default function ReportsPage() {
     { output: 0, scrap: 0, downMin: 0, util: 0 },
   );
   const reasonMax = Math.max(1, ...byReason.map((r) => r.minutes));
-  const retentionDays = snap.retention.totalMonths * 30;
 
   return (
     <div className="space-y-5">
@@ -88,34 +87,19 @@ export default function ReportsPage() {
         <p className="mt-1 text-sm text-ink-2">{t("subtitle")}</p>
       </div>
 
-      {/* range selector — capped to the plan's data-retention window */}
-      <div>
-        <div className="flex gap-1 rounded-xl border border-line bg-surface p-1 sm:max-w-xl">
-          {RANGES.map((r) => {
-            const locked = r > retentionDays;
-            return (
-              <button
-                key={r}
-                onClick={() => !locked && setDays(r)}
-                disabled={locked}
-                title={locked ? t("lockedHint") : undefined}
-                className={`flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
-                  r === days
-                    ? "bg-accent text-white"
-                    : locked
-                      ? "cursor-not-allowed text-muted"
-                      : "text-ink-2 hover:bg-neutral-soft"
-                }`}
-              >
-                {locked && <Lock className="size-3" />}
-                {t(`range${r}`)}
-              </button>
-            );
-          })}
-        </div>
-        {RANGES.some((r) => r > retentionDays) && (
-          <p className="mt-1.5 text-xs text-muted">{t("lockedHint")}</p>
-        )}
+      {/* range selector — unlimited history is included free on every plan */}
+      <div className="flex gap-1 rounded-xl border border-line bg-surface p-1 sm:max-w-xl">
+        {RANGES.map((r) => (
+          <button
+            key={r}
+            onClick={() => setDays(r)}
+            className={`flex flex-1 items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+              r === days ? "bg-accent text-white" : "text-ink-2 hover:bg-neutral-soft"
+            }`}
+          >
+            {t(`range${r}`)}
+          </button>
+        ))}
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">

@@ -1,9 +1,10 @@
 import { NOW } from "./data";
 
+/** Membership/subscription money — always EUR (billed from Germany). */
 export function formatMoney(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-IE", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
     maximumFractionDigits: 0,
   }).format(amount);
 }

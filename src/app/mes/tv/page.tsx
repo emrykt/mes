@@ -108,11 +108,6 @@ export default function TvBoardPage() {
         </div>
       </header>
 
-      {/* achievement badges */}
-      <div className="mt-4">
-        <BadgesStrip dark limit={4} />
-      </div>
-
       {/* stations grid */}
       <div className="mt-4 grid flex-1 grid-cols-2 gap-2.5 sm:grid-cols-3 md:gap-4 xl:grid-cols-4">
         {snap.stations.map((s) => {
@@ -178,6 +173,11 @@ export default function TvBoardPage() {
           </div>
         )}
       </footer>
+
+      {/* achievement badges — bottom strip, out of the main view */}
+      <div className="mt-4">
+        <BadgesStrip dark limit={4} />
+      </div>
     </div>
   );
 }

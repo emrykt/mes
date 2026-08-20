@@ -23,7 +23,7 @@ function monthLabel(month: string, withYear = false): string {
 function money(v: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
     maximumFractionDigits: 0,
   }).format(v);
 }

@@ -9,8 +9,8 @@ import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 
 const NAV = [
-  { href: "/mes/sales", key: "navOrders", icon: ClipboardList, exact: true },
   { href: "/mes/sales/quote", key: "navQuote", icon: FileText, exact: false, feature: "quoting" },
+  { href: "/mes/sales", key: "navOrders", icon: ClipboardList, exact: true },
   { href: "/mes/sales/capacity", key: "navCapacity", icon: CalendarRange, exact: false },
 ] as const;
 
@@ -37,7 +37,6 @@ export default function MesSalesShell({ children }: { children: React.ReactNode 
             </span>
             <span className="text-sm font-semibold">{tc("appName")}</span>
           </Link>
-          <span className="hidden text-sm font-medium text-ink-2 sm:inline">{t("shell")}</span>
           <div className="ml-auto flex items-center gap-2 md:order-last">
             <CompanySwitcher />
             <LanguageSwitcher />

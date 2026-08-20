@@ -7,6 +7,7 @@ import { ArrowDownToLine, ArrowLeft, Boxes, Loader2, Package, Recycle } from "lu
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card, StatCard, Table, Td, Th } from "@/components/ui";
+import StockAiAlerts from "@/components/mes/StockAiAlerts";
 import { formatCost } from "@/lib/currency";
 import type { MaterialForm, StockItem, StockMoveType } from "@/lib/demo-types";
 
@@ -96,6 +97,10 @@ export default function StockScreen() {
         <StatCard label={t("kpiLow")} value={String(lowCount)} sub={t("kpiLowSub")} />
         <StatCard label={t("kpiRemnant")} value={t("kg", { v: Math.round(remnantKg) })} />
         <StatCard label={t("kpiItems")} value={String(items.length)} />
+      </div>
+
+      <div className="mt-5">
+        <StockAiAlerts />
       </div>
 
       <Card title={t("itemsTitle")} subtitle={t("itemsHint")} className="mt-5" padded={false}>

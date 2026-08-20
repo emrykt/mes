@@ -82,8 +82,9 @@ const CURRENT_SCHEMA = 1;
  *   1 — mega-menu + trust bar / testimonials / FAQ / footer + item icons
  *   2 — default menu panel images + contact / demo-request section
  *   3 — demo CTAs point to /login (demo tour is gated behind sign-in)
+ *   4 — trust bar "in Germany"; Standard plan name; EUR
  */
-const CURRENT_SITE_VERSION = 3;
+const CURRENT_SITE_VERSION = 4;
 
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -420,7 +421,7 @@ function seedQuotes(now: Date): SavedQuote[] {
       marginPct: s.margin,
       total,
       perPart: Math.round((total / s.qty) * 100) / 100,
-      currency: "USD" as const,
+      currency: "EUR" as const,
     };
   });
 }

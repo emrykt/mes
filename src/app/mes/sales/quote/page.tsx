@@ -34,7 +34,7 @@ export default function SalesQuotePage() {
   const [search, setSearch] = useState("");
 
   const rates = snap?.settings.billingRates ?? {};
-  const currency = snap?.settings.currency ?? "USD";
+  const currency = snap?.settings.currency ?? "EUR";
   const money = (v: number, d = 0) => formatCost(v, currency, locale, d);
 
   const priced = useMemo(
@@ -56,13 +56,20 @@ export default function SalesQuotePage() {
   const qtyNum = Math.max(1, Number(qty) || 1);
   const grossMarginPct = total > 0 ? Math.round((marginAmt / total) * 100) : 0;
 
+  const [custFilter, setCustFilter] = useState("all");
+  const [period, setPeriod] = useState("all"); // all | 30 | 90 | 365 (days)
+  const savedCustomers = useMemo(
+    () => [...new Set((snap?.quotes ?? []).map((x) => x.customer))].sort((a, b) => a.localeCompare(b)),
+    [snap?.quotes],
+  );
   const savedFiltered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const all = snap?.quotes ?? [];
-    return q
-      ? all.filter((x) => [x.customer, x.part ?? ""].join(" ").toLowerCase().includes(q))
-      : all;
-  }, [snap?.quotes, search]);
+    const cutoff = period === "all" ? 0 : Date.now() - Number(period) * 86400000;
+    return (snap?.quotes ?? [])
+      .filter((x) => !q || [x.customer, x.part ?? ""].join(" ").toLowerCase().includes(q))
+      .filter((x) => custFilter === "all" || x.customer === custFilter)
+      .filter((x) => cutoff === 0 || new Date(x.at).getTime() >= cutoff);
+  }, [snap?.quotes, search, custFilter, period]);
 
   if (!snap) {
     return (
@@ -416,16 +423,38 @@ th,td{border-bottom:1px solid #ddd;padding:8px 6px;font-size:13px}th{text-align:
         title={t("savedTitle")}
         subtitle={t("savedHint")}
         action={
-          <label className="relative">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("searchCustomer")}
-              className="rounded-lg border border-line bg-page py-2 pr-3 pl-9 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
-            />
-          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="relative">
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t("searchCustomer")}
+                className="rounded-lg border border-line bg-page py-2 pr-3 pl-9 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+              />
+            </label>
+            <select
+              value={custFilter}
+              onChange={(e) => setCustFilter(e.target.value)}
+              className="rounded-lg border border-line bg-page px-2.5 py-2 text-sm focus:border-accent focus:outline-none"
+            >
+              <option value="all">{t("allCustomers")}</option>
+              {savedCustomers.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+              className="rounded-lg border border-line bg-page px-2.5 py-2 text-sm focus:border-accent focus:outline-none"
+            >
+              <option value="all">{t("periodAll")}</option>
+              <option value="30">{t("period30")}</option>
+              <option value="90">{t("period90")}</option>
+              <option value="365">{t("period365")}</option>
+            </select>
+          </div>
         }
         padded={false}
       >

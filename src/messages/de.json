@@ -24,7 +24,7 @@
     "CANCELED": "Gekündigt"
   },
   "plans": {
-    "BASIC": "Basic",
+    "BASIC": "Standard",
     "AIPRO": "AI Pro",
     "AIULTIMATE": "Enterprise"
   },
@@ -349,7 +349,11 @@
     "retentionUpdated": "Aufbewahrung aktualisiert",
     "currentPlanPriceNote": "{base} Paket + {addon} Aufbewahrungs-Add-on",
     "billAddNote": "Erhöht Ihr Abo um {addon}",
-    "totalPerMo": "{total}/Mon. gesamt"
+    "totalPerMo": "{total}/Mon. gesamt",
+    "retentionUnlimited": "Unbegrenzte Historie",
+    "retentionUnlimitedNote": "In jeder Mitgliedschaft kostenlos enthalten.",
+    "retentionPoint1": "Alle bisherigen Produktions-, Stillstands- und Ausschussdaten — ohne Zeitlimit.",
+    "retentionPoint2": "Berichte und Analysen umfassen Ihre gesamte Historie ohne Aufpreis."
   },
   "portalBilling": {
     "title": "Rechnungen & Zahlung",
@@ -654,7 +658,12 @@
       "colCustomer": "Kunde",
       "colOps": "Arbeitsgänge",
       "colQty": "Menge",
-      "colTotal": "Gesamt"
+      "colTotal": "Gesamt",
+      "allCustomers": "Alle Kunden",
+      "periodAll": "Gesamt",
+      "period30": "Letzte 30 Tage",
+      "period90": "Letzte 90 Tage",
+      "period365": "Letztes Jahr"
     },
     "sales": {
       "shell": "Vertrieb",
@@ -786,7 +795,9 @@
       "actualShort": "Ist {h} Std.",
       "perfVsPlan": "{pct}% ggü. Plan",
       "create": "Auftrag anlegen",
-      "created": "Auftrag {id} mit {steps} Arbeitsplan-Schritten angelegt (nur Vorschau)."
+      "created": "Auftrag {id} mit {steps} Arbeitsplan-Schritten angelegt (nur Vorschau).",
+      "allCustomers": "Alle Kunden",
+      "allStatuses": "Alle Status"
     },
     "executive": {
       "title": "Werkspuls",
@@ -932,7 +943,14 @@
       "moveIssue": "An Produktion ausgegeben",
       "moveReceipt": "Zugang",
       "moveRemnant": "Reststück zurück",
-      "moveAdjust": "Korrektur"
+      "moveAdjust": "Korrektur",
+      "aiAlertsTitle": "KI-Bestandswarnungen",
+      "aiAlertsHint": "Prognose aus Ihrem Verbrauch — nachbestellen, bevor es leer wird.",
+      "aiAlertsNone": "Alle Materialien im grünen Bereich — kein Engpass prognostiziert.",
+      "aiBelowReorder": "{name} ist auf/unter Meldebestand — jetzt nachbestellen.",
+      "aiRunsOut": "{name} reicht bei aktuellem Verbrauch noch ~{days} Tage — bald nachbestellen.",
+      "aiWatch": "{name} wird knapp — im Auge behalten.",
+      "aiUsage": "Ø Verbrauch: {rate} {unit}/Tag"
     },
     "scrap": {
       "title": "Ausschuss / Abfall",
@@ -1130,6 +1148,12 @@
       "salesTargetsTitle": "Vertriebsziel",
       "salesTargetsHint": "Termintreue-Leistung.",
       "planPerformance": "Plan-Performance"
+    },
+    "lostRev": {
+      "title": "Potenziell entgangener Umsatz (heute)",
+      "subtitle": "Nicht abrechenbare Kapazität + Ausschuss — was die Plattform zurückholt.",
+      "downtime": "Ungenutzte Kapazität (Stillstand)",
+      "scrap": "Ausschuss"
     }
   },
   "portalUsers": {

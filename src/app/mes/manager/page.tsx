@@ -98,11 +98,6 @@ export default function ManagerOverviewPage() {
       {/* smart suggestions — AI Pro */}
       {ent.advancedAnalytics && <InsightsPanel limit={3} />}
 
-      {/* achievement badges */}
-      <Card title={t("badgesTitle")}>
-        <BadgesStrip />
-      </Card>
-
       {/* stations grid */}
       <Card title={t("stationsTitle")}>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -257,6 +252,11 @@ export default function ManagerOverviewPage() {
           />
         </Card>
       </div>
+
+      {/* achievement badges — kept at the bottom, out of the way */}
+      <Card title={t("badgesTitle")}>
+        <BadgesStrip />
+      </Card>
     </div>
   );
 }

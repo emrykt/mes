@@ -59,23 +59,30 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
   const locale = useLocale();
   const { snap, dispatch } = useDemo();
   const [query, setQuery] = useState("");
+  const [customerFilter, setCustomerFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showNew, setShowNew] = useState(false);
   const [editTarget, setEditTarget] = useState<MesOrder | null>(null);
   const [createdMsg, setCreatedMsg] = useState<string | null>(null);
 
   const orders = snap?.orders ?? [];
+  const customerList = useMemo(
+    () => [...new Set(orders.map((o) => o.customer))].sort((a, b) => a.localeCompare(b)),
+    [orders],
+  );
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const nowMs = snap ? new Date(snap.now).getTime() : Date.now();
     return orders
-      .filter(
-        (o) => !q || [o.id, o.customer, o.part].join(" ").toLowerCase().includes(q),
-      )
+      .filter((o) => !q || [o.id, o.customer, o.part].join(" ").toLowerCase().includes(q))
+      .filter((o) => customerFilter === "all" || o.customer === customerFilter)
+      .filter((o) => statusFilter === "all" || orderStatus(o, new Date(nowMs)) === statusFilter)
       .sort((a, b) => {
         const ad = orderProgress(a) >= 1 ? 1 : 0;
         const bd = orderProgress(b) >= 1 ? 1 : 0;
         return ad - bd || a.dueDate.localeCompare(b.dueDate);
       });
-  }, [orders, query]);
+  }, [orders, query, customerFilter, statusFilter, snap]);
 
   if (!snap) {
     return (
@@ -138,16 +145,39 @@ export default function OrdersBoard({ allowCreate = false }: { allowCreate?: boo
         </p>
       )}
 
-      <label className="relative block sm:max-w-xs">
-        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t("searchPlaceholder")}
-          className="w-full rounded-lg border border-line bg-surface py-2 pr-3 pl-9 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
-        />
-      </label>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="relative block flex-1 sm:max-w-xs">
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="w-full rounded-lg border border-line bg-surface py-2 pr-3 pl-9 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+          />
+        </label>
+        <select
+          value={customerFilter}
+          onChange={(e) => setCustomerFilter(e.target.value)}
+          className="rounded-lg border border-line bg-surface px-2.5 py-2 text-sm focus:border-accent focus:outline-none"
+        >
+          <option value="all">{t("allCustomers")}</option>
+          {customerList.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="rounded-lg border border-line bg-surface px-2.5 py-2 text-sm focus:border-accent focus:outline-none"
+        >
+          <option value="all">{t("allStatuses")}</option>
+          <option value="late">{statusLabel.late}</option>
+          <option value="risk">{statusLabel.risk}</option>
+          <option value="onTime">{statusLabel.onTime}</option>
+          <option value="done">{statusLabel.done}</option>
+        </select>
+      </div>
 
       <Card padded={false}>
         {filtered.length === 0 ? (

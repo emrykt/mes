@@ -70,19 +70,14 @@ export const PLAN_RETENTION_MONTHS: Record<PlanId, number> = {
 
 /**
  * Default global pricing (admin-editable at runtime; this is the seed).
- * Add-on `price` is a recurring MONTHLY surcharge (USD) added on top of the
- * base plan price; `years` is the total retention the tier targets.
+ * Prices are in EUR (billed from Germany). Data-retention add-ons were removed —
+ * every membership includes UNLIMITED history for free, so `addonTiers` is empty.
  * AIULTIMATE (Enterprise) is contact-priced — its number is a placeholder and
  * is not shown to customers (portal renders "Contact us").
  */
 export const DEFAULT_PRICING: PricingConfig = {
   plans: { BASIC: 499, AIPRO: 999, AIULTIMATE: 1999 },
-  addonTiers: [
-    { years: 1, price: 9 },
-    { years: 2, price: 19 },
-    { years: 3, price: 29 },
-    { years: 5, price: 39 },
-  ],
+  addonTiers: [],
 };
 
 /** Compact on-brand SVG promo image (data URL) for a mega-menu panel. */
@@ -189,7 +184,7 @@ export const DEFAULT_SITE_NAV: SiteNav = {
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   trustBar: {
     enabled: true,
-    logosTitle: "Trusted by metalworking shops around the world",
+    logosTitle: "Trusted by metalworking shops in Germany",
     logos: [
       { name: "Baylor Sheet Metal" },
       { name: "Aegean Precision" },

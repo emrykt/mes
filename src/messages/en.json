@@ -24,7 +24,7 @@
     "CANCELED": "Canceled"
   },
   "plans": {
-    "BASIC": "Basic",
+    "BASIC": "Standard",
     "AIPRO": "AI Pro",
     "AIULTIMATE": "Enterprise"
   },
@@ -349,7 +349,11 @@
     "retentionUpdated": "Retention updated",
     "currentPlanPriceNote": "{base} plan + {addon} retention add-on",
     "billAddNote": "Adds {addon} to your subscription",
-    "totalPerMo": "{total}/mo total"
+    "totalPerMo": "{total}/mo total",
+    "retentionUnlimited": "Unlimited history",
+    "retentionUnlimitedNote": "Included free with every membership.",
+    "retentionPoint1": "See all past production, downtime and scrap data — no time limit.",
+    "retentionPoint2": "Reports and analytics span your full history at no extra cost."
   },
   "portalBilling": {
     "title": "Billing & invoices",
@@ -654,7 +658,12 @@
       "colCustomer": "Customer",
       "colOps": "Operations",
       "colQty": "Qty",
-      "colTotal": "Total"
+      "colTotal": "Total",
+      "allCustomers": "All customers",
+      "periodAll": "All time",
+      "period30": "Last 30 days",
+      "period90": "Last 90 days",
+      "period365": "Last year"
     },
     "sales": {
       "shell": "Sales",
@@ -786,7 +795,9 @@
       "actualShort": "Actual {h} h",
       "perfVsPlan": "{pct}% vs plan",
       "create": "Create order",
-      "created": "Order {id} created with {steps} routing steps (preview only)."
+      "created": "Order {id} created with {steps} routing steps (preview only).",
+      "allCustomers": "All customers",
+      "allStatuses": "All statuses"
     },
     "executive": {
       "title": "Plant pulse",
@@ -932,7 +943,14 @@
       "moveIssue": "Issued to production",
       "moveReceipt": "Received",
       "moveRemnant": "Remnant returned",
-      "moveAdjust": "Adjusted"
+      "moveAdjust": "Adjusted",
+      "aiAlertsTitle": "AI stock alerts",
+      "aiAlertsHint": "Forecast from your consumption history — reorder before you run out.",
+      "aiAlertsNone": "All materials healthy — no shortages forecast.",
+      "aiBelowReorder": "{name} is at/below the reorder level — reorder now.",
+      "aiRunsOut": "{name} runs out in ~{days} days at current usage — reorder soon.",
+      "aiWatch": "{name} is trending low — keep an eye on it.",
+      "aiUsage": "Avg use: {rate} {unit}/day"
     },
     "scrap": {
       "title": "Scrap / waste",
@@ -1130,6 +1148,12 @@
       "salesTargetsTitle": "Sales target",
       "salesTargetsHint": "On-time delivery performance.",
       "planPerformance": "Plan performance"
+    },
+    "lostRev": {
+      "title": "Potential lost revenue (today)",
+      "subtitle": "Capacity you couldn't bill + scrap — what the platform helps you recover.",
+      "downtime": "Idle capacity (downtime)",
+      "scrap": "Scrap"
     }
   },
   "portalUsers": {

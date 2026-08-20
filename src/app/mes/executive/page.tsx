@@ -19,6 +19,8 @@ import { useDemo, useEntitlements } from "@/components/demo/DemoProvider";
 import ExecutiveTabs from "@/components/mes/ExecutiveTabs";
 import InsightsPanel from "@/components/mes/InsightsPanel";
 import BadgesStrip from "@/components/mes/BadgesStrip";
+import PerformanceScore from "@/components/mes/PerformanceScore";
+import LostRevenueCard from "@/components/mes/LostRevenueCard";
 import { Card } from "@/components/ui";
 import {
   adherenceRate,
@@ -141,8 +143,18 @@ export default function ExecutivePage() {
 
       <ExecutiveTabs />
 
+      {/* performance score — front and centre on the Pulse tab */}
+      <div className="mt-6">
+        <PerformanceScore />
+      </div>
+
+      {/* potential lost revenue — prominent so the customer sees the value */}
+      <div className="mt-4">
+        <LostRevenueCard />
+      </div>
+
       {/* hero: utilization + output + plan performance */}
-      <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
         <Card className="text-center">
           <p className="text-xs font-medium text-muted">{t("utilToday")}</p>
           <p className="mt-1 text-2xl font-semibold leading-none tracking-tight tabular-nums sm:text-5xl">
@@ -216,10 +228,6 @@ export default function ExecutivePage() {
         </div>
       )}
 
-      {/* achievement badges */}
-      <Card title={t("badgesTitle")} className="mt-4">
-        <BadgesStrip />
-      </Card>
 
       {/* alerts */}
       <Card title={t("activeAlerts")} className="mt-4" padded={false}>
@@ -275,6 +283,11 @@ export default function ExecutivePage() {
           yMax={100}
           height={160}
         />
+      </Card>
+
+      {/* achievement badges — kept at the bottom, out of the way */}
+      <Card title={t("badgesTitle")} className="mt-4">
+        <BadgesStrip />
       </Card>
     </div>
   );

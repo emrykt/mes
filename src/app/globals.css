@@ -42,11 +42,24 @@
   --color-chrome-ink: #9bb6bb;
 }
 
+/* Slightly larger base type across every screen (Tailwind rem sizes scale). */
+html {
+  font-size: 106.25%; /* 17px base */
+  -webkit-text-size-adjust: 100%; /* iOS: don't auto-inflate text */
+}
+
 body {
   background-color: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Safari/iOS: keep media from overflowing and shifting layout. */
+img,
+svg,
+video {
+  max-width: 100%;
 }
 
 ::selection {
@@ -83,7 +96,21 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent; /* Safari needs this for clipped text */
   animation: gradPan 9s ease infinite;
+}
+
+/* Safari/iOS: stabilise GPU-composited animated layers so they don't shift. */
+.anim-spin-slow,
+.anim-spin-rev,
+.anim-float,
+.anim-aurora,
+.anim-pulse,
+.anim-twinkle {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 /* Scroll-reveal */

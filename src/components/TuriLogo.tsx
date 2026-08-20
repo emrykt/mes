@@ -42,7 +42,7 @@ export default function TuriLogo({
       </svg>
       {wordmark && (
         <span
-          className={`text-2xl font-semibold lowercase leading-none ${wordClass}`}
+          className={`text-2xl font-bold lowercase leading-none ${wordClass}`}
           style={{ fontFamily: '"Turi", system-ui, sans-serif' }}
         >
           tur

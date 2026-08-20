@@ -9,10 +9,14 @@ import ContactForm from "@/components/landing/ContactForm";
 import SiteFooter from "@/components/landing/SiteFooter";
 import PricingCards from "@/components/landing/PricingCards";
 import {
+  Activity,
   ArrowRight,
   Bot,
+  Factory,
   Gauge,
+  Lightbulb,
   Rocket,
+  Search,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -54,6 +58,20 @@ export default function LandingPage() {
     { icon: Wallet, title: t("aiCard4Title"), desc: t("aiCard4Desc") },
     { icon: Rocket, title: t("aiCard5Title"), desc: t("aiCard5Desc") },
     { icon: ShieldCheck, title: t("aiCard6Title"), desc: t("aiCard6Desc") },
+  ];
+
+  // The TURI loop — the acronym as four running steps
+  const loop = [
+    { icon: Activity, letter: "T", step: t("loopTrackT"), head: t("loopTrackH"), desc: t("loopTrackD") },
+    { icon: Search, letter: "U", step: t("loopUnderstandT"), head: t("loopUnderstandH"), desc: t("loopUnderstandD") },
+    { icon: Lightbulb, letter: "R", step: t("loopRecommendT"), head: t("loopRecommendH"), desc: t("loopRecommendD") },
+    { icon: TrendingUp, letter: "I", step: t("loopImproveT"), head: t("loopImproveH"), desc: t("loopImproveD") },
+  ];
+  const questions = [t("q1"), t("q2"), t("q3"), t("q4"), t("q5"), t("q6"), t("q7"), t("q8"), t("q9")];
+  const aboutStats = [
+    { v: t("aboutStat1V"), l: t("aboutStat1L") },
+    { v: t("aboutStat2V"), l: t("aboutStat2L") },
+    { v: t("aboutStat3V"), l: t("aboutStat3L") },
   ];
 
   return (
@@ -131,6 +149,101 @@ export default function LandingPage() {
       {/* ---------- TRUST BAR (managed) ---------- */}
       <TrustBar />
 
+      {/* ---------- THE TURI LOOP (acronym) ---------- */}
+      <section id="how" className="scroll-mt-24 border-b border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-strong">
+              <Activity className="size-3.5" />
+              {t("loopEyebrow")}
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{t("loopTitle")}</h2>
+            <p className="mt-3 text-ink-2">{t("loopSubtitle")}</p>
+          </Reveal>
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {loop.map(({ icon: Icon, letter, step, head, desc }, i) => (
+              <Reveal
+                key={step}
+                delay={i * 80}
+                className="relative rounded-2xl border border-line bg-page p-6"
+              >
+                <span className="absolute right-4 top-4 text-4xl font-bold leading-none text-accent/12 select-none">
+                  {letter}
+                </span>
+                <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-white">
+                  <Icon className="size-5.5" />
+                </span>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-accent-strong">{step}</p>
+                <h3 className="mt-1 font-semibold">{head}</h3>
+                <p className="mt-1.5 text-sm text-ink-2">{desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- QUESTIONS TURI ANSWERS ---------- */}
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <Reveal>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-soft px-3 py-1 text-xs font-semibold text-ink-2">
+              {t("qEyebrow")}
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl text-balance">{t("qTitle")}</h2>
+            <p className="mt-3 text-ink-2">{t("qSubtitle")}</p>
+            <p className="mt-6 border-l-2 border-accent pl-4 text-lg font-medium text-ink text-pretty">
+              {t("qMotto")}
+            </p>
+          </Reveal>
+          <Reveal delay={100} className="grid gap-2.5 sm:grid-cols-2">
+            {questions.map((q, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-2.5 rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink-2"
+              >
+                <ArrowRight className="mt-0.5 size-4 shrink-0 text-accent" />
+                {q}
+              </div>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- SPEAKS THE LANGUAGE OF THE SHOP ---------- */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 lg:grid-cols-2">
+          <Reveal>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-strong">
+              <Sparkles className="size-3.5" />
+              {t("speakEyebrow")}
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{t("speakTitle")}</h2>
+            <p className="mt-3 text-ink-2">{t("speakSubtitle")}</p>
+          </Reveal>
+          <Reveal delay={100} className="space-y-2.5">
+            {[
+              { c: "var(--color-critical)", txt: t("speakRed"), dot: true },
+              { c: "var(--color-warning)", txt: t("speakAmber"), dot: true },
+              { c: "var(--color-good)", txt: t("speakGreen"), dot: true },
+              { c: "", txt: t("speakTip1"), dot: false },
+              { c: "", txt: t("speakTip2"), dot: false },
+            ].map((r, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-xl border border-line bg-page px-4 py-3 text-sm shadow-sm"
+              >
+                {r.dot ? (
+                  <span className="size-2.5 shrink-0 rounded-full" style={{ background: r.c }} />
+                ) : (
+                  <Lightbulb className="size-4 shrink-0 text-accent" />
+                )}
+                <span className="text-ink">{r.txt}</span>
+              </div>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
       {/* ---------- AI FEATURES ---------- */}
       <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -155,6 +268,36 @@ export default function LandingPage() {
               <p className="mt-1.5 text-sm text-ink-2">{desc}</p>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      {/* ---------- ABOUT (Tusch & Richter heritage) ---------- */}
+      <section id="about" className="scroll-mt-24 border-y border-line" style={{ backgroundColor: "#07222a" }}>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 text-white lg:grid-cols-[1.05fr_0.95fr]">
+          <Reveal>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/90 backdrop-blur">
+              <Factory className="size-3.5" />
+              {t("aboutEyebrow")}
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{t("aboutTitle")}</h2>
+            <p className="mt-5 text-white/75 text-pretty">{t("aboutBody1")}</p>
+            <p className="mt-4 text-white/75 text-pretty">{t("aboutBody2")}</p>
+            <p className="mt-6 border-l-2 border-good pl-4 text-lg font-medium italic text-white/90">
+              {t("aboutGermanTagline")}
+            </p>
+            <p className="mt-5 text-xs text-white/45">{t("aboutNote")}</p>
+          </Reveal>
+          <Reveal delay={100} className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            {aboutStats.map((s) => (
+              <div
+                key={s.l}
+                className="rounded-2xl border border-white/12 bg-white/[0.06] px-6 py-5 backdrop-blur"
+              >
+                <p className="text-4xl font-semibold tracking-tight text-grad">{s.v}</p>
+                <p className="mt-1 text-sm text-white/70">{s.l}</p>
+              </div>
+            ))}
+          </Reveal>
         </div>
       </section>
 

@@ -164,17 +164,17 @@ export const DEFAULT_SITE_NAV: SiteNav = {
       id: "company",
       label: "Company",
       image: menuImage("#0a616b", "#16a34a", "Company"),
-      headline: "Building the future of production intelligence",
-      intro: "A focused team helping metalworking shops run measurably better.",
-      ctaLabel: "Talk to sales",
-      ctaHref: "/portal",
+      headline: "Born from 70 years on the shop floor",
+      intro: "TURI grew out of the machine and process knowledge of Tusch & Richter — an independent product carrying decades of metalworking know-how into a modern AI platform.",
+      ctaLabel: "Read our story",
+      ctaHref: "/#about",
       items: [
-        { title: "About TURI", description: "Our mission: turn shop-floor data into profit.", href: "#", icon: "building" },
+        { title: "About TURI", description: "Born from 70 years of metalworking experience — an independent product.", href: "/#about", icon: "building" },
+        { title: "The TURI loop", description: "Track, Understand, Recommend, Improve — what the name actually does.", href: "/#how", icon: "sparkles" },
         { title: "Trust & compliance", description: "The measures we take to keep your data secure and available.", href: "#", icon: "shield" },
         { title: "Careers", description: "Join us building the platform for modern manufacturing.", href: "#", icon: "users" },
         { title: "Newsroom", description: "Announcements, milestones and press.", href: "#", icon: "newspaper" },
-        { title: "Partners", description: "Integrators and resellers extending TURI.", href: "#", icon: "handshake" },
-        { title: "Contact sales", description: "Get a tailored walkthrough for your shop.", href: "/portal", icon: "phone" },
+        { title: "Contact sales", description: "Get a tailored walkthrough for your shop.", href: "/#contact", icon: "phone" },
       ],
     },
   ],
@@ -238,6 +238,16 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     intro: "Everything you need to evaluate TURI with confidence.",
     items: [
       {
+        question: "What does TURI stand for?",
+        answer:
+          "Track, Understand, Recommend, Improve. TURI tracks what happens on your floor, understands why, recommends the next move, and proves the improvement — continuously, so you don't change the way you work, you change what you know about it.",
+      },
+      {
+        question: "Is TURI part of Tusch & Richter?",
+        answer:
+          "TURI grew out of the machine and process knowledge of Tusch & Richter, who have served metalworking shops for over 70 years. But TURI is an independent product — not a subsidiary or a reseller arrangement. It simply carries that hard-won understanding of how metal shops really run into a modern AI platform.",
+      },
+      {
         question: "How long does it take to go live?",
         answer:
           "Most shops are running within a week. There is no per-station licensing and no year-long rollout — you configure your operations, stations and catalogs and start.",
@@ -246,6 +256,11 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         question: "Is there a limit on the number of stations?",
         answer:
           "No. Pricing is based on capability, not station count. Every plan includes the full MES core for unlimited stations.",
+      },
+      {
+        question: "What do the AI features actually do?",
+        answer:
+          "The assistant answers questions grounded in your own live data, surfaces the current bottleneck and root causes, warns you before deadline and capacity risks bite, and recommends the next action to recover capacity — in plain language your whole team acts on.",
       },
       {
         question: "How is my data kept secure?",
@@ -258,14 +273,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
           "No. Updates are applied with a migration-safe process — your live orders and shop-floor state keep flowing while new capabilities roll in.",
       },
       {
-        question: "What do the AI features actually do?",
-        answer:
-          "The assistant answers questions grounded in your own live data, surfaces the current bottleneck and root causes, and recommends the next action to recover capacity.",
-      },
-      {
         question: "Can I try it before buying?",
         answer:
-          "Yes — start a 30-day free trial and explore the live simulated plant across every role, from the operator kiosk to the executive cockpit.",
+          "Yes — start a 30-day free trial and explore the live simulated plant across every role, from the operator kiosk to the executive cockpit. A referral code from an existing TURI shop starts your trial too.",
       },
     ],
   },
@@ -277,7 +287,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     successMessage: "Thanks — we've received your request and will be in touch shortly.",
   },
   footer: {
-    tagline: "AI-powered Smart Manufacturing, production and business management for metalworking shops.",
+    tagline: "Track · Understand · Recommend · Improve. The AI production-intelligence layer for metalworking shops — born from 70 years of machine and process expertise.",
     columns: [
       {
         title: "Product",
@@ -301,10 +311,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       {
         title: "Company",
         links: [
-          { title: "About", href: "#" },
+          { title: "About TURI", href: "/#about" },
+          { title: "How it works", href: "/#how" },
           { title: "Trust & compliance", href: "#" },
-          { title: "Careers", href: "#" },
-          { title: "Contact sales", href: "/portal" },
+          { title: "Contact sales", href: "/#contact" },
         ],
       },
       {

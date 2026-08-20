@@ -46,17 +46,19 @@ export default function TuriLogo({
           style={{ fontFamily: '"Turi", system-ui, sans-serif' }}
         >
           tur
-          {/* the "i" keeps the font's stem; its dot is recoloured green to match the brand */}
+          {/* the "i" keeps the font's stem; a green disc fully covers the font's dot
+              (position measured against the Fredoka-700 i-dot: centre 0.64em above the
+              baseline, 48.5% across the glyph, 0.26em wide to guarantee full coverage) */}
           <span className="relative">
             i
             <span
               aria-hidden
               className="absolute rounded-full"
               style={{
-                width: "0.235em",
-                height: "0.235em",
-                left: "50%",
-                top: "0.02em",
+                width: "0.26em",
+                height: "0.26em",
+                left: "48.5%",
+                top: "0.206em",
                 transform: "translateX(-50%)",
                 background: "linear-gradient(150deg, #8ee24d 10%, #57c01f 90%)",
               }}

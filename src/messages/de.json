@@ -1501,5 +1501,11 @@
     "assistant_ai": "Das ist die KI selbst: Fragen Sie in normaler Sprache und erhalten Sie fundierte Antworten — den Engpass, die Ursache, die heutigen Stillstandskosten und die nächste beste Maßnahme.",
     "deviceBadge": "Tablet · iOS / Android · Smartphone",
     "operatorDevice": "Läuft als Kiosk auf jedem Tablet (iOS oder Android) oder Smartphone — große Touch-Ziele, ohne Schulung."
+  },
+  "cookie": {
+    "message": "Wir verwenden nur unbedingt erforderliche Cookies, um TURI zu betreiben. Mit Ihrer Einwilligung können künftig nicht notwendige Cookies hinzukommen.",
+    "acceptAll": "Alle akzeptieren",
+    "essential": "Nur erforderliche",
+    "policy": "Cookie-Richtlinie"
   }
 }

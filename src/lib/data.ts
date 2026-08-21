@@ -320,10 +320,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       {
         title: "Legal",
         links: [
-          { title: "Privacy", href: "#" },
-          { title: "Terms", href: "#" },
-          { title: "Security", href: "#" },
-          { title: "Status", href: "#" },
+          { title: "Privacy", href: "/legal/privacy" },
+          { title: "Terms", href: "/legal/terms" },
+          { title: "Imprint", href: "/legal/imprint" },
+          { title: "Cookies", href: "/legal/cookies" },
         ],
       },
     ],

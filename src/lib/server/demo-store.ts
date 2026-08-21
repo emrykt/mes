@@ -99,7 +99,7 @@ const CURRENT_SCHEMA = 2;
  *   3 — demo CTAs point to /login (demo tour is gated behind sign-in)
  *   4 — trust bar "in Germany"; Standard plan name; EUR
  */
-const CURRENT_SITE_VERSION = 7;
+const CURRENT_SITE_VERSION = 8;
 
 function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);

@@ -1501,5 +1501,11 @@
     "assistant_ai": "This is the AI itself: ask in plain language and get grounded answers — the bottleneck, the root cause, today’s downtime cost, and the next best action.",
     "deviceBadge": "Tablet · iOS / Android · Phone",
     "operatorDevice": "Runs as a kiosk on any tablet (iOS or Android) or phone — big touch targets, no training."
+  },
+  "cookie": {
+    "message": "We use only strictly necessary cookies to run TURI. With your consent we may add non-essential cookies in future.",
+    "acceptAll": "Accept all",
+    "essential": "Essential only",
+    "policy": "Cookie Policy"
   }
 }

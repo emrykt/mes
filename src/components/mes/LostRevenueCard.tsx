@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { TrendingDown } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
@@ -8,6 +8,7 @@ import { Card } from "@/components/ui";
 import { formatCost } from "@/lib/currency";
 import { plantEconomics } from "@/lib/revenue";
 import { scrapCostToday, downtimeTodayByReason } from "@/lib/mes-calc";
+import PeriodToggle, { PERIOD_FACTOR, type Period } from "@/components/mes/PeriodToggle";
 
 const BREAK_REASON = "dt-break";
 
@@ -22,8 +23,10 @@ export default function LostRevenueCard() {
   const locale = useLocale();
   const { snap } = useDemo();
   const now = useMemo(() => new Date(), []);
+  const [period, setPeriod] = useState<Period>("daily");
 
   if (!snap) return null;
+  const factor = PERIOD_FACTOR[period];
   const money = (v: number) => formatCost(v, snap.settings.currency, locale, 0);
 
   const eco = plantEconomics(snap, now);
@@ -41,22 +44,25 @@ export default function LostRevenueCard() {
     Math.round(scrapCostToday(snap.scrapEvents, snap.stock, snap.settings.costRates.laborPerHour, now)),
   );
 
-  const total = downtimeLoss + scrap;
+  const total = (downtimeLoss + scrap) * factor;
   const denom = Math.max(1, total);
   const parts = [
-    { label: t("downtime"), value: downtimeLoss, color: "var(--color-serious)" },
-    { label: t("scrap"), value: scrap, color: "var(--color-warning)" },
+    { label: t("downtime"), value: downtimeLoss * factor, color: "var(--color-serious)" },
+    { label: t("scrap"), value: scrap * factor, color: "var(--color-warning)" },
   ];
 
   return (
     <Card className="border-serious/30 bg-serious-soft/30">
+      <div className="mb-3 flex items-center justify-between">
+        <p className="flex items-center gap-1.5 text-sm font-medium text-serious-text">
+          <TrendingDown className="size-4" />
+          {t("title")}
+        </p>
+        <PeriodToggle value={period} onChange={setPeriod} />
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="flex items-center gap-1.5 text-sm font-medium text-serious-text">
-            <TrendingDown className="size-4" />
-            {t("title")}
-          </p>
-          <p className="mt-1 text-4xl font-semibold tracking-tight tabular-nums text-serious-text">
+          <p className="text-4xl font-semibold tracking-tight tabular-nums text-serious-text">
             {money(total)}
           </p>
           <p className="mt-0.5 text-xs text-ink-2">{t("subtitle")}</p>

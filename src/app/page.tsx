@@ -8,6 +8,7 @@ import Faq from "@/components/landing/Faq";
 import ContactForm from "@/components/landing/ContactForm";
 import SiteFooter from "@/components/landing/SiteFooter";
 import PricingCards from "@/components/landing/PricingCards";
+import LiveFlow from "@/components/landing/LiveFlow";
 import {
   Activity,
   ArrowRight,
@@ -67,6 +68,7 @@ export default function LandingPage() {
     { icon: TrendingUp, letter: "I", step: t("loopImproveT"), head: t("loopImproveH"), desc: t("loopImproveD") },
   ];
   const questions = [t("q1"), t("q2"), t("q3"), t("q4"), t("q5"), t("q6"), t("q7"), t("q8"), t("q9")];
+  const machines = Array.from({ length: 12 }, (_, i) => t(`builtM${i + 1}`));
 
   return (
     <main className="min-h-screen">
@@ -176,6 +178,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ---------- LIVE AI FLOW (animated) ---------- */}
+      <LiveFlow />
+
       {/* ---------- QUESTIONS TURI ANSWERS ---------- */}
       <section className="mx-auto max-w-6xl px-6 py-24">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
@@ -259,6 +264,29 @@ export default function LandingPage() {
               <p className="mt-1.5 text-sm text-ink-2">{desc}</p>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      {/* ---------- BUILT FOR METALWORKING ---------- */}
+      <section className="border-t border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-strong">
+              {t("builtEyebrow")}
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{t("builtTitle")}</h2>
+            <p className="mt-3 text-ink-2">{t("builtSubtitle")}</p>
+          </Reveal>
+          <Reveal delay={80} className="stagger mt-10 flex flex-wrap justify-center gap-2.5">
+            {machines.map((m) => (
+              <span
+                key={m}
+                className="rounded-full border border-line bg-page px-4 py-2 text-sm font-medium text-ink transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent-strong hover:shadow-md"
+              >
+                {m}
+              </span>
+            ))}
+          </Reveal>
         </div>
       </section>
 

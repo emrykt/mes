@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { Card } from "@/components/ui";
-import { cycleAmount, daysUntil } from "@/lib/subscription";
+import { subscriptionPrice, daysUntil } from "@/lib/subscription";
 import type { SubStatus } from "@/lib/demo-types";
 
 const fmtDate = (iso: string) =>
@@ -26,7 +26,7 @@ export default function AdminSubscription() {
   if (!sub) return null;
   const plan = snap.settings.plan;
   const st = STATUS[sub.status];
-  const amount = cycleAmount(sub, plan, snap.pricing);
+  const amount = subscriptionPrice(sub, plan, snap.pricing);
   const endDays = daysUntil(sub.currentPeriodEnd, now);
   const renewLabel = sub.status === "trialing" ? "Trial ends" : sub.cancelAtPeriodEnd ? "Access until" : "Renews";
 
@@ -47,8 +47,8 @@ export default function AdminSubscription() {
           <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${st.cls}`}>{st.label}</span>
           <div className="mt-3 divide-y divide-line/60">
             {row("Plan", plan === "AIULTIMATE" ? "Flexible" : plan === "AIPRO" ? "AI Pro" : "Basic")}
-            {row("Billing", sub.period === "annual" ? "Annual (billed yearly)" : "Monthly")}
-            {row("Amount per cycle", `€${amount.toLocaleString("en-GB")}${sub.period === "annual" ? "/yr" : "/mo"}`)}
+            {row("Billing", sub.period === "annual" ? "Annual (12-month commitment, billed monthly)" : "Monthly")}
+            {row("Monthly charge", `€${amount.toLocaleString("en-GB")}/mo`)}
             {row("Started", fmtDate(sub.startedAt))}
             {row(renewLabel, `${fmtDate(sub.currentPeriodEnd)} (${endDays >= 0 ? `in ${endDays}d` : `${-endDays}d ago`})`)}
             {sub.canceledAt && row("Cancellation requested", fmtDate(sub.canceledAt))}
@@ -93,8 +93,8 @@ export default function AdminSubscription() {
           </div>
           <p className="mt-2 text-xs text-muted">
             {sub.period === "annual"
-              ? "Annual: cancelling keeps access until the payment day, then the term ends."
-              : "Monthly: cancelling stops the renewal on the next payment day."}
+              ? "Annual: a 12-month commitment paid monthly; it renews after 12 months."
+              : "Monthly: billed each month; cancelling stops the renewal on the next payment day."}
           </p>
         </div>
       </div>

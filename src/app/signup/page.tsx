@@ -48,7 +48,6 @@ function SignupInner() {
   const def = PLANS[plan];
   const contact = def.contact;
   const monthly = period === "annual" ? def.annualPrice : def.monthlyPrice;
-  const yearlyTotal = def.annualPrice * 12;
   const tagline: Record<PlanId, string> = {
     BASIC: t("planTaglineBasic"),
     AIPRO: t("planTaglineAipro"),
@@ -297,7 +296,6 @@ function SignupInner() {
               planName={tp(plan)}
               period={period}
               monthly={monthly}
-              yearlyTotal={yearlyTotal}
               trial={Boolean(referral.trim())}
             />
           </section>
@@ -355,7 +353,6 @@ function SignupInner() {
               planName={tp(plan)}
               period={period}
               monthly={monthly}
-              yearlyTotal={yearlyTotal}
               trial={Boolean(referral.trim())}
             />
           </section>
@@ -426,14 +423,12 @@ function OrderSummary({
   planName,
   period,
   monthly,
-  yearlyTotal,
   trial,
 }: {
   t: ReturnType<typeof useTranslations>;
   planName: string;
   period: Period;
   monthly: number;
-  yearlyTotal: number;
   trial: boolean;
 }) {
   return (
@@ -451,7 +446,7 @@ function OrderSummary({
       </dl>
       <div className="mt-3 border-t border-line pt-3 text-sm">
         {period === "annual" ? (
-          <p className="text-xs text-muted">{t("annualTotalNote", { n: yearlyTotal, m: monthly })}</p>
+          <p className="text-xs text-muted">{t("annualTotalNote", { n: monthly })}</p>
         ) : (
           <p className="text-xs text-muted">{t("monthlyTotalNote", { n: monthly })}</p>
         )}
@@ -460,9 +455,7 @@ function OrderSummary({
           {trial ? (
             <span className="text-sm font-semibold text-good-text">{t("dueTodayTrial")}</span>
           ) : (
-            <span className="text-xl font-semibold tracking-tight">
-              {formatMoney(period === "annual" ? yearlyTotal : monthly)}
-            </span>
+            <span className="text-xl font-semibold tracking-tight">{formatMoney(monthly)}</span>
           )}
         </div>
         {trial && <p className="mt-1 text-xs text-muted">{t("trialThenLine", { n: monthly })}</p>}

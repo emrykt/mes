@@ -245,7 +245,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       {
         question: "Is TURI part of Tusch & Richter?",
         answer:
-          "TURI grew out of the machine and process knowledge of Tusch & Richter, who have served metalworking shops for over 70 years. But TURI is an independent product — not a subsidiary or a reseller arrangement. It simply carries that hard-won understanding of how metal shops really run into a modern AI platform.",
+          "TURI grew out of the machine and process knowledge of Tusch & Richter, who have served metalworking shops for over 70 years.",
       },
       {
         question: "How long does it take to go live?",

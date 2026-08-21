@@ -95,15 +95,15 @@ function PricingEditor() {
           <div className="rounded-xl border border-line p-4">
             <p className="text-sm font-semibold">Monthly</p>
             <ul className="mt-2 space-y-1.5 text-sm text-ink-2">
-              <li>• Not cancelled → renews automatically after 30 days.</li>
-              <li>• Cancelled → membership ends on the next payment day (no renewal).</li>
+              <li>• Billed every month at the monthly rate.</li>
+              <li>• Cancel anytime → ends on the next payment day (no renewal).</li>
             </ul>
           </div>
           <div className="rounded-xl border border-line p-4">
-            <p className="text-sm font-semibold">Annual</p>
+            <p className="text-sm font-semibold">Annual (12-month commitment)</p>
             <ul className="mt-2 space-y-1.5 text-sm text-ink-2">
-              <li>• Not cancelled → renews automatically after 365 days.</li>
-              <li>• Cancelled → membership continues until the payment day, then ends.</li>
+              <li>• Discounted rate, billed monthly — no yearly upfront charge.</li>
+              <li>• 12-month commitment; renews after 12 months.</li>
             </ul>
           </div>
         </div>

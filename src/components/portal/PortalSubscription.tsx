@@ -6,7 +6,7 @@ import { Check, Copy, Gift } from "lucide-react";
 import { Card } from "@/components/ui";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { formatDate } from "@/lib/format";
-import { cycleAmount, daysUntil } from "@/lib/subscription";
+import { subscriptionPrice, daysUntil } from "@/lib/subscription";
 import type { SubStatus } from "@/lib/demo-types";
 
 const statusCls: Record<SubStatus, string> = {
@@ -27,7 +27,7 @@ export default function PortalSubscription() {
   if (!snap?.settings.subscription) return null;
   const sub = snap.settings.subscription;
   const plan = snap.settings.plan;
-  const amount = cycleAmount(sub, plan, snap.pricing);
+  const amount = subscriptionPrice(sub, plan, snap.pricing);
   const endDays = daysUntil(sub.currentPeriodEnd, now);
 
   const statusLabel: Record<SubStatus, string> = {
@@ -53,7 +53,7 @@ export default function PortalSubscription() {
         </span>
         <dl className="mt-3 divide-y divide-line/70 text-sm">
           {row(t("periodLabel"), sub.period === "annual" ? t("periodAnnual") : t("periodMonthly"))}
-          {row(t("amountPerCycle"), `€${amount.toLocaleString(locale)}${sub.period === "annual" ? t("perYear") : "/mo"}`)}
+          {row(t("amountPerCycle"), `€${amount.toLocaleString(locale)}${t("perMonthShort")}`)}
           {row(dateLabel, `${formatDate(sub.currentPeriodEnd, locale)}${endDays >= 0 ? ` (${endDays}d)` : ""}`)}
         </dl>
 

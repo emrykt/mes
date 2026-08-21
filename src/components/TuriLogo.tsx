@@ -42,13 +42,13 @@ export default function TuriLogo({
       </svg>
       {wordmark && (
         <span
-          className={`text-2xl font-bold lowercase leading-none ${wordClass}`}
-          style={{ fontFamily: '"Turi", system-ui, sans-serif' }}
+          className={`text-2xl font-semibold lowercase leading-none ${wordClass}`}
+          style={{ fontFamily: '"Turi", system-ui, sans-serif', letterSpacing: "0.015em" }}
         >
           tur
           {/* the "i" keeps the font's stem; a green disc fully covers the font's dot
-              (position measured against the Fredoka-700 i-dot: centre 0.64em above the
-              baseline, 48.5% across the glyph, 0.26em wide to guarantee full coverage) */}
+              (measured against the Fredoka-600 i-dot: centre ~0.64em above the baseline,
+              ~48% across the glyph, 0.26em wide to guarantee full coverage) */}
           <span className="relative">
             i
             <span
@@ -57,7 +57,7 @@ export default function TuriLogo({
               style={{
                 width: "0.26em",
                 height: "0.26em",
-                left: "48.5%",
+                left: "47%",
                 top: "0.206em",
                 transform: "translateX(-50%)",
                 background: "linear-gradient(150deg, #8ee24d 10%, #57c01f 90%)",

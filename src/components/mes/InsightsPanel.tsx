@@ -20,6 +20,42 @@ interface LlmItem {
   recommendation: string;
 }
 
+/**
+ * Shared, throttled cache for the LLM insights call. Every InsightsPanel on the
+ * page (overview + executive + alerts) and every navigation reuses one result
+ * per company/locale for TTL_MS, so we make at most one /api/insights request
+ * per window instead of one per panel per interval. Keeps AI spend predictable.
+ */
+const INSIGHTS_TTL_MS = 5 * 60 * 1000;
+type InsightsEntry = { at: number; items: LlmItem[] | null; inflight?: Promise<LlmItem[] | null> };
+const insightsCache = new Map<string, InsightsEntry>();
+
+function getInsights(locale: string, company: string): Promise<LlmItem[] | null> {
+  const key = `${company}:${locale}`;
+  const now = Date.now();
+  const e = insightsCache.get(key);
+  if (e?.inflight) return e.inflight;
+  if (e && now - e.at < INSIGHTS_TTL_MS) return Promise.resolve(e.items);
+
+  const p = fetch("/api/insights", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ locale, company }),
+  })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d): LlmItem[] | null =>
+      d?.mode === "llm" && Array.isArray(d.items) ? d.items : (e?.items ?? null),
+    )
+    .catch(() => e?.items ?? null)
+    .then((items) => {
+      insightsCache.set(key, { at: Date.now(), items });
+      return items;
+    });
+
+  insightsCache.set(key, { at: e?.at ?? 0, items: e?.items ?? null, inflight: p });
+  return p;
+}
+
 const ICON: Record<InsightKind, typeof Gauge> = {
   bottleneck: Gauge,
   downtimeReason: TimerOff,
@@ -51,18 +87,12 @@ export default function InsightsPanel({ limit }: { limit?: number }) {
   useEffect(() => {
     let alive = true;
     const run = () =>
-      fetch("/api/insights", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, company }),
-      })
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => {
-          if (alive && d?.mode === "llm" && Array.isArray(d.items)) setLlm(d.items);
-        })
-        .catch(() => {});
+      getInsights(locale, company).then((items) => {
+        if (alive && items) setLlm(items);
+      });
     run();
-    const id = setInterval(run, 60000);
+    // re-check on the TTL cadence; the shared cache dedupes across panels/tabs.
+    const id = setInterval(run, INSIGHTS_TTL_MS);
     return () => {
       alive = false;
       clearInterval(id);

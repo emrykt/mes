@@ -117,7 +117,7 @@ API'si henüz bağlanmadı (sonraki faz).
 - **Asistan kapsamı** (`PlantAssistant` `scope`): Üretim = `"ops"` (para
   intentleri `MONEY_INTENTS` reddedilir → `opsNoMoney`, çipler operasyonel,
   LLM yönergesine para-hariç eki eklenir); GM/Satış = `"full"`. **Öneri motoru
-  da LLM'e taşındı:** `/api/insights` anahtar varsa `claude-opus-4-8` ile 3
+  da LLM'e taşındı:** `/api/insights` anahtar varsa `claude-haiku-4-5` ile 3
   doğal-dil öneri üretir, yoksa `503` → `InsightsPanel` yerel `plantInsights`
   sezgilerine düşer (LLM modunda "AI" rozeti). **Gerçek LLM için `.env.local`'e
   `ANTHROPIC_API_KEY` gerekir** (`.env.local.example` var); anahtar gelince
@@ -266,7 +266,7 @@ API'si henüz bağlanmadı (sonraki faz).
   `/mes/executive/assistant`) — `PlantAssistant`. **Hibrit**: istemci önce
   `POST /api/assistant` dener; anahtar yoksa route `503 {mode:"local"}` döner →
   istemci `assistant-engine.ts` yerel motoruna düşer. **LLM modu**
-  (`ANTHROPIC_API_KEY`/`ANTHROPIC_AUTH_TOKEN` env varsa): `claude-opus-4-8`,
+  (`ANTHROPIC_API_KEY`/`ANTHROPIC_AUTH_TOKEN` env varsa): `claude-haiku-4-5`,
   adaptive thinking. Sistem yönergesi bağlamı `smartSuggestions` (=`plantInsights`),
   `openEscalations` (=`store.alerts`), `lateOrderRootCauses` (=`rootCauseFor`),
   `performanceScore` (=`plantScore`, faktör puanları + en zayıflar; "skoru nasıl

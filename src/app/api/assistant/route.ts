@@ -25,7 +25,7 @@ export const dynamic = "force-dynamic";
 const LANG: Record<string, string> = { en: "English", de: "German" };
 
 const REFUSAL: Record<string, string> = {
-  en: "I'm the TURI AI assistant — I can only provide information about production and efficiency.",
+  en: "I'm the TURI AI assistant — I can only provide information about production and efficiency.",
   de: "Ich bin der TURI-KI-Assistent — ich kann nur Auskunft zu Produktion und Effizienz geben.",
 };
 
@@ -161,24 +161,26 @@ export async function POST(req: Request) {
     ? `\nThis is the PRODUCTION MANAGEMENT assistant: it has no money remit. Do NOT discuss cost, revenue, profit, margin, lost revenue or pricing — if asked, briefly say those belong to Sales and the Executive view and offer an operational answer instead (efficiency, bottleneck, downtime, orders, quality). Ignore any money fields in the data for your answers.`
     : "";
 
-  const system = `You are the TURI Smart Manufacturing Assistant for a sheet-metal fabrication shop.
+  // Stable instruction prefix (cacheable) — kept separate from the volatile
+  // live-plant JSON so the cached prefix stays byte-stable across requests.
+  const instructions = `You are the TURI Smart Manufacturing Assistant for a sheet-metal fabrication shop.
 You answer ONLY questions about production and efficiency, using the live plant data provided below as JSON.
 Scope you may answer: utilization/OEE-style efficiency, output vs target, plan performance, daily and downtime cost, revenue/profit/margin, lost revenue (opportunity cost of downtime), which machines are down and for how long, scrap, maintenance plan, order/backlog status and due-date risk, shift and operator comparison, andon calls, the current bottleneck and how to relieve it (smartSuggestions), open escalations/alerts (openEscalations), why a late order is behind (lateOrderRootCauses), the 0–1000 performance score and how to raise it (performanceScore — improving its weakest factors adds the most points), and rough quoting/pricing questions using the station billing rates.
 If the user asks about anything outside production and efficiency (general knowledge, coding, chit-chat, politics, personal advice, etc.), you MUST reply with exactly this sentence and nothing else: "${refusal}"
 Behave like a proactive shop-floor advisor: lead with the answer, then — when it helps — surface the live bottleneck, an open escalation, or one concrete improvement drawn from smartSuggestions. Make the manager *feel* the upside of acting by pointing to recovered capacity and reduced loss (use the lostRevenue and downtime figures). NEVER compare anything to the software's price or subscription, and never make ROI/payback/"pays for itself" claims about the product — convey value only through the plant's own recovered capacity and avoided loss.
-Rules: reply in ${lang}. Be concise (1–4 sentences; a short bulleted list is fine for suggestions). Use the numbers from the data; never invent figures. Costs are already in the data's stated currency — show that currency and do not convert. Do not mention that you are reading JSON or that this is a demo.${opsScope}
+Rules: reply in ${lang}. Be concise (1–4 sentences; a short bulleted list is fine for suggestions). Use the numbers from the data; never invent figures. Costs are already in the data's stated currency — show that currency and do not convert. Do not mention that you are reading JSON or that this is a demo.${opsScope}`;
 
-LIVE PLANT DATA (JSON):
-${await buildContext(company ?? DEFAULT_COMPANY_ID)}`;
+  const context = await buildContext(company ?? DEFAULT_COMPANY_ID);
 
   try {
     const client = new Anthropic();
     const msg = await client.messages.create({
-      model: "claude-opus-4-8",
+      model: "claude-haiku-4-5",
       max_tokens: 1024,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
-      system,
+      system: [
+        { type: "text", text: instructions, cache_control: { type: "ephemeral" } },
+        { type: "text", text: `LIVE PLANT DATA (JSON):\n${context}`, cache_control: { type: "ephemeral" } },
+      ],
       messages: [{ role: "user", content: question }],
     });
     const text = msg.content

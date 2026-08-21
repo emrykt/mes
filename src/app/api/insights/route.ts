@@ -55,24 +55,24 @@ export async function POST(req: Request) {
   };
   const lang = LANG[locale ?? "en"] ?? "English";
 
-  const system = `You are the TURI Smart Manufacturing analyst for a sheet-metal plant.
+  const instructions = `You are the TURI Smart Manufacturing analyst for a sheet-metal plant.
 From the live plant signals (JSON) produce the 3 most valuable improvement suggestions right now.
 Each item: a one-sentence reading of the situation and a one-sentence concrete recommendation.
 Focus on bottlenecks, dominant losses (downtime/scrap), late-order risk and where idle capacity can be filled.
 Frame value as recovered capacity / reduced loss — NEVER compare to the software price or make ROI/payback claims.
-Reply in ${lang}. Return ONLY a JSON array of exactly 3 objects: [{"text": "...", "recommendation": "..."}]. No prose, no code fences.
+Reply in ${lang}. Return ONLY a JSON array of exactly 3 objects: [{"text": "...", "recommendation": "..."}]. No prose, no code fences.`;
 
-LIVE PLANT SIGNALS (JSON):
-${JSON.stringify(await buildContext(company ?? DEFAULT_COMPANY_ID))}`;
+  const context = JSON.stringify(await buildContext(company ?? DEFAULT_COMPANY_ID));
 
   try {
     const client = new Anthropic();
     const msg = await client.messages.create({
-      model: "claude-opus-4-8",
+      model: "claude-haiku-4-5",
       max_tokens: 1024,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
-      system,
+      system: [
+        { type: "text", text: instructions, cache_control: { type: "ephemeral" } },
+        { type: "text", text: `LIVE PLANT SIGNALS (JSON):\n${context}`, cache_control: { type: "ephemeral" } },
+      ],
       messages: [{ role: "user", content: "Give the 3 suggestions now." }],
     });
     const text = msg.content

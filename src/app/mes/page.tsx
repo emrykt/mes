@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Boxes,
   Briefcase,
-  Factory,
   Gauge,
   MonitorSmartphone,
   ShoppingCart,
@@ -14,6 +13,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useDemo } from "@/components/demo/DemoProvider";
+import TuriLogo from "@/components/TuriLogo";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { canManageTenant, hasModule } from "@/lib/auth";
@@ -47,9 +47,7 @@ export default function MesChooserPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-12">
       <div className="flex items-center gap-3">
-        <span className="flex size-10 items-center justify-center rounded-xl bg-accent text-white">
-          <Factory className="size-5" />
-        </span>
+        <TuriLogo className="h-9 w-9" wordClass="text-ink" />
         <div className="mr-auto">
           <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-sm text-ink-2">{snap?.companyName ?? t("subtitle")}</p>

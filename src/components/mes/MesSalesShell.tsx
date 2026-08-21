@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { CalendarRange, ClipboardList, Factory, FileText } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
+import { CalendarRange, ClipboardList, FileText } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
 import { useDemo } from "@/components/demo/DemoProvider";
@@ -31,11 +32,8 @@ export default function MesSalesShell({ children }: { children: React.ReactNode 
     <div className="min-h-screen pb-20 md:pb-0">
       <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 md:px-6">
-          <Link href="/mes" className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
-              <Factory className="size-4.5" />
-            </span>
-            <span className="text-sm font-semibold">{tc("appName")}</span>
+          <Link href="/mes" className="flex items-center">
+            <TuriLogo className="h-7 w-7" wordClass="text-ink" />
           </Link>
           <div className="ml-auto flex items-center gap-2 md:order-last">
             <CompanySwitcher />

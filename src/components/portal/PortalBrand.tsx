@@ -1,6 +1,6 @@
 "use client";
 
-import { Factory } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import { useTranslations } from "next-intl";
 import { DemoProvider, useDemo } from "@/components/demo/DemoProvider";
 
@@ -20,14 +20,9 @@ function BrandInner() {
     );
   }
   return (
-    <div className="flex items-center gap-2.5">
-      <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
-        <Factory className="size-4.5" />
-      </span>
-      <div>
-        <p className="text-sm font-semibold">{tc("appName")}</p>
-        <p className="text-[11px] text-muted">{t("title")}</p>
-      </div>
+    <div>
+      <TuriLogo className="h-7 w-7" wordClass="text-ink" />
+      <p className="mt-1 text-[11px] text-muted">{t("title")}</p>
     </div>
   );
 }

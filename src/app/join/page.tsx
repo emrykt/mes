@@ -3,7 +3,8 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, Factory, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 interface Invite {
@@ -72,11 +73,8 @@ function JoinInner() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-page px-6 py-12">
       <div className="w-full max-w-sm">
-        <Link href="/" className="mb-8 flex items-center justify-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-white shadow-sm">
-            <Factory className="size-5" />
-          </span>
-          <span className="text-xl font-semibold tracking-tight">TURI</span>
+        <Link href="/" className="mb-8 flex items-center justify-center">
+          <TuriLogo className="h-9 w-9" wordClass="text-ink" />
         </Link>
 
         <div className="rounded-2xl border border-line bg-surface p-7 shadow-sm">

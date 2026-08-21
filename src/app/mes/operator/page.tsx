@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
+import TuriLogo from "@/components/TuriLogo";
 import { useDemo } from "@/components/demo/DemoProvider";
 import { SIM_STATIONS, type MachineKind } from "@/lib/sim";
 import type { MesOrder } from "@/lib/mes-types";
@@ -140,12 +141,8 @@ export default function OperatorKioskPage() {
     <div className="min-h-screen bg-chrome text-white">
       {/* header */}
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-white/10 px-4 py-3 sm:px-5">
-        <Link
-          href="/mes"
-          className="flex size-9 items-center justify-center rounded-lg bg-accent"
-          aria-label="TURI"
-        >
-          <Factory className="size-5" />
+        <Link href="/mes" className="flex items-center" aria-label="TURI">
+          <TuriLogo className="h-8 w-8" wordClass="text-white" />
         </Link>
         <div className="mr-auto">
           <p className="text-base font-semibold leading-tight">{def.name}</p>

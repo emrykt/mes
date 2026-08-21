@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import UserMenu from "@/components/auth/UserMenu";
+import TuriLogo from "@/components/TuriLogo";
 import {
-  Factory,
   LayoutDashboard,
   LayoutTemplate,
   ReceiptText,
@@ -33,14 +33,9 @@ export default function AdminSidebar() {
 
   return (
     <aside className="fixed inset-y-0 left-0 flex w-60 flex-col bg-chrome text-chrome-ink">
-      <div className="flex items-center gap-2.5 px-5 py-5">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-white">
-          <Factory className="size-4.5" />
-        </span>
-        <div>
-          <p className="text-sm font-semibold text-white">{tc("appName")}</p>
-          <p className="text-[11px] text-chrome-ink/70">{t("title")}</p>
-        </div>
+      <div className="px-5 py-5">
+        <TuriLogo className="h-7 w-7" wordClass="text-white" />
+        <p className="mt-1.5 text-[11px] text-chrome-ink/70">{t("title")}</p>
       </div>
 
       <nav className="mt-2 flex-1 space-y-1 px-3">

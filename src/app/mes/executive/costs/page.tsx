@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowLeft, Factory, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import TrendChart from "@/components/charts/TrendChart";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
@@ -108,12 +109,8 @@ export default function ExecutiveCostsPage() {
         >
           <ArrowLeft className="size-5" />
         </Link>
-        <Link
-          href="/mes"
-          className="flex size-8 items-center justify-center rounded-lg bg-accent text-white"
-          aria-label={tc("appName")}
-        >
-          <Factory className="size-4.5" />
+        <Link href="/mes" className="flex items-center" aria-label={tc("appName")}>
+          <TuriLogo className="h-7 w-7" wordClass="text-ink" />
         </Link>
         <div className="mr-auto">
           <h1 className="text-xl font-semibold tracking-tight">{t("title")}</h1>

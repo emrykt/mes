@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BadgeCheck, Bell, Factory, Loader2, Wrench } from "lucide-react";
+import TuriLogo from "@/components/TuriLogo";
 import { useDemo } from "@/components/demo/DemoProvider";
 import BadgesStrip from "@/components/mes/BadgesStrip";
 import CompanySwitcher from "@/components/mes/CompanySwitcher";
@@ -64,12 +65,8 @@ export default function TvBoardPage() {
       {/* header */}
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
         <div className="flex items-center gap-3">
-          <Link
-            href="/mes"
-            className="flex size-10 items-center justify-center rounded-xl bg-accent md:size-11"
-            aria-label="TURI"
-          >
-            <Factory className="size-5 md:size-6" />
+          <Link href="/mes" className="flex items-center" aria-label="TURI">
+            <TuriLogo className="h-9 w-9 md:h-10 md:w-10" wordClass="text-white" />
           </Link>
           <div className="mr-auto">
             <h1 className="text-lg font-semibold tracking-tight md:text-2xl">{t("title")}</h1>

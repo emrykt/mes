@@ -26,7 +26,7 @@ interface LlmItem {
  * per company/locale for TTL_MS, so we make at most one /api/insights request
  * per window instead of one per panel per interval. Keeps AI spend predictable.
  */
-const INSIGHTS_TTL_MS = 5 * 60 * 1000;
+const INSIGHTS_TTL_MS = 10 * 60 * 1000;
 type InsightsEntry = { at: number; items: LlmItem[] | null; inflight?: Promise<LlmItem[] | null> };
 const insightsCache = new Map<string, InsightsEntry>();
 
@@ -90,9 +90,12 @@ export default function InsightsPanel({ limit }: { limit?: number }) {
       getInsights(locale, company).then((items) => {
         if (alive && items) setLlm(items);
       });
-    run();
-    // re-check on the TTL cadence; the shared cache dedupes across panels/tabs.
-    const id = setInterval(run, INSIGHTS_TTL_MS);
+    run(); // fetch once when the panel opens (served from shared cache if fresh)
+    // re-check on the TTL cadence, but only while the tab is visible — no point
+    // spending on suggestions nobody is looking at. The shared cache dedupes.
+    const id = setInterval(() => {
+      if (typeof document === "undefined" || document.visibilityState === "visible") run();
+    }, INSIGHTS_TTL_MS);
     return () => {
       alive = false;
       clearInterval(id);

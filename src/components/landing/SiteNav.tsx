@@ -10,8 +10,10 @@ import { NavIcon } from "@/lib/nav-icons";
 import { useSiteConfig } from "@/lib/useSiteConfig";
 import type { NavLink as NavLinkT } from "@/lib/demo-types";
 
-/** Internal paths use client-side routing; anchors/hash use a plain link. */
+/** Internal paths use client-side routing; anchors/hash use a plain link.
+ *  An empty/"none" href renders as plain, non-interactive text. */
 function PanelLink({ item, onClick }: { item: NavLinkT; onClick: () => void }) {
+  const clickable = !!item.href && item.href !== "none";
   const href = item.href || "#";
   const inner = (
     <div className="flex gap-2.5">
@@ -32,6 +34,9 @@ function PanelLink({ item, onClick }: { item: NavLinkT; onClick: () => void }) {
       </div>
     </div>
   );
+  if (!clickable) {
+    return <div className="block rounded-lg p-2.5">{inner}</div>;
+  }
   const cls = "group/item block rounded-lg p-2.5 transition-colors hover:bg-accent-soft/50";
   return href.startsWith("/") ? (
     <Link href={href} className={cls} onClick={onClick}>

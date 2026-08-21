@@ -104,6 +104,24 @@ video {
 .anim-aurora { animation: auroraPan 26s ease-in-out infinite alternate; }
 .anim-pulse { animation: pulseGlow 4.5s ease-in-out infinite; }
 .anim-grad { background-size: 220% 220%; animation: gradPan 9s ease infinite; }
+.anim-float-slow { animation: floatY 9s ease-in-out infinite; }
+@keyframes pulseSoft { 0%, 100% { transform: scale(0.94); box-shadow: 0 0 0 0 rgba(14,131,144,0.30); } 50% { transform: scale(1); box-shadow: 0 0 0 7px rgba(14,131,144,0); } }
+.anim-pulse-soft { animation: pulseSoft 3.2s ease-in-out infinite; }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.97); } 100% { opacity: 1; transform: none; } }
+/* staggered entrance for lists (loop cards, question chips, shop-language rows) */
+.stagger > * { opacity: 0; animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+.stagger > *:nth-child(1){animation-delay:.05s}
+.stagger > *:nth-child(2){animation-delay:.12s}
+.stagger > *:nth-child(3){animation-delay:.19s}
+.stagger > *:nth-child(4){animation-delay:.26s}
+.stagger > *:nth-child(5){animation-delay:.33s}
+.stagger > *:nth-child(6){animation-delay:.40s}
+.stagger > *:nth-child(7){animation-delay:.47s}
+.stagger > *:nth-child(8){animation-delay:.54s}
+.stagger > *:nth-child(9){animation-delay:.61s}
+/* animated dashed connector line */
+.dash-flow { stroke-dasharray: 5 7; animation: dashFlow 22s linear infinite; }
 
 /* Animated gradient text for hero highlight */
 .text-grad {
@@ -160,9 +178,10 @@ video {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim-spin-slow, .anim-spin-rev, .anim-float, .anim-twinkle, .anim-aurora, .anim-pulse, .anim-grad, .text-grad {
+  .anim-spin-slow, .anim-spin-rev, .anim-float, .anim-float-slow, .anim-twinkle, .anim-aurora, .anim-pulse, .anim-pulse-soft, .anim-grad, .text-grad, .dash-flow {
     animation: none !important;
   }
+  .stagger > * { opacity: 1 !important; animation: none !important; }
   .reveal { opacity: 1 !important; }
   .reveal.in { animation: none !important; }
   .btn-sheen:hover::after { animation: none !important; }

@@ -729,8 +729,8 @@ function issueMaterial(store: DemoStore, order: MesOrder, now: Date): void {
 }
 
 /** Record one scrapped part with a reason and its material weight (kg). */
-function recordScrap(store: DemoStore, stationId: string, order: MesOrder, seed: string, now: Date): void {
-  const reasonId = pickScrapReason(seed);
+function recordScrap(store: DemoStore, stationId: string, order: MesOrder, seed: string, now: Date, reasonId?: string): void {
+  reasonId = reasonId ?? pickScrapReason(seed);
   let partKg = 0.5;
   const it = order.stockItemId ? store.stock.find((s) => s.id === order.stockItemId) : undefined;
   if (it && order.materialQty && order.qty > 0) {
@@ -1560,6 +1560,12 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
       const next = Math.max(0, (step.scrapQty ?? 0) + action.delta);
       station.todayScrap = Math.max(0, station.todayScrap + (next - (step.scrapQty ?? 0)));
       step.scrapQty = next;
+      // operator-entered scrap carries a reason → log it to the scrap ledger
+      if (action.delta > 0 && action.reasonId && order) {
+        for (let i = 0; i < action.delta; i++) {
+          recordScrap(store, station.id, order, `${station.id}:${now.getTime()}:${i}`, now, action.reasonId);
+        }
+      }
       break;
     }
     case "finishStep": {

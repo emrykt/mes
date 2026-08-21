@@ -49,6 +49,7 @@ export default function OperatorKioskPage() {
 
   const [stationId, setStationId] = useState("st-laser-1");
   const [showDowntime, setShowDowntime] = useState(false);
+  const [scrapFor, setScrapFor] = useState<string | null>(null);
   const [showAndon, setShowAndon] = useState(false);
   const [showScan, setShowScan] = useState(false);
   const [scanValue, setScanValue] = useState("");
@@ -242,7 +243,7 @@ export default function OperatorKioskPage() {
                         </span>
                       </button>
                       <button
-                        onClick={() => dispatch({ type: "addScrap", stationId, orderId: order.id, delta: 1 })}
+                        onClick={() => setScrapFor(order.id)}
                         disabled={!running}
                         className={`${bigBtn} flex-col bg-critical/20 py-6 ring-1 ring-critical hover:bg-critical/30`}
                       >
@@ -293,7 +294,7 @@ export default function OperatorKioskPage() {
                         label={t(scrapKey)}
                         value={scrap}
                         disabled={!running}
-                        onAdd={() => dispatch({ type: "addScrap", stationId, orderId: order.id, delta: 1 })}
+                        onAdd={() => setScrapFor(order.id)}
                         onRemove={() => dispatch({ type: "addScrap", stationId, orderId: order.id, delta: -1 })}
                       />
                     </div>
@@ -349,7 +350,7 @@ export default function OperatorKioskPage() {
                         label={t("scrap")}
                         value={step.scrapQty ?? 0}
                         disabled={!running}
-                        onAdd={() => dispatch({ type: "addScrap", stationId, orderId: order.id, delta: 1 })}
+                        onAdd={() => setScrapFor(order.id)}
                         onRemove={() => dispatch({ type: "addScrap", stationId, orderId: order.id, delta: -1 })}
                       />
                     </div>
@@ -525,6 +526,30 @@ export default function OperatorKioskPage() {
                 onClick={() => {
                   dispatch({ type: "startDowntime", stationId, reasonId: r.id });
                   setShowDowntime(false);
+                }}
+                className="rounded-xl bg-chrome py-5 text-base font-semibold hover:bg-white/10"
+              >
+                {r.name}
+              </button>
+            ))}
+          </div>
+        </Modal>
+      )}
+
+      {/* scrap / NOK reason modal */}
+      {scrapFor && (
+        <Modal
+          onClose={() => setScrapFor(null)}
+          title={t("scrapReasonTitle")}
+          hint={t("scrapReasonHint")}
+        >
+          <div className="grid grid-cols-2 gap-3">
+            {snap.settings.scrapReasons.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => {
+                  dispatch({ type: "addScrap", stationId, orderId: scrapFor, delta: 1, reasonId: r.id });
+                  setScrapFor(null);
                 }}
                 className="rounded-xl bg-chrome py-5 text-base font-semibold hover:bg-white/10"
               >

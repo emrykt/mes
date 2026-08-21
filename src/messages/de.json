@@ -151,8 +151,8 @@
     "loopImproveH": "TURI belegt die Verbesserung",
     "loopImproveD": "Es misst die Wirkung jeder Maßnahme: wie viel Verlust verhindert, wie viel Kapazität zurückgewonnen wurde — in Geld, das Sie sehen.",
     "qEyebrow": "",
-    "qTitle": "Die Fragen, die Ihre Halle nicht aus Excel und WhatsApp beantworten kann",
-    "qSubtitle": "Heute stecken die Antworten in Tabellen, Gruppenchats, Telefonaten und im Kopf des Meisters. TURI beantwortet sie aus Live-Daten — für alle, jederzeit.",
+    "qTitle": "Von fragmentierten Informationen zu operativer Intelligenz in Echtzeit.",
+    "qSubtitle": "Wenn Erkenntnisse in Tabellen, Messaging-Apps, Telefonaten und individuellem Wissen stecken, wird die Entscheidungsfindung langsam. TURI verbindet Ihr operatives Datenökosystem und liefert sofortige, KI-gestützte Antworten für die gesamte Organisation — rund um die Uhr.",
     "q1": "Wo ist jeder Auftrag, auf wessen Maschine, und wie weit ist er?",
     "q2": "Welcher Auftrag wird gleich zu spät?",
     "q3": "Welche Maschine ist gerade der Engpass?",
@@ -607,7 +607,9 @@
       "rejected": "Abgelehnt",
       "packed": "Verpackt",
       "shipmentReady": "Versandbereit",
-      "todayAtStation": "Heute: {output} Stk. · {scrap} Ausschuss"
+      "todayAtStation": "Heute: {output} Stk. · {scrap} Ausschuss",
+      "scrapReasonTitle": "Grund für Ausschuss / NOK",
+      "scrapReasonHint": "Tippen Sie den Grund an, damit TURI lernt, woher der Qualitätsverlust kommt."
     },
     "manager": {
       "title": "Produktions-Board",

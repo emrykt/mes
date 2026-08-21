@@ -87,23 +87,25 @@ export const DEFAULT_DOWNTIME_REASONS: DowntimeReason[] = [
  */
 /** Scrap/waste reasons (tenant data → Turkish mock). */
 export const DEFAULT_SCRAP_REASONS = [
-  { id: "sc-tolerance", name: "Out of tolerance" },
-  { id: "sc-setup", name: "Setup scrap" },
-  { id: "sc-material", name: "Material defect" },
-  { id: "sc-tooling", name: "Tooling / die" },
+  { id: "sc-tolerance", name: "Dimension / tolerance" },
   { id: "sc-surface", name: "Surface / burr" },
+  { id: "sc-program", name: "Program" },
+  { id: "sc-material", name: "Material defect" },
   { id: "sc-operator", name: "Operator error" },
+  { id: "sc-tooling", name: "Tooling / die" },
+  { id: "sc-other", name: "Other" },
 ];
 
 /** Weighted scrap-reason picker (deterministic via seed). */
 export function pickScrapReason(seed: string): string {
   const weights: [string, number][] = [
-    ["sc-tolerance", 0.26],
-    ["sc-setup", 0.22],
-    ["sc-material", 0.18],
-    ["sc-tooling", 0.14],
-    ["sc-surface", 0.12],
+    ["sc-tolerance", 0.28],
+    ["sc-surface", 0.18],
+    ["sc-material", 0.16],
+    ["sc-program", 0.14],
+    ["sc-tooling", 0.12],
     ["sc-operator", 0.08],
+    ["sc-other", 0.04],
   ];
   let r = rand(seed);
   for (const [id, w] of weights) {

@@ -662,7 +662,7 @@ export type DemoAction =
   | { type: "pauseStation"; stationId: string }
   | { type: "resumeStation"; stationId: string }
   | { type: "addQty"; stationId: string; orderId: string; delta: number }
-  | { type: "addScrap"; stationId: string; orderId: string; delta: number }
+  | { type: "addScrap"; stationId: string; orderId: string; delta: number; reasonId?: string }
   | { type: "finishStep"; stationId: string; orderId: string }
   | { type: "startDowntime"; stationId: string; reasonId: string }
   | { type: "endDowntime"; stationId: string }

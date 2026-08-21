@@ -151,8 +151,8 @@
     "loopImproveH": "TURI proves the improvement",
     "loopImproveD": "It measures the impact of every action: how much loss was caught, how much capacity was recovered — in money you can see.",
     "qEyebrow": "",
-    "qTitle": "The questions your floor can’t answer from Excel and WhatsApp",
-    "qSubtitle": "Today the answers live in spreadsheets, group chats, phone calls and the foreman’s head. TURI answers them from live data — for everyone, all the time.",
+    "qTitle": "From fragmented information to real-time operational intelligence.",
+    "qSubtitle": "When insights live in spreadsheets, messaging apps, phone calls, and individual know-how, decision-making slows down. TURI connects your operational data ecosystem and provides instant, AI-powered answers across the organization, 24/7.",
     "q1": "Where is each job, on whose machine, and how far along?",
     "q2": "Which order is about to be late?",
     "q3": "Which machine is the bottleneck right now?",
@@ -607,7 +607,9 @@
       "rejected": "Rejected",
       "packed": "Packed",
       "shipmentReady": "Shipment ready",
-      "todayAtStation": "Today: {output} pcs · {scrap} scrap"
+      "todayAtStation": "Today: {output} pcs · {scrap} scrap",
+      "scrapReasonTitle": "Reason for scrap / NOK",
+      "scrapReasonHint": "Tap the reason so TURI can learn where quality loss comes from."
     },
     "manager": {
       "title": "Production board",

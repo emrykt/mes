@@ -186,10 +186,7 @@ export default function LandingPage() {
       <section className="mx-auto max-w-6xl px-6 py-24">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-soft px-3 py-1 text-xs font-semibold text-ink-2">
-              {t("qEyebrow")}
-            </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl text-balance">{t("qTitle")}</h2>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">{t("qTitle")}</h2>
             <p className="mt-3 text-ink-2">{t("qSubtitle")}</p>
             <p className="mt-6 border-l-2 border-accent pl-4 text-lg font-medium text-ink text-pretty">
               {t("qMotto")}

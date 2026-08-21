@@ -43,22 +43,21 @@ export default function TuriLogo({
       {wordmark && (
         <span
           className={`text-2xl font-semibold lowercase leading-none ${wordClass}`}
-          style={{ fontFamily: '"Turi", system-ui, sans-serif', letterSpacing: "0.015em" }}
+          style={{ fontFamily: '"Turi", system-ui, sans-serif', letterSpacing: "0.025em" }}
         >
           tur
-          {/* the "i" keeps the font's stem; a green disc fully covers the font's dot
-              (measured against the Fredoka-600 i-dot: centre ~0.64em above the baseline,
-              ~48% across the glyph, 0.26em wide to guarantee full coverage) */}
+          {/* dotless "ı" (U+0131) + our own small green dot — no font dot to peek out,
+              so the disc can be small; placement measured for Fredoka-600 + 0.025em spacing */}
           <span className="relative">
-            i
+            {"ı"}
             <span
               aria-hidden
               className="absolute rounded-full"
               style={{
-                width: "0.26em",
-                height: "0.26em",
-                left: "47%",
-                top: "0.206em",
+                width: "0.19em",
+                height: "0.19em",
+                left: "44%",
+                top: "0.266em",
                 transform: "translateX(-50%)",
                 background: "linear-gradient(150deg, #8ee24d 10%, #57c01f 90%)",
               }}

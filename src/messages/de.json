@@ -213,7 +213,24 @@
     "builtM9": "Bohren",
     "builtM10": "Montage",
     "builtM11": "Qualität",
-    "builtM12": "Verpackung"
+    "builtM12": "Verpackung",
+    "opsEyebrow": "Mühelos in der Halle",
+    "opsTitle": "Der Bediener tippt dreimal. Den Rest macht TURI.",
+    "opsOperatorLabel": "Der Bediener macht",
+    "opsStep1": "Auftrag wählen",
+    "opsStep2": "Start",
+    "opsStep3": "Fertig",
+    "opsDevice": "Auf jedem Tablet (iOS oder Android) oder Smartphone — Kiosk-Modus, große Touch-Ziele, ohne Schulung.",
+    "opsTuriLabel": "TURI leitet automatisch ab",
+    "opsChain1": "Was produziert wurde",
+    "opsChain2": "Wie lange es dauerte",
+    "opsChain3": "Status gegenüber der Planzeit",
+    "opsChain4": "Jede Verzögerung",
+    "opsChain5": "Den Engpass",
+    "opsChain6": "Bediener- & Maschinenleistung",
+    "opsChain7": "Den nächsten Auftrag",
+    "opsChain8": "Ein wahrscheinlich aufkommendes Problem",
+    "opsChain9": "Eine Empfehlung für den Manager"
   },
   "adminNav": {
     "title": "Admin-Panel",
@@ -1476,6 +1493,8 @@
     "maintenance_ai": "Die KI eskaliert Live-Ausfälle an die richtige Person und weist auf die Maschine hin, die als Nächstes Aufmerksamkeit braucht — bevor sie ausfällt.",
     "stock_ai": "Die KI prognostiziert den Verbrauch aus echten Daten und alarmiert den Einkauf, bevor ein kritisches Material ausgeht.",
     "tv_ai": "Die KI zeigt auf dem großen Bildschirm, was zählt — den aktuellen Engpass und offene Andon-Rufe — damit die ganze Halle die Priorität sieht.",
-    "assistant_ai": "Das ist die KI selbst: Fragen Sie in normaler Sprache und erhalten Sie fundierte Antworten — den Engpass, die Ursache, die heutigen Stillstandskosten und die nächste beste Maßnahme."
+    "assistant_ai": "Das ist die KI selbst: Fragen Sie in normaler Sprache und erhalten Sie fundierte Antworten — den Engpass, die Ursache, die heutigen Stillstandskosten und die nächste beste Maßnahme.",
+    "deviceBadge": "Tablet · iOS / Android · Smartphone",
+    "operatorDevice": "Läuft als Kiosk auf jedem Tablet (iOS oder Android) oder Smartphone — große Touch-Ziele, ohne Schulung."
   }
 }

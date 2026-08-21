@@ -9,6 +9,7 @@ import ContactForm from "@/components/landing/ContactForm";
 import SiteFooter from "@/components/landing/SiteFooter";
 import PricingCards from "@/components/landing/PricingCards";
 import LiveFlow from "@/components/landing/LiveFlow";
+import OperatorFlow from "@/components/landing/OperatorFlow";
 import {
   Activity,
   ArrowRight,
@@ -177,6 +178,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- OPERATOR: 3 taps, TURI does the rest ---------- */}
+      <OperatorFlow />
 
       {/* ---------- LIVE AI FLOW (animated) ---------- */}
       <LiveFlow />

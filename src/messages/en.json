@@ -213,7 +213,24 @@
     "builtM9": "Drilling",
     "builtM10": "Assembly",
     "builtM11": "Quality",
-    "builtM12": "Packaging"
+    "builtM12": "Packaging",
+    "opsEyebrow": "Effortless on the floor",
+    "opsTitle": "The operator taps three times. TURI does the rest.",
+    "opsOperatorLabel": "The operator does",
+    "opsStep1": "Pick job",
+    "opsStep2": "Start",
+    "opsStep3": "Finish",
+    "opsDevice": "On any tablet (iOS or Android) or phone — kiosk mode, big touch targets, no training.",
+    "opsTuriLabel": "TURI derives, automatically",
+    "opsChain1": "What was produced",
+    "opsChain2": "How long it took",
+    "opsChain3": "Status vs the planned time",
+    "opsChain4": "Any delay",
+    "opsChain5": "The bottleneck",
+    "opsChain6": "Operator & machine performance",
+    "opsChain7": "The next job",
+    "opsChain8": "A likely upcoming problem",
+    "opsChain9": "A recommendation for the manager"
   },
   "adminNav": {
     "title": "Admin Panel",
@@ -1476,6 +1493,8 @@
     "maintenance_ai": "AI escalates live breakdowns to the right person and points to the machine that needs attention next — before it fails.",
     "stock_ai": "AI forecasts depletion from real consumption and alerts purchasing before a critical material runs out.",
     "tv_ai": "AI surfaces what matters on the big screen — the live bottleneck and open andon calls — so the whole floor sees the priority.",
-    "assistant_ai": "This is the AI itself: ask in plain language and get grounded answers — the bottleneck, the root cause, today’s downtime cost, and the next best action."
+    "assistant_ai": "This is the AI itself: ask in plain language and get grounded answers — the bottleneck, the root cause, today’s downtime cost, and the next best action.",
+    "deviceBadge": "Tablet · iOS / Android · Phone",
+    "operatorDevice": "Runs as a kiosk on any tablet (iOS or Android) or phone — big touch targets, no training."
   }
 }

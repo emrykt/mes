@@ -15,7 +15,9 @@ import {
   Cpu,
   Gauge,
   LayoutDashboard,
+  Smartphone,
   Sparkles,
+  Tablet,
   Tv,
   Wallet,
   Wrench,
@@ -76,6 +78,16 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               </p>
               <p className="mt-1.5 text-sm text-white/85">{t(`${s}_ai`)}</p>
             </div>
+            {s === "operator" && (
+              <div className="mt-4 flex max-w-xl flex-wrap items-center gap-3 rounded-2xl border border-white/12 bg-white/[0.05] p-4 backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
+                  <Tablet className="size-3.5" />
+                  <Smartphone className="size-3.5" />
+                  {t("deviceBadge")}
+                </span>
+                <span className="text-sm text-white/70">{t("operatorDevice")}</span>
+              </div>
+            )}
             <p className="mt-5 max-w-xl text-white/70">{t(`${s}_use`)}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup?plan=AIPRO" className="btn-sheen inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-base font-medium text-white shadow-lg shadow-accent/30 hover:bg-accent-strong">

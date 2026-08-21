@@ -18,8 +18,81 @@ import type {
 const WEEK_DAYS = [1, 2, 3, 4, 5, 6, 0] as const;
 import { SIM_STATIONS } from "@/lib/sim";
 
+/** Editable catalog of named reasons (downtime or scrap): rename inline, remove,
+ *  and add — mirrors the way both are configured. Writes to the live store. */
+function ReasonCatalog({
+  title,
+  hint,
+  reasons,
+  placeholder,
+  addLabel,
+  onAdd,
+  onRename,
+  onRemove,
+  inputClass,
+}: {
+  title: string;
+  hint: string;
+  reasons: { id: string; name: string }[];
+  placeholder: string;
+  addLabel: string;
+  onAdd: (name: string) => void;
+  onRename: (id: string, name: string) => void;
+  onRemove: (id: string) => void;
+  inputClass: string;
+}) {
+  const [newVal, setNewVal] = useState("");
+  return (
+    <Card title={title} subtitle={hint}>
+      <ul className="space-y-2">
+        {reasons.map((r) => (
+          <li key={r.id} className="flex items-center gap-2">
+            <input
+              defaultValue={r.name}
+              onBlur={(e) => {
+                const v = e.target.value.trim();
+                if (v && v !== r.name) onRename(r.id, v);
+              }}
+              className={`${inputClass} grow`}
+            />
+            <button
+              onClick={() => onRemove(r.id)}
+              aria-label="remove"
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-line text-critical hover:bg-critical-soft/40"
+            >
+              <Trash2 className="size-4" />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <input
+          value={newVal}
+          onChange={(e) => setNewVal(e.target.value)}
+          placeholder={placeholder}
+          className={`${inputClass} grow sm:max-w-60`}
+        />
+        <button
+          onClick={() => {
+            const v = newVal.trim();
+            if (v) {
+              onAdd(v);
+              setNewVal("");
+            }
+          }}
+          disabled={newVal.trim() === ""}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-white hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Plus className="size-4" />
+          {addLabel}
+        </button>
+      </div>
+    </Card>
+  );
+}
+
 /**
- * Operation catalog + downtime reason management, shared by the admin panel
+ * Operation catalog + downtime/scrap reason management, shared by the admin panel
  * and the production-manager panel. Cost rates & currency render only where
  * `withCosts` is set (admin side). Everything writes to the live demo store.
  */
@@ -35,7 +108,6 @@ export default function MesCatalogSettings({
 
   const [newOp, setNewOp] = useState("");
   const [newOpBatch, setNewOpBatch] = useState(false);
-  const [newReason, setNewReason] = useState("");
   const [note, setNote] = useState<string | null>(null);
   const [costs, setCosts] = useState({
     laborPerHour: "14",
@@ -84,14 +156,6 @@ export default function MesCatalogSettings({
     await dispatch({ type: "addOperation", name, batchable: newOpBatch });
     setNewOp("");
     setNewOpBatch(false);
-    setNote(t("addedNote", { name }));
-  }
-
-  async function addReason() {
-    const name = newReason.trim();
-    if (!name) return;
-    await dispatch({ type: "addReason", name });
-    setNewReason("");
     setNote(t("addedNote", { name }));
   }
 
@@ -192,34 +256,29 @@ export default function MesCatalogSettings({
         <p className="mt-2 text-xs text-muted">{t("batchableHelp")}</p>
       </Card>
 
-      <Card title={t("reasonsTitle")} subtitle={t("reasonsHint")}>
-        <ul className="flex flex-wrap gap-2">
-          {snap.settings.downtimeReasons.map((r) => (
-            <li
-              key={r.id}
-              className="rounded-lg border border-line bg-page px-3 py-1.5 text-sm font-medium text-ink-2"
-            >
-              {r.name}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <input
-            value={newReason}
-            onChange={(e) => setNewReason(e.target.value)}
-            placeholder={t("addReasonPlaceholder")}
-            className={`${inputClass} grow sm:max-w-60`}
-          />
-          <button
-            onClick={addReason}
-            disabled={newReason.trim() === ""}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-white hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <Plus className="size-4" />
-            {t("add")}
-          </button>
-        </div>
-      </Card>
+      <ReasonCatalog
+        title={t("reasonsTitle")}
+        hint={t("reasonsHint")}
+        reasons={snap.settings.downtimeReasons}
+        placeholder={t("addReasonPlaceholder")}
+        addLabel={t("add")}
+        inputClass={inputClass}
+        onAdd={(name) => { dispatch({ type: "addReason", name }); setNote(t("addedNote", { name })); }}
+        onRename={(id, name) => dispatch({ type: "renameReason", id, name })}
+        onRemove={(id) => dispatch({ type: "removeReason", id })}
+      />
+
+      <ReasonCatalog
+        title={t("scrapReasonsTitle")}
+        hint={t("scrapReasonsHint")}
+        reasons={snap.settings.scrapReasons}
+        placeholder={t("addScrapReasonPlaceholder")}
+        addLabel={t("add")}
+        inputClass={inputClass}
+        onAdd={(name) => { dispatch({ type: "addScrapReason", name }); setNote(t("addedNote", { name })); }}
+        onRename={(id, name) => dispatch({ type: "renameScrapReason", id, name })}
+        onRemove={(id) => dispatch({ type: "removeScrapReason", id })}
+      />
 
       <Card title={t("escalationTitle")} subtitle={t("escalationHint")} padded={false}>
         <Table>

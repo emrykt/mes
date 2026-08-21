@@ -732,7 +732,10 @@
       "billingHint": "Market sell price per station-hour. Drives revenue, profit and lost-revenue (opportunity cost of downtime).",
       "colStation": "Station",
       "colRate": "Rate / hour",
-      "billingSaved": "Billing rates saved."
+      "billingSaved": "Billing rates saved.",
+      "scrapReasonsTitle": "Scrap / quality (NOK) reasons",
+      "scrapReasonsHint": "The reasons operators pick when reporting scrap or a NOK part. Edit, add or remove them.",
+      "addScrapReasonPlaceholder": "New scrap reason"
     },
     "maintenance": {
       "title": "Planned maintenance",

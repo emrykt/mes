@@ -1692,6 +1692,31 @@ export function applyAction(store: DemoStore, action: DemoAction, now: Date): vo
       });
       break;
     }
+    case "removeReason": {
+      store.settings.downtimeReasons = store.settings.downtimeReasons.filter((r) => r.id !== action.id);
+      break;
+    }
+    case "renameReason": {
+      const r = store.settings.downtimeReasons.find((x) => x.id === action.id);
+      if (r && action.name.trim()) r.name = action.name.trim();
+      break;
+    }
+    case "addScrapReason": {
+      store.settings.scrapReasons.push({
+        id: `sc-custom-${Date.now()}`,
+        name: action.name,
+      });
+      break;
+    }
+    case "removeScrapReason": {
+      store.settings.scrapReasons = store.settings.scrapReasons.filter((r) => r.id !== action.id);
+      break;
+    }
+    case "renameScrapReason": {
+      const r = store.settings.scrapReasons.find((x) => x.id === action.id);
+      if (r && action.name.trim()) r.name = action.name.trim();
+      break;
+    }
     case "saveCosts":
       store.settings.costRates = action.costRates;
       break;

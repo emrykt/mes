@@ -693,6 +693,11 @@ export type DemoAction =
     }
   | { type: "addOperation"; name: string; batchable: boolean }
   | { type: "addReason"; name: string }
+  | { type: "removeReason"; id: string }
+  | { type: "renameReason"; id: string; name: string }
+  | { type: "addScrapReason"; name: string }
+  | { type: "removeScrapReason"; id: string }
+  | { type: "renameScrapReason"; id: string; name: string }
   | { type: "saveCosts"; costRates: DemoSettings["costRates"] }
   | { type: "saveBillingRates"; billingRates: Record<string, number> }
   | { type: "setCurrency"; currency: CurrencyCode }

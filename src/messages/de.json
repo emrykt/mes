@@ -732,7 +732,10 @@
       "billingHint": "Marktpreis je Stationsstunde. Speist Umsatz, Gewinn und entgangenen Umsatz (Opportunitätskosten des Stillstands).",
       "colStation": "Station",
       "colRate": "Satz / Stunde",
-      "billingSaved": "Verrechnungssätze gespeichert."
+      "billingSaved": "Verrechnungssätze gespeichert.",
+      "scrapReasonsTitle": "Ausschuss- / Qualitätsgründe (NOK)",
+      "scrapReasonsHint": "Die Gründe, die Bediener bei Ausschuss oder NOK-Teilen wählen. Bearbeiten, hinzufügen oder entfernen.",
+      "addScrapReasonPlaceholder": "Neuer Ausschussgrund"
     },
     "maintenance": {
       "title": "Geplante Instandhaltung",

@@ -10,7 +10,6 @@ export default function AboutPage() {
   const stats = [
     { v: t("aboutStat1V"), l: t("aboutStat1L") },
     { v: t("aboutStat2V"), l: t("aboutStat2L") },
-    { v: t("aboutStat3V"), l: t("aboutStat3L") },
   ];
   const loop = [
     { icon: Activity, t: t("loopTrackT"), d: t("loopTrackH") },
@@ -39,11 +38,10 @@ export default function AboutPage() {
             </span>
             <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">{t("aboutTitle")}</h1>
             <p className="mt-5 text-white/75 text-pretty">{t("aboutBody1")}</p>
-            <p className="mt-4 text-white/75 text-pretty">{t("aboutBody2")}</p>
             <p className="mt-6 border-l-2 border-good pl-4 text-lg font-medium italic text-white/90">{t("aboutGermanTagline")}</p>
             <p className="mt-5 text-xs text-white/45">{t("aboutNote")}</p>
           </Reveal>
-          <Reveal delay={120} className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+          <Reveal delay={120} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {stats.map((s) => (
               <div key={s.l} className="anim-float-slow rounded-2xl border border-white/12 bg-white/[0.06] px-6 py-5 backdrop-blur">
                 <p className="text-4xl font-semibold tracking-tight text-grad">{s.v}</p>

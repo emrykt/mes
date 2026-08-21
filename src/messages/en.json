@@ -1433,6 +1433,15 @@
     "assistant_b1": "Answers grounded in your own live numbers",
     "assistant_b2": "Bottleneck, root cause and the next best action",
     "assistant_b3": "Proactive suggestions and open escalations",
-    "assistant_b4": "Speaks the language of the shop, in EN & DE"
+    "assistant_b4": "Speaks the language of the shop, in EN & DE",
+    "aiLabel": "AI recommendations",
+    "operator_ai": "AI keeps the operator on the right job — it surfaces the next best task and flags a step that’s slipping behind before it becomes a delay, right on the kiosk.",
+    "production_ai": "AI pinpoints the live bottleneck, explains the root cause of every delay, and recommends the move — before it costs you the day.",
+    "executive_ai": "AI turns the numbers into decisions: it tells you exactly which factor to fix first to raise your score, and where capacity is leaking as money.",
+    "sales_ai": "AI checks real capacity as you quote and flags orders that eat capacity at a thin margin — so you promise dates you can keep and prices that pay.",
+    "maintenance_ai": "AI escalates live breakdowns to the right person and points to the machine that needs attention next — before it fails.",
+    "stock_ai": "AI forecasts depletion from real consumption and alerts purchasing before a critical material runs out.",
+    "tv_ai": "AI surfaces what matters on the big screen — the live bottleneck and open andon calls — so the whole floor sees the priority.",
+    "assistant_ai": "This is the AI itself: ask in plain language and get grounded answers — the bottleneck, the root cause, today’s downtime cost, and the next best action."
   }
 }

@@ -15,6 +15,7 @@ import {
   Cpu,
   Gauge,
   LayoutDashboard,
+  Sparkles,
   Tv,
   Wallet,
   Wrench,
@@ -68,6 +69,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             </span>
             <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">{t(`${s}_name`)}</h1>
             <p className="mt-3 text-lg text-grad font-medium">{t(`${s}_tagline`)}</p>
+            {/* AI recommendations — front and centre on every product */}
+            <div className="mt-5 max-w-xl rounded-2xl border border-good/30 bg-white/[0.06] p-4 backdrop-blur">
+              <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-good">
+                <Sparkles className="size-3.5" /> {t("aiLabel")}
+              </p>
+              <p className="mt-1.5 text-sm text-white/85">{t(`${s}_ai`)}</p>
+            </div>
             <p className="mt-5 max-w-xl text-white/70">{t(`${s}_use`)}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup?plan=AIPRO" className="btn-sheen inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-base font-medium text-white shadow-lg shadow-accent/30 hover:bg-accent-strong">

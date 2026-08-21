@@ -1433,6 +1433,15 @@
     "assistant_b1": "Antworten, verankert in Ihren eigenen Live-Zahlen",
     "assistant_b2": "Engpass, Ursache und die nächste beste Maßnahme",
     "assistant_b3": "Proaktive Vorschläge und offene Eskalationen",
-    "assistant_b4": "Spricht die Sprache der Halle, auf DE & EN"
+    "assistant_b4": "Spricht die Sprache der Halle, auf DE & EN",
+    "aiLabel": "KI-Empfehlungen",
+    "operator_ai": "Die KI hält den Bediener beim richtigen Auftrag — sie zeigt die nächste beste Aufgabe und meldet einen Schritt, der ins Hintertreffen gerät, bevor daraus eine Verzögerung wird — direkt am Kiosk.",
+    "production_ai": "Die KI benennt den aktuellen Engpass, erklärt die Ursache jeder Verzögerung und empfiehlt den Schritt — bevor er den Tag kostet.",
+    "executive_ai": "Die KI macht aus Zahlen Entscheidungen: Sie sagt Ihnen genau, welchen Faktor Sie zuerst angehen sollten, um Ihren Score zu steigern, und wo Kapazität als Geld verloren geht.",
+    "sales_ai": "Die KI prüft die echte Kapazität schon beim Kalkulieren und markiert Aufträge, die Kapazität bei dünner Marge fressen — so versprechen Sie haltbare Termine und Preise, die sich lohnen.",
+    "maintenance_ai": "Die KI eskaliert Live-Ausfälle an die richtige Person und weist auf die Maschine hin, die als Nächstes Aufmerksamkeit braucht — bevor sie ausfällt.",
+    "stock_ai": "Die KI prognostiziert den Verbrauch aus echten Daten und alarmiert den Einkauf, bevor ein kritisches Material ausgeht.",
+    "tv_ai": "Die KI zeigt auf dem großen Bildschirm, was zählt — den aktuellen Engpass und offene Andon-Rufe — damit die ganze Halle die Priorität sieht.",
+    "assistant_ai": "Das ist die KI selbst: Fragen Sie in normaler Sprache und erhalten Sie fundierte Antworten — den Engpass, die Ursache, die heutigen Stillstandskosten und die nächste beste Maßnahme."
   }
 }
